@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import './css/PastTest.css';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import "./css/PastTest.css";
 import { UserContext } from "../contexts/UserContext";
 import CertificateReport from "../CertificateReport";
 import { Link } from "react-router-dom";
 import { useAxios } from "../api/axiosInstance";
 
 const PastTest = () => {
-
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
   const buttonRef = useRef(null);
@@ -39,7 +37,6 @@ const PastTest = () => {
     //console.log("User ID:", user_id);
   }, [user_id]);
 
-
   useEffect(() => {
     axios
       .get(`${API_URL}/institute/institutions/${user.institute_id}`)
@@ -53,7 +50,7 @@ const PastTest = () => {
   }, [user.institute_id]);
 
   const sortedTests = [...tests].sort(
-    (a, b) => new Date(b.test_date) - new Date(a.test_date)
+    (a, b) => new Date(b.test_date) - new Date(a.test_date),
   );
 
   const formatTime = (seconds) => {
@@ -70,27 +67,17 @@ const PastTest = () => {
   };
 
   const filteredTests = sortedTests.filter((test) => {
-
-    const matchQuizType =
-      !quizType || test.test_visibility === quizType;
+    const matchQuizType = !quizType || test.test_visibility === quizType;
 
     const matchStatus =
       !passingStatus ||
-      (
-        test.is_result_declared === "Yes" &&
-        test.status === passingStatus
-      );
+      (test.is_result_declared === "Yes" && test.status === passingStatus);
 
-    const matchSearch =
-      test.test_name
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
+    const matchSearch = test.test_name
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
 
-    return (
-      matchQuizType &&
-      matchStatus &&
-      matchSearch
-    );
+    return matchQuizType && matchStatus && matchSearch;
   });
 
   const clearFilters = () => {
@@ -100,38 +87,42 @@ const PastTest = () => {
     setCurrentPage(1);
   };
 
-  const handleParticipationCertificateDownload = (test_id, test_name, submit_date) => {
-
+  const handleParticipationCertificateDownload = (
+    test_id,
+    test_name,
+    submit_date,
+  ) => {
     const certificateData = {
       test_id: test_id,
       test_name: test_name,
       student_name: user.name,
       standard: user.standard_type,
       institute_data: user.institute_id == null ? null : institute,
-      test_date: submit_date
+      test_date: submit_date,
     };
     childRef.current.generateParticipationCertificate(certificateData);
   };
 
-
-  const handleAchievementCertificateDownload = (test_id, test_name, submit_date) => {
-
+  const handleAchievementCertificateDownload = (
+    test_id,
+    test_name,
+    submit_date,
+  ) => {
     const certificateData = {
       test_ID: test_id,
       test_name: test_name,
       user_ID: user_id,
-      test_date: submit_date
+      test_date: submit_date,
     };
     childRef.current.generateAchievementCertificate(certificateData);
   };
 
   const handleReportDownload = (test_id, test_name, submit_date) => {
-
     const ReportData = {
       test_ID: test_id,
       test_name: test_name,
       user_ID: user_id,
-      test_date: submit_date
+      test_date: submit_date,
     };
     childRef.current.generateReport(ReportData);
   };
@@ -140,7 +131,6 @@ const PastTest = () => {
     if (!releaseDate) return false;
     return new Date(releaseDate) <= new Date();
   };
-
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -159,9 +149,9 @@ const PastTest = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isFilterOpen]);
 
@@ -169,14 +159,21 @@ const PastTest = () => {
 
   const currentTests = filteredTests.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   return (
     <div className="pastTest">
+      {isFilterOpen && (
+        <div className="filter-backdrop" onClick={toggleFilter}></div>
+      )}
+
       {/*****Filter section */}
       <div className="Sticky-filterby">
-        <div className={`filter-section ${isFilterOpen ? 'filter-section--open' : ''}`} ref={filterRef}>
+        <div
+          className={`filter-section ${isFilterOpen ? "filter-section--open" : ""}`}
+          ref={filterRef}
+        >
           <h2>Filter By</h2>
           <hr />
           <div className="filter-group">
@@ -190,9 +187,9 @@ const PastTest = () => {
             >
               <option value="">All Quizzes</option>
 
-              {user?.institute_id &&
+              {user?.institute_id && (
                 <option value="Institution">Institutional</option>
-              }
+              )}
 
               <option value="Global">General</option>
               <option value="Interest">Interest Based</option>
@@ -247,10 +244,7 @@ const PastTest = () => {
           {/* <br></br> */}
           {/* <br></br><br></br> */}
 
-          <div
-            className="clear-filters"
-            onClick={clearFilters}
-          >
+          <div className="clear-filters" onClick={clearFilters}>
             Clear Search & Filter
           </div>
         </div>
@@ -261,16 +255,17 @@ const PastTest = () => {
         <div className="pastTest-header">
           <h1>Past Quizzes</h1>
           <div className="filter-toggle-wrapper">
-            <button className="filter-toggle-button" onClick={toggleFilter} ref={buttonRef}>
-              {isFilterOpen ? 'Hide Filters' : 'Filter By'}
+            <button
+              className="filter-toggle-button"
+              onClick={toggleFilter}
+              ref={buttonRef}
+            >
+              {isFilterOpen ? "Hide Filters" : "Filter By"}
             </button>
           </div>
         </div>
-        {
-          /***Table container****/
-        }
-        <div className='table-container'>
-
+        {/***Table container****/}
+        <div className="table-container">
           <table>
             <thead>
               <tr>
@@ -283,27 +278,35 @@ const PastTest = () => {
                 <th>Download Report</th>
                 <th>Result</th>
               </tr>
-
             </thead>
             <tbody>
               {currentTests.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center" }}>No Quizzes found.</td>
+                  <td colSpan="7" style={{ textAlign: "center" }}>
+                    No Quizzes found.
+                  </td>
                 </tr>
               ) : (
                 currentTests.map((test, index) => (
                   <tr key={index}>
-                    <td>
-                      {(currentPage - 1) * itemsPerPage + index + 1}
-                    </td>
+                    <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td>{test.test_name}</td>
                     {/* <td>{test.marks}</td> */}
                     <td>{formatTime(test.time_taken)}</td>
                     <td>{test.test_date}</td>
                     <td>
-                      <img src={'/images/download_certificate.png'} alt="Certificate"
+                      <img
+                        src={"/images/download_certificate.png"}
+                        alt="Certificate"
                         className="certi-rep"
-                        onClick={() => handleParticipationCertificateDownload(test.test_id, test.test_name, test.test_date)} />
+                        onClick={() =>
+                          handleParticipationCertificateDownload(
+                            test.test_id,
+                            test.test_name,
+                            test.test_date,
+                          )
+                        }
+                      />
                     </td>
                     <td>
                       <img
@@ -320,12 +323,14 @@ const PastTest = () => {
                             handleReportDownload(
                               test.test_id,
                               test.test_name,
-                              test.test_date
+                              test.test_date,
                             );
                           }
                         }}
                         style={{
-                          opacity: isResultAvailable(test.result_release_date) ? 1 : 0.4,
+                          opacity: isResultAvailable(test.result_release_date)
+                            ? 1
+                            : 0.4,
                           cursor: isResultAvailable(test.result_release_date)
                             ? "pointer"
                             : "not-allowed",
@@ -340,7 +345,7 @@ const PastTest = () => {
                             alt="Result"
                             className="certi-rep"
                             style={{
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                           />
                         </Link>
@@ -352,16 +357,15 @@ const PastTest = () => {
                           title={`Result will be available after ${test.result_release_date}`}
                           style={{
                             opacity: 0.4,
-                            cursor: "not-allowed"
+                            cursor: "not-allowed",
                           }}
                         />
                       )}
                     </td>
-
                   </tr>
-                )))}
+                ))
+              )}
             </tbody>
-
           </table>
           {totalPages > 1 && (
             <div className="pagination">
@@ -379,9 +383,7 @@ const PastTest = () => {
         </div>
       </div>
       <CertificateReport ref={childRef} />
-
     </div>
-
-  )
-}
+  );
+};
 export default PastTest;

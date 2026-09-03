@@ -101,6 +101,15 @@ function App() {
               />
 
               <Route
+                path="/dashboard/managestandards"
+                element={
+                  <ProtectedRoute>
+                    <Welcome />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/dashboard/manageinstitutes"
                 element={
                   <ProtectedRoute>

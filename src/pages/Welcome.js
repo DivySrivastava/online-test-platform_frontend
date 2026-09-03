@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
@@ -39,8 +40,7 @@ const Dashboard = () => {
   const { user } = useContext(UserContext);
   const [statistics, setStatistics] = useState({});
 
-  const [showManageModal, setShowManageModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
 
   const [standards, setStandards] = useState([]);
   const [newStandard, setNewStandard] = useState("");
@@ -69,10 +69,6 @@ const Dashboard = () => {
 
     fetchFeedbacks();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("User changed:", username?.user);
-  // }, [username?.user]);
 
   useEffect(() => {
     if (!user) return;
@@ -218,13 +214,42 @@ const Dashboard = () => {
         });
       }
 
-      setShowAddModal(false);
       setNewStandard("");
-
-      // Reload page after successful API call
-      window.location.reload();
+      setActiveModal("manage");
+      fetchStandards();
     } catch (error) {
       console.error("Error adding standard:", error);
+    }
+  };
+
+  const openManageStandards = () => {
+    fetchStandards();
+    setActiveModal("manage");
+  };
+
+  // Open Manage Standards when direct route is opened
+  useEffect(() => {
+    if (location.pathname === "/dashboard/managestandards") {
+      setActiveModal("manage");
+
+      if (user?.role_id === 3) {
+        axios
+          .get(`${API_URL}/institute/standards/${user.institute_id}`)
+          .then((res) => {
+            setStandards(res.data);
+          })
+          .catch((err) => {
+            console.error("Error fetching standards:", err);
+          });
+      }
+    }
+  }, [location.pathname, user]);
+
+  const closeManageStandards = () => {
+    setActiveModal(null);
+
+    if (location.pathname === "/dashboard/managestandards") {
+      navigate("/dashboard", { replace: true });
     }
   };
 
@@ -297,13 +322,13 @@ const Dashboard = () => {
   }, [location.state]);
 
   useEffect(() => {
-    console.log("Username.user.role_id", username.user);
-
     if (!username) {
       navigate("/login");
+      return;
     }
-  }, [username]);
 
+    console.log("Username.user.role_id", username.user);
+  }, [username, navigate]);
   const role = username?.user?.role_id;
 
   useEffect(() => {
@@ -785,9 +810,9 @@ const Dashboard = () => {
                     className="menu-item"
                     onClick={() => {
                       if (item.pagename === "managestandards") {
-                        setShowManageModal(true);
+                        openManageStandards();
                       } else if (item.pagename === "addstandard") {
-                        setShowAddModal(true);
+                        setActiveModal("add");
                       }
                     }}
                     style={{ cursor: "pointer" }}
@@ -1195,82 +1220,89 @@ const Dashboard = () => {
             )}
           </div>
         </section>
-        {showManageModal && (
-          <div className="modal-overlay">
-            <div className="manage-modal">
-              <div className="modal-header">
-                <h3>Manage {standardTitle}</h3>
+        {activeModal === "manage" &&
+          createPortal(
+            <div className="modal-overlay">
+              <div className="manage-modal">
+                <div className="modal-header">
+                  <h3>Manage {standardTitle}</h3>
 
-                <button
-                  className="close-btn"
-                  onClick={() => setShowManageModal(false)}
-                >
-                  ✕
-                </button>
+                  <button
+                    type="button"
+                    className="close-btn"
+                    onClick={closeManageStandards}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="modal-body">
+                  <div className="standard-table-wrapper">
+                    <table className="standard-table">
+                      <thead>
+                        <tr>
+                          <th>S.No.</th>
+                          <th>{standardTitle} Id</th>
+                          <th>{standardTitle}</th>
+                          <th>Creator Name</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {standards.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="no-data">
+                              No {standardTitle.toLowerCase()} found.
+                            </td>
+                          </tr>
+                        ) : (
+                          standards.map((item, index) => (
+                            <tr key={item.standard_id}>
+                              <td>{index + 1}</td>
+                              <td>{item.standard_id}</td>
+                              <td>{item.item_name}</td>
+                              <td>{item.creator_name}</td>
+                              <td>
+                                <button
+                                  className="delete-btn"
+                                  onClick={() => handleDelete(item.standard_id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      setActiveModal("add");
+                    }}
+                  >
+                    Add New Standard
+                  </button>
+                </div>
               </div>
-
-              <table className="standard-table">
-                <thead>
-                  <tr>
-                    <th>S.No.</th>
-                    <th>{standardTitle} Id</th>
-                    <th>{standardTitle}</th>
-                    <th>Creator Name</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {standards.length === 0 ? (
-                    <tr>
-                      <td colSpan="3" className="no-data">
-                        No {standardTitle.toLowerCase()} found.
-                      </td>
-                    </tr>
-                  ) : (
-                    standards.map((item, index) => (
-                      <tr key={item.standard_id}>
-                        <td>{index + 1}</td>
-                        <td>{item.standard_id}</td>
-                        <td>{item.item_name}</td>
-                        <td>{item.creator_name}</td>
-                        <td>
-                          <button
-                            className="delete-btn"
-                            onClick={() => handleDelete(item.standard_id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-
-              <div className="modal-footer">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowAddModal(true)}
-                >
-                  Add New Standard
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {showAddModal && (
+            </div>,
+            document.body,
+          )}
+        {activeModal === "add" && (
           <div className="modal-overlay">
             <div className="add-modal">
               <div className="modal-header">
                 <button
                   className="close-btn"
                   onClick={() => {
-                    setShowAddModal(false);
-
-                    if (user.role_id === 3) {
-                      setNewStandard("");
-                    }
+                    setNewStandard("");
+                    fetchStandards();
+                    setActiveModal("manage");
                   }}
                 >
                   ✕

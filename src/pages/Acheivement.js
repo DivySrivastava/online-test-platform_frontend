@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import './css/PastTest.css';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import "./css/PastTest.css";
 import { UserContext } from "../contexts/UserContext";
 import CertificateReport from "../CertificateReport";
 import { useAxios } from "../api/axiosInstance";
 
 const Acheivement = () => {
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
   const buttonRef = useRef(null);
@@ -29,13 +28,12 @@ const Acheivement = () => {
     const fetchAchievements = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/test/achievements/${user.id}`
+          `${API_URL}/test/achievements/${user.id}`,
         );
 
         setAchievements(response.data);
 
         console.log("Achievements", response.data);
-
       } catch (error) {
         console.error("Error fetching achievements:", error);
       }
@@ -44,30 +42,21 @@ const Acheivement = () => {
     fetchAchievements();
   }, [user?.id, API_URL]);
 
-
   const sortedTests = [...achievements].sort(
-    (a, b) => new Date(b.test_date) - new Date(a.test_date)
+    (a, b) => new Date(b.test_date) - new Date(a.test_date),
   );
 
   const filteredTests = sortedTests.filter((achievement) => {
-
-    const matchQuizType =
-      !quizType || achievement.test_visibility === quizType;
+    const matchQuizType = !quizType || achievement.test_visibility === quizType;
 
     const matchRankStatus =
-      !rankStatus ||
-      achievement.student_rank === Number(rankStatus);
+      !rankStatus || achievement.student_rank === Number(rankStatus);
 
-    const matchSearch =
-      achievement.test_name
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
+    const matchSearch = achievement.test_name
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
 
-    return (
-      matchQuizType &&
-      matchRankStatus &&
-      matchSearch
-    );
+    return matchQuizType && matchRankStatus && matchSearch;
   });
 
   const clearFilters = () => {
@@ -77,27 +66,22 @@ const Acheivement = () => {
     setCurrentPage(1);
   };
 
-
-
   const handleAcheivementCertificateDownload = (
     test_Id,
     test_name,
-    submit_date
+    submit_date,
   ) => {
-
     if (!user?.id) return;
 
     const certificateData = {
       test_ID: test_Id,
       test_name: test_name,
       user_ID: user?.id,
-      test_date: submit_date
+      test_date: submit_date,
     };
-
 
     childRef.current.generateAchievementCertificate(certificateData);
   };
-
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -116,9 +100,9 @@ const Acheivement = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isFilterOpen]);
 
@@ -126,14 +110,17 @@ const Acheivement = () => {
 
   const currentTests = filteredTests.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   return (
     <div className="pastTest">
       {/*****Filter section */}
       <div className="Sticky-filterby">
-        <div className={`filter-section ${isFilterOpen ? 'filter-section--open' : ''}`} ref={filterRef}>
+        <div
+          className={`filter-section ${isFilterOpen ? "filter-section--open" : ""}`}
+          ref={filterRef}
+        >
           <h2>Filter By</h2>
           <hr />
           <div className="filter-group">
@@ -147,25 +134,16 @@ const Acheivement = () => {
             >
               <option value="">All Quizzes</option>
 
-              {user?.institute_id &&
+              {user?.institute_id && (
                 <option value="Institution">Institutional</option>
-              }
+              )}
 
               <option value="Global">General</option>
               <option value="Interest">Interest Based</option>
             </select>
           </div>
           <hr />
-          {/* <div className="filter-group">
-            <label>Date</label>
-            <select>
-              <option value="yesterday">Yesterday</option>
-              <option value="last-7-days">Last 7 Days</option>
-              <option value="last-30-days">Last 30 Days</option>
-              <option value="last-year">Last Year </option>
-            </select>
-          </div>
-          <hr /> */}
+
           <div className="filter-group">
             <label>Rank</label>
             <select
@@ -194,24 +172,18 @@ const Acheivement = () => {
             />
             <hr />
           </div>
-          {/* <div className="filter-group">
-            <label>Performance</label>
 
-          </div>
-          <hr />
-          <div className="filter-group">
-            <label>Self Practice Quiz</label>
-          </div> */}
-          {/* <br></br> */}
-          {/* <br></br><br></br> */}
-
-          <div
-            className="clear-filters"
-            onClick={clearFilters}
-          >
+          <div className="clear-filters" onClick={clearFilters}>
             Clear Search & Filter
           </div>
         </div>
+        {/* MOBILE BACKDROP */}
+        {isFilterOpen && (
+          <div
+            className="filter-backdrop"
+            onClick={() => setIsFilterOpen(false)}
+          />
+        )}
       </div>
       {/***main section starts */}
       <div className="pastTest-main-section">
@@ -219,16 +191,17 @@ const Acheivement = () => {
         <div className="pastTest-header">
           <h1>Achievements</h1>
           <div className="filter-toggle-wrapper">
-            <button className="filter-toggle-button" onClick={toggleFilter} ref={buttonRef}>
-              {isFilterOpen ? 'Hide Filters' : 'Filter By'}
+            <button
+              className="filter-toggle-button"
+              onClick={toggleFilter}
+              ref={buttonRef}
+            >
+              {isFilterOpen ? "Hide Filters" : "Filter By"}
             </button>
           </div>
         </div>
-        {
-          /***Table container****/
-        }
-        <div className='table-container'>
-
+        {/***Table container****/}
+        <div className="table-container">
           <table>
             <thead>
               <tr>
@@ -239,7 +212,6 @@ const Acheivement = () => {
                 <th>Submission Date</th>
                 <th>Download Acheivement Certificate</th>
               </tr>
-
             </thead>
             <tbody>
               {currentTests.length === 0 ? (
@@ -251,9 +223,7 @@ const Acheivement = () => {
               ) : (
                 currentTests.map((achievement, index) => (
                   <tr key={achievement.test_id}>
-                    <td>
-                      {(currentPage - 1) * itemsPerPage + index + 1}
-                    </td>
+                    <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
 
                     <td>{achievement.test_name}</td>
 
@@ -275,7 +245,7 @@ const Acheivement = () => {
                           handleAcheivementCertificateDownload(
                             achievement.test_id,
                             achievement.test_name,
-                            achievement.test_date
+                            achievement.test_date,
                           )
                         }
                       />
@@ -287,7 +257,6 @@ const Acheivement = () => {
           </table>
           {totalPages > 1 && (
             <div className="pagination">
-
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
@@ -311,15 +280,12 @@ const Acheivement = () => {
               >
                 Next
               </button>
-
             </div>
           )}
         </div>
       </div>
       <CertificateReport ref={childRef} />
-
     </div>
-
-  )
-}
+  );
+};
 export default Acheivement;

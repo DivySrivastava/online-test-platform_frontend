@@ -8,7 +8,7 @@
 
 /**left section **/
 .dashboard-left-section {
-   flex: 1;
+  flex: 1;
   background: #306694;
   color: #fff;
   padding: clamp(0.8rem, 2vw, 1.2rem);
@@ -16,7 +16,6 @@
   border-radius: 0 1.2rem 1.2rem 0;
 
   box-shadow: 0 4px 10px rgba(110, 114, 119, 0.9);
-
 }
 /*main-manageuser-section*/
 .main-manageuser-section {
@@ -34,7 +33,6 @@
   z-index: 30;
   gap: clamp(10px, 2vw, 15px);
   margin-bottom: clamp(10px, 2vw, 15px);
-  
 }
 
 .manageuser-header h1 {
@@ -63,7 +61,7 @@
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: clamp(0.8rem, 2vw, 1.2rem);
   margin-top: clamp(-0.5rem, 1.2vw, -1rem);
-  margin: clamp(0.5rem, 1.2vw, 1rem) ;
+  margin: clamp(0.5rem, 1.2vw, 1rem);
 }
 .mnguser-mgt {
   background-color: rgba(255, 255, 255, 0.45);
@@ -88,7 +86,7 @@
   font-weight: 600;
   color: #465f77;
 }
-.mnguser-mgt h2:hover{
+.mnguser-mgt h2:hover {
   transform: translateY(-2px);
   text-shadow: 0 2px #7e96ac91;
 }
@@ -98,16 +96,14 @@
   color: #475c70;
 }
 
-
 .mnguser-icon {
   width: clamp(1.8rem, 8vw, 2rem);
   height: clamp(1.8rem, 8vw, 2rem);
   margin-bottom: 0.4rem;
 }
-.mnguser-icon:hover{
+.mnguser-icon:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(48, 102, 148, 0.5);
-
 }
 /*manageuser container*/
 .manageuser-containers {
@@ -132,19 +128,23 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
   gap: clamp(10px, 2vw, 15px);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .manageuser-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 /*manage user icon*/
-.manageuser-icon  {
+.manageuser-icon {
   width: 4.5rem;
   height: 4.5rem;
   cursor: pointer;
-  
-  transition: opacity 0.2s, transform 0.2s;
+
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 .manageuser-icon:hover {
   filter: drop-shadow(0 0 8px #f4fbfd);
@@ -153,7 +153,6 @@
 
 /***responsive design***/
 @media (max-width: 800px) {
-
   .manageuser-page {
     flex-direction: column;
   }
@@ -169,13 +168,12 @@
     z-index: 50;
     border-radius: 10px;
     background: #306694;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   .dashboard-left-section.open {
     display: block;
   }
-
 
   /*.dashboard-left-section {
     display:none;/*width: fit-content;
@@ -183,7 +181,7 @@
     margin: 0.5rem;
     border-radius: 10px;
   }*/
-/*
+  /*
   .menu-container {
     display: none;
   }
@@ -194,7 +192,7 @@
 */
   .menu-toggle-btn {
     background: #ffffff7e;
-    
+
     border: none;
     padding: 6px 10px;
     cursor: pointer;
@@ -205,7 +203,7 @@
 @media (max-width: 768px) {
   .manageuser-header {
     flex-direction: row;
-    margin:1rem;
+    margin: 1rem;
     gap: clamp(10px, 2vw, 15px);
   }
   .manageuser-header h1 {
@@ -224,9 +222,58 @@
   }
   .mnguser-mgt-grid {
     display: grid;
-     grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.6rem;
     padding: 0.4rem;
-
   }
+}
+
+.menu-mnguser-wrapper {
+  position: relative;
+}
+
+.manageuser-filter-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.manageuser-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 10px;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #306694;
+  border-radius: 8px;
+  transition: 0.2s ease;
+}
+
+.manageuser-filter-item:hover {
+  background: #eef7fa;
+}
+
+.mnguser-filter-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.manageuser-filter-item span:first-of-type {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.manageuser-filter-item .menu-arrow {
+  font-size: 18px;
+  font-weight: bold;
 }

@@ -306,7 +306,7 @@ const WinnerSection = () => {
           Clear Search & Filter
         </div>
       </aside>
-      
+
       {/* ── Main content ── */}
       <div className="winner-main-section">
         <fieldset className="winner-fieldset">
@@ -329,121 +329,120 @@ const WinnerSection = () => {
             </button>
           </div>
 
+          <div className="winner-table-scroll">
+            <div className="winner-table-cards">
+              <div className="winner-header">
+                <span className="winner-header-spacer" aria-hidden="true" />
 
-          <div className="winner-table-cards">
-        
-            <div className="winner-header">
-              <span className="winner-header-spacer" aria-hidden="true" />
-              <div className="winner-header-data">
-                <span className="col-position">Position</span>
-                <span className="col-userid">User ID</span>
-                <span className="col-name">Name</span>
-                <span className="col-marks">Marks</span>
-                <span className="col-time">Time Taken</span>
-                <span className="col-achievement">Achievement</span>
+                <div className="winner-header-data">
+                  <span className="col-position">Position</span>
+                  <span className="col-userid">User ID</span>
+                  <span className="col-name">Name</span>
+                  <span className="col-marks">Marks</span>
+                  <span className="col-time">Time Taken</span>
+                  <span className="col-achievement">Achievement</span>
+                </div>
               </div>
-            </div>
 
-            <div className="winner-container">
-              {tests && tests.length > 0 ? (
-                tests.map((test, index) => (
-                  <div className="winner-card" key={index}>
-                    {/* Left: Test Details */}
-                    <div className="test-info">
-                      <h2>{test.test_name}</h2>
-                      <p>Quiz ID: {test.test_id}</p>
-                      <p>Category: {test.test_type}</p>
-                      <p>Visibility: {test.test_visibility}</p>
-                      <p>
-                        Language:{" "}
-                        {languageMap[test.test_lang] || test.test_lang}
-                      </p>
-                      <p>Duration: {test.test_duration} mins</p>
-                      <p>
-                        Released:{" "}
-                        {new Date(test.result_release_date).toLocaleDateString(
-                          "en-GB",
-                          {
+              <div className="winner-container">
+                {tests && tests.length > 0 ? (
+                  tests.map((test, index) => (
+                    <div className="winner-card" key={index}>
+                      <div className="test-info">
+                        <h2>{test.test_name}</h2>
+                        <p>Quiz ID: {test.test_id}</p>
+                        <p>Category: {test.test_type}</p>
+                        <p>Visibility: {test.test_visibility}</p>
+                        <p>
+                          Language:{" "}
+                          {languageMap[test.test_lang] || test.test_lang}
+                        </p>
+                        <p>Duration: {test.test_duration} mins</p>
+                        <p>
+                          Released:{" "}
+                          {new Date(
+                            test.result_release_date,
+                          ).toLocaleDateString("en-GB", {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          },
+                          })}
+                        </p>
+                      </div>
+
+                      <div className="students-list">
+                        {test.winners && test.winners.length > 0 ? (
+                          test.winners.map((student, i) => (
+                            <div className="student-row" key={i}>
+                              <span>{student.student_rank}</span>
+                              <span>{student.student_id}</span>
+                              <span>{student.student_name}</span>
+
+                              <span className="col-marks">
+                                {student.marks}/{student.max_marks}
+                              </span>
+
+                              <span className="col-time">
+                                {Math.floor(student.time_taken / 60)} mins{" "}
+                                {student.time_taken % 60} secs
+                              </span>
+
+                              <img
+                                src="/images/download.png"
+                                alt="Certificate"
+                                className="certi-rep"
+                                onClick={() =>
+                                  handleAchievementCertificateDownload(
+                                    student.student_id,
+                                    test.test_id,
+                                    test.test_name,
+                                    student.test_date,
+                                  )
+                                }
+                              />
+                            </div>
+                          ))
+                        ) : (
+                          <div className="no-winners">No winners</div>
                         )}
-                      </p>
+                      </div>
                     </div>
-
-                    {/* Right: Winners */}
-                    <div className="students-list">
-                      {test.winners && test.winners.length > 0 ? (
-                        test.winners.map((student, i) => (
-                          <div className="student-row" key={i}>
-                            <span>{student.student_rank}</span>
-                            <span>{student.student_id}</span>
-                            <span>{student.student_name}</span>
-
-                            <span className="col-marks">
-                              {student.marks}/{student.max_marks}
-                            </span>
-
-                            <span className="col-time">
-                              {Math.floor(student.time_taken / 60)} mins{" "}
-                              {student.time_taken % 60} secs
-                            </span>
-
-                            <img
-                              src="/images/download.png"
-                              alt="Certificate"
-                              className="certi-rep"
-                              onClick={() =>
-                                handleAchievementCertificateDownload(
-                                  student.student_id,
-                                  test.test_id,
-                                  test.test_name,
-                                  student.test_date,
-                                )
-                              }
-                            />
-                          </div>
-                        ))
-                      ) : (
-                        <div className="no-winners">No winners</div>
-                      )}
-                    </div>
+                  ))
+                ) : (
+                  <div className="no-winners">
+                    <h4>No Winners Found</h4>
                   </div>
-                ))
-              ) : (
-                <div className="no-winners">
-                  <h4>No Winners Found</h4>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* PAGINATION - TABLE KE SAATH */}
+              <div className="su-pagination">
+                <button
+                  className="su-page-btn"
+                  onClick={handlePrevious}
+                  disabled={page === 1}
+                >
+                  &#9664;
+                </button>
+
+                <span className="su-page-info">
+                  {page === 0 ? "No Pages" : `Page ${page} of ${totalPages}`}
+                </span>
+
+                <button
+                  className="su-page-btn"
+                  onClick={handleNext}
+                  disabled={page === totalPages || totalPages === 0}
+                >
+                  &#9654;
+                </button>
+              </div>
             </div>
           </div>
         </fieldset>
-        {/* PAGINATION */}
 
-        <div className="su-pagination">
-          <button
-            className="su-page-btn"
-            onClick={handlePrevious}
-            disabled={page === 1}
-          >
-            &#9664;
-          </button>
-
-          <span className="su-page-info">
-            {page === 0 ? "No Pages" : `Page ${page} of ${totalPages}`}
-          </span>
-
-          <button
-            className="su-page-btn"
-            onClick={handleNext}
-            disabled={page === totalPages || totalPages === 0}
-          >
-            &#9654;
-          </button>
-        </div>
+        <CertificateReport ref={childRef} />
       </div>
-      <CertificateReport ref={childRef} />
     </div>
   );
 };

@@ -131,6 +131,67 @@ const ProfileMenu = ({ user }) => {
           <Link to="/dashboard" onClick={() => setIsOpen(false)}>
             Dashboard
           </Link>
+
+          {/* ONLY STUDENT MENU */}
+          {(user.role_name === "Student" || user.role_name === "Others") &&
+            isMobile && (
+              <>
+                <Link
+                  to="/dashboard/past-quizzes"
+                  onClick={() => setIsOpen(false)}
+                >
+                  My Quizzes
+                </Link>
+
+                <Link
+                  to="/dashboard/achievements"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Achievements
+                </Link>
+
+                <Link
+                  to="/dashboard/performance"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Detailed Performance
+                </Link>
+
+                <Link
+                  to="/dashboard/payment-details"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Payment Details
+                </Link>
+
+                <Link
+                  to="/dashboard/managestandards"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Contact to Admin
+                </Link>
+              </>
+            )}
+
+          {/* ONLY TEACHER MENU - MOBILE */}
+          {user.role_name === "Teacher" && isMobile && (
+            <>
+              <Link
+                to="/dashboard/managestandards"
+                onClick={() => setIsOpen(false)}
+              >
+                Manage Standard
+              </Link>
+
+              <Link
+                to="/dashboard/managestandards"
+                onClick={() => setIsOpen(false)}
+              >
+                Contact to Admin
+              </Link>
+            </>
+          )}
+
           <Link
             to="/profile"
             state={{ role: user.role_name }}

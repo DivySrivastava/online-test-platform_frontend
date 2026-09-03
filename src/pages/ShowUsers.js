@@ -18,7 +18,7 @@ const ShowUsers = () => {
   const { user } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const [cursorStack, setCursorStack] = useState([]); // stack of firstId per page
+  const [cursorStack, setCursorStack] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
@@ -28,7 +28,6 @@ const ShowUsers = () => {
   const [searchType, setSearchType] = useState("name");
   const [searchInput, setSearchInput] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  //const [searchInput, setSearchInput] = useState('');
   const [appliedSearch, setAppliedSearch] = useState("");
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
@@ -39,7 +38,6 @@ const ShowUsers = () => {
     userId: null,
   });
 
-  // Close filter panel on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -63,27 +61,22 @@ const ShowUsers = () => {
 
   const handleSearch = () => {
     resetPagination();
-    setAppliedSearch(searchInput); // 🔥 apply search here
+    setAppliedSearch(searchInput);
   };
 
   useEffect(() => {
     fetchUsers(null, "next");
   }, [appliedSearch]);
 
-  // ─── Core fetch ───────────────────────────────────────────────
   const fetchUsers = async (cursor = null, direction = "next") => {
     try {
       const params = { direction };
-
       if (userType && userType !== "---Select User Type---") {
         params.role = userType;
       }
-
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
-
       if (appliedSearch) params.search = appliedSearch;
-
       if (cursor) params.cursor = cursor;
 
       const url =
@@ -107,15 +100,13 @@ const ShowUsers = () => {
     setCursorStack([]);
     setNextCursor(null);
   };
-  // Initial load
+
   useEffect(() => {
     fetchUsers(null, "next");
   }, []);
 
-  // ─── Pagination ───────────────────────────────────────────────
   const handleNext = () => {
     if (!hasMore) return;
-    // Save current first user_id so we can come back
     const currentFirstId = users.length > 0 ? users[0].user_id : null;
     setCursorStack((prev) => [...prev, currentFirstId]);
     fetchUsers(nextCursor, "next");
@@ -124,29 +115,15 @@ const ShowUsers = () => {
 
   const handlePrev = () => {
     if (page <= 1) return;
-
     const stack = [...cursorStack];
     const prevCursor = stack.pop();
-
     setCursorStack(stack);
     setPage((p) => p - 1);
-
     if (stack.length === 0) {
-      // ✅ Back to page 1
       fetchUsers(null, "next");
     } else {
-      // ✅ Go to previous page using stored cursor
       fetchUsers(prevCursor, "prev");
     }
-  };
-
-  // ─── Search / Filter ──────────────────────────────────────────
-  const applyFilters = () => {
-    setCursorStack([]);
-    setPage(1);
-    setNextCursor(null);
-    fetchUsers(null, "next"); // reset to page 1 with new filters
-    setIsFilterOpen(false);
   };
 
   const clearFilters = () => {
@@ -155,9 +132,7 @@ const ShowUsers = () => {
     setEndDate("");
     setSearchInput("");
     setSearchType("name");
-
     setAppliedSearch("");
-
     resetPagination();
     fetchUsers(null, "next");
     setCursorStack([]);
@@ -169,7 +144,6 @@ const ShowUsers = () => {
         ? `${API_URL}/user/students/${user.institute_id}`
         : `${API_URL}/user/all-users`;
 
-    // Fetch with cleared state — call directly with empty params
     axios
       .get(url, { params: { direction: "next" } })
       .then((res) => {
@@ -187,14 +161,11 @@ const ShowUsers = () => {
   const onConfirmDeleteYes = async () => {
     const userId = confirmDelete.userId;
     setConfirmDelete({ open: false, userId: null });
-
     try {
       const response = await axios.delete(
         `${API_URL}/user/delete-user/${userId}`,
       );
-
       toast.success(response.data.message);
-
       setUsers((prevUsers) =>
         prevUsers.filter((user) => user.user_id !== userId),
       );
@@ -209,15 +180,11 @@ const ShowUsers = () => {
   };
 
   const handleUserDetails = async (userId) => {
-    console.log("User id-->", userId);
-
     navigate(`/dashboard/manageuser/showusers/${userId}`);
   };
 
   const pageStart = (page - 1) * PAGE_SIZE + 1;
   const pageEnd = pageStart + users.length - 1;
-
-  // ─── Render ───────────────────────────────────────────────────
 
   return (
     <div className="su-root">
@@ -271,8 +238,13 @@ const ShowUsers = () => {
       )}
 
       <div className="su-body">
-        {/* ...baaki sab wahi as-is rehne do... */}
-        {/* SIDEBAR FILTER */}
+        {isFilterOpen && (
+          <div
+            className="su-filter-backdrop"
+            onClick={() => setIsFilterOpen(false)}
+          />
+        )}
+
         <aside
           className={`su-filter${isFilterOpen ? " su-filter--open" : ""}`}
           ref={filterRef}
@@ -355,7 +327,6 @@ const ShowUsers = () => {
           </div>
         </aside>
 
-        {/* MAIN CONTENT */}
         <div className="su-main">
           <div className="su-header">
             <h1 className="su-page-title">
@@ -400,7 +371,7 @@ const ShowUsers = () => {
                         key={u.user_id}
                         className={i % 2 === 0 ? "su-row-even" : ""}
                       >
-                        <td>{pageStart + i}</td> {/* ✅ fixed off-by-one */}
+                        <td>{pageStart + i}</td>
                         <td>{u.user_id}</td>
                         <td>{u.name}</td>
                         <td>{u.user_email}</td>
@@ -468,7 +439,6 @@ const ShowUsers = () => {
               </table>
             </div>
 
-            {/* PAGINATION */}
             <div className="su-pagination">
               <button
                 className="su-page-btn"
@@ -477,13 +447,11 @@ const ShowUsers = () => {
               >
                 &#9664;
               </button>
-
               <span className="su-page-info">
                 {users.length === 0
                   ? "0"
                   : `${pageStart} – ${pageEnd} of ${total}`}
               </span>
-
               <button
                 className="su-page-btn"
                 onClick={handleNext}

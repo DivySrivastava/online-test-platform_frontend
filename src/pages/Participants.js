@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import './css/PastTest.css';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import "./css/PastTest.css";
 import { useParams } from "react-router-dom";
 import CertificateReport from "../CertificateReport";
 import { useAxios } from "../api/axiosInstance";
 
-
 const Participants = () => {
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
   const buttonRef = useRef(null);
@@ -21,7 +19,7 @@ const Participants = () => {
     currentPage: 1,
     totalPages: 1,
     totalRecords: 0,
-    limit: 10
+    limit: 10,
   });
   const [passingStatus, setPassingStatus] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -38,7 +36,6 @@ const Participants = () => {
 
   const fetchTestAndCreator = async () => {
     try {
-
       const response = await axios.get(
         `${API_URL}/user/participants/${test_id}`,
         {
@@ -47,20 +44,25 @@ const Participants = () => {
             limit: 10,
             sortBy,
             status: passingStatus,
-            search: searchText
-          }
-        }
+            search: searchText,
+          },
+        },
       );
 
       setStudentTestDetails(response.data.data);
 
-      setPagination(response.data.pagination);
-
+      setPagination(
+        response.data.pagination || {
+          currentPage: 1,
+          totalPages: 1,
+          totalRecords: 0,
+          limit: 10,
+        },
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
 
   const clearFilters = () => {
     setSortBy("");
@@ -70,18 +72,12 @@ const Participants = () => {
   };
 
   const toggleFilter = () => {
-    setIsFilterOpen(!isFilterOpen);
+    setIsFilterOpen((prev) => !prev);
   };
 
   useEffect(() => {
     fetchTestAndCreator();
-  }, [
-    test_id,
-    currentPage,
-    sortBy,
-    passingStatus,
-    searchText
-  ]);
+  }, [test_id, currentPage, sortBy, passingStatus, searchText]);
 
   const handleParticipationCertificateDownload = (
     test_id,
@@ -89,7 +85,7 @@ const Participants = () => {
     submit_date,
     name,
     standard_type,
-    institute_id
+    institute_id,
   ) => {
     axios
       .get(`${API_URL}/institute/institutions/${institute_id}`)
@@ -114,15 +110,21 @@ const Participants = () => {
       .catch((error) => console.error("Error fetching Institute:", error));
   };
 
-
   return (
     <>
       <div className="pastTest">
+        {/* Mobile Filter Background Blur */}
+        {isFilterOpen && (
+          <div
+            className="filter-backdrop"
+            onClick={() => setIsFilterOpen(false)}
+          ></div>
+        )}
 
         {/***** Filter section *****/}
         <div className="Sticky-filterby">
           <div
-            className={`filter-section ${isFilterOpen ? 'filter-section--open' : ''}`}
+            className={`filter-section ${isFilterOpen ? "filter-section--open" : ""}`}
             ref={filterRef}
           >
             <h2>Actions</h2>
@@ -178,19 +180,14 @@ const Participants = () => {
               <hr />
             </div>
 
-            <div
-              className="clear-filters"
-              onClick={clearFilters}
-            >
+            <div className="clear-filters" onClick={clearFilters}>
               Clear Search & Filter
             </div>
           </div>
         </div>
 
-
         {/***** Main section *****/}
         <div className="pastTest-main-section">
-
           <div className="pastTest-header">
             <h1>Participants</h1>
 
@@ -200,13 +197,12 @@ const Participants = () => {
                 onClick={toggleFilter}
                 ref={buttonRef}
               >
-                {isFilterOpen ? 'Hide Filters' : 'Filter By'}
+                {isFilterOpen ? "Hide Filters" : "Filter By"}
               </button>
             </div>
           </div>
 
           <div className="table-container">
-
             <table>
               <thead>
                 <tr>
@@ -234,43 +230,27 @@ const Participants = () => {
                   studentTestDetails &&
                   studentTestDetails.map((studentTestDetail, index) => (
                     <tr key={studentTestDetail.student_id || index}>
+                      <td>{(currentPage - 1) * 10 + index + 1}</td>
+
+                      <td>{studentTestDetail.student_rank || "NA"}</td>
+
+                      <td>{studentTestDetail.student_id}</td>
+
+                      <td>{studentTestDetail.institute_id || "NA"}</td>
+
+                      <td>{studentTestDetail.student_name}</td>
+
+                      <td>{studentTestDetail.marks}</td>
 
                       <td>
-                        {(currentPage - 1) * 10 + index + 1}
+                        {`${Math.floor(studentTestDetail.time_taken / 60)} min ${
+                          studentTestDetail.time_taken % 60
+                        } sec`}
                       </td>
 
-                      <td>
-                        {studentTestDetail.student_rank || "NA"}
-                      </td>
+                      <td>{studentTestDetail.status}</td>
 
-                      <td>
-                        {studentTestDetail.student_id}
-                      </td>
-
-                      <td>
-                        {studentTestDetail.institute_id || "NA"}
-                      </td>
-
-                      <td>
-                        {studentTestDetail.student_name}
-                      </td>
-
-                      <td>
-                        {studentTestDetail.marks}
-                      </td>
-
-                      <td>
-                        {`${Math.floor(studentTestDetail.time_taken / 60)} min ${studentTestDetail.time_taken % 60
-                          } sec`}
-                      </td>
-
-                      <td>
-                        {studentTestDetail.status}
-                      </td>
-
-                      <td>
-                        {studentTestDetail.submit_date_time}
-                      </td>
+                      <td>{studentTestDetail.submit_date_time}</td>
 
                       <td>
                         <img
@@ -285,19 +265,17 @@ const Participants = () => {
                               studentTestDetail.test_date,
                               studentTestDetail.student_name,
                               studentTestDetail.standard_type,
-                              studentTestDetail.institute_id
+                              studentTestDetail.institute_id,
                             )
                           }
                         />
                       </td>
-
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
             <div className="pagination">
-
               <button
                 onClick={() => setCurrentPage((prev) => prev - 1)}
                 disabled={currentPage === 1}
@@ -306,30 +284,24 @@ const Participants = () => {
               </button>
 
               <span>
-                Page {pagination.currentPage} of {pagination.totalPages}
+                Page {pagination?.currentPage || 1} of{" "}
+                {pagination?.totalPages || 1}
               </span>
 
               <button
                 onClick={() => setCurrentPage((prev) => prev + 1)}
-                disabled={
-                  currentPage >= pagination.totalPages
-                }
+                disabled={currentPage >= pagination.totalPages}
               >
                 Next
               </button>
-
             </div>
-
           </div>
         </div>
-
       </div>
 
       <CertificateReport ref={childRef} />
     </>
   );
-
-
-}
+};
 
 export default Participants;

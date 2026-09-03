@@ -211,6 +211,83 @@ function PreviewQuiz() {
         <div className="circle"></div>
       </div>*/}
       <div className="top-Quiz-Banner"></div>
+
+      {/* MOBILE INFORMATION - TOP */}
+      <div className="mobile-info-section">
+        <div className="mobile-info-left">
+          <div>
+            <h4>
+              <img
+                src="/images/chronometer.png"
+                alt="counter Icon"
+                className="icon"
+              />
+              Duration
+            </h4>
+            <p>{formatDuration(testDuration * 60)}</p>
+          </div>
+
+          <div>
+            <h4>
+              <img
+                src="/images/question.png"
+                alt="question Icon"
+                className="icon"
+              />
+              Questions
+            </h4>
+            <p>{questions.length}</p>
+          </div>
+        </div>
+
+        <div className="mobile-info-right">
+          <button className="details-toggle" onClick={toggleDetails}>
+            {isDetailsOpen ? "Hide Information" : "Information"}
+          </button>
+
+          {isDetailsOpen && (
+            <div className="details-dropdown" ref={detailsRef}>
+              <h4>Information</h4>
+
+              <hr />
+
+              <h4>
+                <img
+                  src="/images/chronometer.png"
+                  alt="counter Icon"
+                  className="icon"
+                />
+                Duration
+              </h4>
+              <p>{formatDuration(testDuration * 60)}</p>
+
+              <h4>
+                <img
+                  src="/images/question.png"
+                  alt="question Icon"
+                  className="icon"
+                />
+                Number of Questions
+              </h4>
+              <p>{questions.length}</p>
+
+              <hr />
+
+              <h4>
+                Don't refresh or close the quiz otherwise your test will get
+                submitted.
+              </h4>
+
+              <hr />
+
+              <div className="submit-button-container">
+                <button onClick={() => navigate(-1)}>Back To Quiz</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/**Sticky info panel */}
       <div className="Sticky-Info">
         <div

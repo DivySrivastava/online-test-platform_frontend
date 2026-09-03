@@ -467,19 +467,34 @@
 /* ─── RESPONSIVE ─────────────────────────────────────── */
 @media (max-width: 768px) {
   .su-filter {
-    display: none;
-    position: fixed;
-    top: calc(7rem + 10px);
-    right: clamp(12px, 2vw, 15px);
+    display: none !important;
+  }
+
+  .su-filter.su-filter--open {
+    display: flex !important;
+    position: fixed !important;
+
+    /* CENTER + THODA NICHE */
+    top: 55% !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+
+    flex-direction: column;
     width: clamp(200px, 50vw, 250px);
+    max-width: calc(100vw - 30px);
     max-height: 60vh;
     overflow-y: auto;
-    z-index: 50;
-    background: #87c7c9e5;
+
+    z-index: 1001 !important;
+
+    /* GREEN BACKGROUND */
+    background: #87c7c9e5 !important;
+
     border: 1px solid #b2dfe1;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    z-index: 80;
+
     padding: clamp(10px, 1.5vw, 12px);
     margin: 0;
   }
@@ -503,10 +518,6 @@
     background: #6fa1cfda;
   }
 
-  .su-filter--open {
-    display: flex;
-  }
-
   .su-mobile-header {
     display: flex;
     justify-content: flex-end;
@@ -522,13 +533,34 @@
   }
 }
 
-@media (max-width: 480px) {
-  .su-filter {
-    width: clamp(180px, 80vw, 260px);
-    right: clamp(8px, 2vw, 10px);
-    top: calc(7rem + 10px);
-  }
+.su-filter-backdrop {
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
 
+  background: rgba(135, 199, 201, 0.35) !important;
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  z-index: 1000 !important;
+}
+
+@media (max-width: 768px) {
+  .su-filter-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 1000;
+  }
+}
+
+@media (max-width: 480px) {
   .su-filter h2 {
     font-size: clamp(1em, 3vw, 1.2em);
   }
@@ -549,7 +581,7 @@
     border-radius: 20px 20px 10px 10px;
   }
   .su-table-wrapper::-webkit-scrollbar {
-    height: 8px;
+    height: 6px;
   }
 
   .su-table-wrapper::-webkit-scrollbar-track {

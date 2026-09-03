@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import './css/TakeQuiz.css';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import "./css/TakeQuiz.css";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../api/axiosInstance";
 import { UserContext } from "../contexts/UserContext";
@@ -34,7 +34,7 @@ const TakeQuiz = () => {
     quizState: "",
     visibility: "",
     language: "",
-    pricing: ""
+    pricing: "",
   });
 
   useEffect(() => {
@@ -82,49 +82,39 @@ const TakeQuiz = () => {
   }, [username]);
 
   useEffect(() => {
-
     let filtered = [...allTests];
 
     // Quiz State
     if (filters.quizState) {
-
       if (filters.quizState === "live") {
-        filtered = filtered.filter(
-          test => test.test_status === "Live"
-        );
+        filtered = filtered.filter((test) => test.test_status === "Live");
       }
 
       if (filters.quizState === "coming") {
-        filtered = filtered.filter(
-          test => test.test_status === "Active"
-        );
+        filtered = filtered.filter((test) => test.test_status === "Active");
       }
 
       if (filters.quizState === "expired") {
-        filtered = filtered.filter(
-          test => test.test_status === "Expired"
-        );
+        filtered = filtered.filter((test) => test.test_status === "Expired");
       }
     }
 
     // Visibility
     if (filters.visibility) {
       filtered = filtered.filter(
-        test => test.test_visibility === filters.visibility
+        (test) => test.test_visibility === filters.visibility,
       );
     }
 
     // Language
     if (filters.language) {
-      filtered = filtered.filter(
-        test => test.test_lang === filters.language
-      );
+      filtered = filtered.filter((test) => test.test_lang === filters.language);
     }
 
     // Pricing
     if (filters.pricing) {
       filtered = filtered.filter(
-        test => test.pricing.toLowerCase() === filters.pricing
+        (test) => test.pricing.toLowerCase() === filters.pricing,
       );
     }
 
@@ -133,22 +123,13 @@ const TakeQuiz = () => {
     setTests(filtered);
 
     console.log("Filtered --> ", filtered);
-
   }, [filters, allTests]);
 
-
   useEffect(() => {
-
     if (user) {
-
       getPurchasedTests();
-
     }
-
   }, [user]);
-
-
-
 
   // const waitForFinalStatus = async (orderId) => {
 
@@ -178,51 +159,35 @@ const TakeQuiz = () => {
   // }
 
   const getPurchasedTests = async () => {
-
     try {
-
       const res = await axios.get(
-        `${API_URL}/payment/purchased-tests/${user.id}`
+        `${API_URL}/payment/purchased-tests/${user.id}`,
       );
 
       const purchasedMap = {};
 
-      res.data.purchasedTests.forEach(item => {
-
+      res.data.purchasedTests.forEach((item) => {
         purchasedMap[item.test_id] = true;
-
       });
 
       console.log("Purchase-->", purchasedMap);
 
       setPurchasedTests(purchasedMap);
-
-    }
-
-    catch (err) {
-
+    } catch (err) {
       console.log(err);
-
     }
-
   };
 
   const handlePayment = async (test, action) => {
-
     try {
-
-      const res = await axios.post(
-        `${API_URL}/payment/create-order`,
-        {
-          student_id: user.id,
-          test_id: test.test_id
-        }
-      );
+      const res = await axios.post(`${API_URL}/payment/create-order`, {
+        student_id: user.id,
+        test_id: test.test_id,
+      });
 
       console.log(res.data);
 
       const callbacks = {
-
         setPaymentStatus,
 
         setPaymentMessage,
@@ -233,12 +198,10 @@ const TakeQuiz = () => {
 
         handleTest,
 
-        onSuccess: null
-
+        onSuccess: null,
       };
 
       openRazorpay(
-
         res.data,
 
         test,
@@ -251,46 +214,36 @@ const TakeQuiz = () => {
 
         API_URL,
 
-        callbacks
-
+        callbacks,
       );
-
     } catch (err) {
-
       console.log("err");
       console.log(err);
 
       alert(err.response?.data?.message || "Unable to create order.");
-
     }
-
   };
 
-
-
   const clearFilters = () => {
-
     setFilters({
       quizState: "",
       visibility: "",
       language: "",
-      pricing: ""
+      pricing: "",
     });
 
     setTests(allTests);
   };
-
 
   const handleTest = (test) => {
     if (test.test_status === "Active") {
       alert(`Test will be live on ${test.test_date}`);
     } else if (test.test_status === "Live") {
       navigate(`/test/${test.test_id}`, {
-        state: { test },  // 👈 pass full object here
+        state: { test }, // 👈 pass full object here
       });
     }
   };
-
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -309,9 +262,9 @@ const TakeQuiz = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isFilterOpen]);
 
@@ -324,7 +277,7 @@ const TakeQuiz = () => {
   //     to: "31 August, 2025",
   //     questions: 20,
   //     duration: 20,
-  //     pricing: "Free", 
+  //     pricing: "Free",
   //   },
   //   {
   //     name: "Sample Name",
@@ -355,8 +308,19 @@ const TakeQuiz = () => {
   };
   return (
     <div className="take-quiz">
+      {/* Mobile / Tablet Filter Backdrop */}
+      {isFilterOpen && (
+        <div
+          className="filter-backdrop"
+          onClick={() => setIsFilterOpen(false)}
+        ></div>
+      )}
+
       <div className="Sticky-filterby">
-        <div className={`filter-section ${isFilterOpen ? 'filter-section--open' : ''}`} ref={filterRef}>
+        <div
+          className={`filter-section ${isFilterOpen ? "filter-section--open" : ""}`}
+          ref={filterRef}
+        >
           <h2>Filter By</h2>
           <hr />
           <div className="filter-group">
@@ -366,7 +330,7 @@ const TakeQuiz = () => {
               onChange={(e) =>
                 setFilters({
                   ...filters,
-                  quizState: e.target.value
+                  quizState: e.target.value,
                 })
               }
             >
@@ -377,7 +341,7 @@ const TakeQuiz = () => {
             </select>
           </div>
 
-          {user && (user.role_id == 4) && (
+          {user && user.role_id == 4 && (
             <>
               <hr />
               <div className="filter-group">
@@ -387,7 +351,7 @@ const TakeQuiz = () => {
                   onChange={(e) =>
                     setFilters({
                       ...filters,
-                      visibility: e.target.value
+                      visibility: e.target.value,
                     })
                   }
                 >
@@ -407,7 +371,7 @@ const TakeQuiz = () => {
               onChange={(e) =>
                 setFilters({
                   ...filters,
-                  language: e.target.value
+                  language: e.target.value,
                 })
               }
             >
@@ -418,7 +382,7 @@ const TakeQuiz = () => {
             </select>
           </div>
 
-          {user && (user.role_id == 4) && (
+          {user && user.role_id == 4 && (
             <>
               {/* <hr />
               <div className="filter-group">
@@ -441,7 +405,7 @@ const TakeQuiz = () => {
               onChange={(e) =>
                 setFilters({
                   ...filters,
-                  pricing: e.target.value
+                  pricing: e.target.value,
                 })
               }
             >
@@ -460,13 +424,16 @@ const TakeQuiz = () => {
         <div className="take-quiz-header">
           <h1>Take Quiz</h1>
           <div className="filter-toggle-wrapper">
-            <button className="filter-toggle-button" onClick={toggleFilter} ref={buttonRef}>
-              {isFilterOpen ? 'Hide Filters' : 'Filter By'}
+            <button
+              className="filter-toggle-button"
+              onClick={toggleFilter}
+              ref={buttonRef}
+            >
+              {isFilterOpen ? "Hide Filters" : "Filter By"}
             </button>
           </div>
         </div>
         <div className="test-container-row">
-
           {tests.length === 0 ? (
             <div className="no-quiz-box">
               <div className="no-quiz-animation"></div>
@@ -474,10 +441,10 @@ const TakeQuiz = () => {
             </div>
           ) : (
             tests.map((test, index) => (
-
-              <div className="test-card" key={test.test_id}
-              // onClick={() => handleTest(test)}
-
+              <div
+                className="test-card"
+                key={test.test_id}
+                // onClick={() => handleTest(test)}
               >
                 <h3>{test.test_name}</h3>
                 <p className="desc">
@@ -485,16 +452,16 @@ const TakeQuiz = () => {
                   {test.test_description}
                 </p>
 
-                <div className='Status-Lang'>
+                <div className="Status-Lang">
                   <span className="test-status1">
-                    {test.test_status === 'Live' && (
+                    {test.test_status === "Live" && (
                       <>
                         <strong>Status: </strong>
                         <i>Live</i>
                       </>
                     )}
 
-                    {test.test_status === 'Active' && (
+                    {test.test_status === "Active" && (
                       <>
                         <span className="test-status2">
                           <strong>Status: </strong>
@@ -505,20 +472,13 @@ const TakeQuiz = () => {
                   </span>
                   <span className="test-lang">
                     <strong>Language: </strong>
-                    {test.test_lang === 'both' && (
-                      <i>English and Hindi</i>
-                    )}
+                    {test.test_lang === "both" && <i>English and Hindi</i>}
 
-                    {test.test_lang === 'english' && (
-                      <i>English</i>
-                    )}
+                    {test.test_lang === "english" && <i>English</i>}
 
-                    {test.test_lang === 'hindi' && (
-                      <i>Hindi</i>
-                    )}
+                    {test.test_lang === "hindi" && <i>Hindi</i>}
                   </span>
                 </div>
-
 
                 <div className="from-to">
                   <p>
@@ -542,8 +502,9 @@ const TakeQuiz = () => {
                 <div className="from-to">
                   <p>
                     {test.start_date
-                      ? new Date(test.start_date.replace(" ", "T"))
-                        .toLocaleTimeString("en-GB", {
+                      ? new Date(
+                          test.start_date.replace(" ", "T"),
+                        ).toLocaleTimeString("en-GB", {
                           hour: "2-digit",
                           minute: "2-digit",
                           second: "2-digit",
@@ -556,8 +517,9 @@ const TakeQuiz = () => {
 
                   <p>
                     {test.end_date
-                      ? new Date(test.end_date.replace(" ", "T"))
-                        .toLocaleTimeString("en-GB", {
+                      ? new Date(
+                          test.end_date.replace(" ", "T"),
+                        ).toLocaleTimeString("en-GB", {
                           hour: "2-digit",
                           minute: "2-digit",
                           second: "2-digit",
@@ -570,17 +532,28 @@ const TakeQuiz = () => {
                 </div>
                 <div className="test-details">
                   <div className="detail-item">
-                    <img src={'/images/question.png'} alt="questions" className="icon-TakeQuiz" />
+                    <img
+                      src={"/images/question.png"}
+                      alt="questions"
+                      className="icon-TakeQuiz"
+                    />
                     <p>
                       {/* <strong>{test.no_of_ques} Questions</strong> */}
-                      <strong>{test.test_lang === "both"
-                        ? test.no_of_ques / 2
-                        : test.no_of_ques} Questions</strong>
+                      <strong>
+                        {test.test_lang === "both"
+                          ? test.no_of_ques / 2
+                          : test.no_of_ques}{" "}
+                        Questions
+                      </strong>
                     </p>
                   </div>
                   <div className="vl"></div>
                   <div className="detail-item">
-                    <img src={'/images/clock.png'} alt="Duration" className="icon-TakeQuiz" />
+                    <img
+                      src={"/images/clock.png"}
+                      alt="Duration"
+                      className="icon-TakeQuiz"
+                    />
                     <p>
                       <strong>{test.test_duration} Minutes</strong>
                     </p>
@@ -589,7 +562,11 @@ const TakeQuiz = () => {
                     <>
                       <div className="vl"></div>
                       <div className="detail-item">
-                        <img src={'/images/fee.png'} alt="Fee" className="icon-TakeQuiz" />
+                        <img
+                          src={"/images/fee.png"}
+                          alt="Fee"
+                          className="icon-TakeQuiz"
+                        />
                         <p>
                           <strong>Rs.{test.fee} Fees</strong>
                         </p>
@@ -599,41 +576,49 @@ const TakeQuiz = () => {
                 </div>
                 <div className="test-footer">
                   <div>
-                    <img src={'/images/certificate.png'} alt="Certificate" className="icon-TakeQuiz" />
+                    <img
+                      src={"/images/certificate.png"}
+                      alt="Certificate"
+                      className="icon-TakeQuiz"
+                    />
                     E-Certificate
                   </div>
                   <div>
-                    <img src={'/images/terms-and-conditions.png'} alt="Terms & Conditions" className="icon-TakeQuiz" />
+                    <img
+                      src={"/images/terms-and-conditions.png"}
+                      alt="Terms & Conditions"
+                      className="icon-TakeQuiz"
+                    />
                     View T&C
                   </div>
                 </div>
 
                 {/* ================= FREE + LIVE ================= */}
 
-                {test && test.test_status === "Live" && test.pricing === "Free" && (
-                  <button
-                    className="play-button"
-                    onClick={() => handleTest(test)}
-                  >
-                    Play
-                  </button>
-                )}
-
-                {/* ================= PAID + LIVE ================= */}
-
-                {test && test.test_status === "Live" && test.pricing === "Paid" && (
-
-                  purchasedTests[test.test_id] ? (
-
+                {test &&
+                  test.test_status === "Live" &&
+                  test.pricing === "Free" && (
                     <button
                       className="play-button"
                       onClick={() => handleTest(test)}
                     >
                       Play
                     </button>
+                  )}
 
+                {/* ================= PAID + LIVE ================= */}
+
+                {test &&
+                  test.test_status === "Live" &&
+                  test.pricing === "Paid" &&
+                  (purchasedTests[test.test_id] ? (
+                    <button
+                      className="play-button"
+                      onClick={() => handleTest(test)}
+                    >
+                      Play
+                    </button>
                   ) : (
-
                     <button
                       className="play-button"
                       // onClick={() => handlePayment(test, "PLAY")}
@@ -645,37 +630,28 @@ const TakeQuiz = () => {
                     >
                       Pay to Play Quiz
                     </button>
-
-                  )
-
-                )}
+                  ))}
 
                 {/* ================= FREE + APPROVED ================= */}
 
-                {test && test.test_status === "Active" && test.pricing === "Free" && (
-                  <button
-                    className="play-button"
-                    disabled
-                  >
-                    Play
-                  </button>
-                )}
+                {test &&
+                  test.test_status === "Active" &&
+                  test.pricing === "Free" && (
+                    <button className="play-button" disabled>
+                      Play
+                    </button>
+                  )}
 
                 {/* ================= PAID + APPROVED ================= */}
 
-                {test && test.test_status === "Active" && test.pricing === "Paid" && (
-
-                  purchasedTests[test.test_id] ? (
-
-                    <button
-                      className="play-button"
-                      disabled
-                    >
+                {test &&
+                  test.test_status === "Active" &&
+                  test.pricing === "Paid" &&
+                  (purchasedTests[test.test_id] ? (
+                    <button className="play-button" disabled>
                       Enrolled
                     </button>
-
                   ) : (
-
                     <button
                       className="play-button"
                       // onClick={() => handlePayment(test, "ENROLL")}
@@ -687,11 +663,7 @@ const TakeQuiz = () => {
                     >
                       Pay to Enroll in Quiz
                     </button>
-
-                  )
-
-                )}
-
+                  ))}
 
                 {/* <button className="play-button">
                 {test.pricing === 'Paid'? (test.test_status==="Live"? "Pay to Play Quiz" : "Pay to enroll in quiz"):"Play"}  
@@ -700,28 +672,36 @@ const TakeQuiz = () => {
                 <br />
                 <hr />
                 <p className="last-p">
-                  By: {test.test_visibility === "Institution" ? "Institute" : "SAHASH"}
+                  By:{" "}
+                  {test.test_visibility === "Institution"
+                    ? "Institute"
+                    : "SAHASH"}
                 </p>
               </div>
-            )))}
+            ))
+          )}
         </div>
       </div>
       {showPaymentModal && (
         <div className="payment-modal-overlay">
           <div className="payment-modal">
-
             <h2>Payment Instructions</h2>
 
             <ul>
               <li>Please complete the payment without refreshing the page.</li>
               <li>Do not close the browser during payment.</li>
-              <li>After successful payment, your quiz will be unlocked automatically.</li>
-              <li>If the amount is deducted but payment fails, it will usually be refunded within 5–7 working days.</li>
+              <li>
+                After successful payment, your quiz will be unlocked
+                automatically.
+              </li>
+              <li>
+                If the amount is deducted but payment fails, it will usually be
+                refunded within 5–7 working days.
+              </li>
               <li>Please ensure you have a stable internet connection.</li>
             </ul>
 
             <div className="payment-modal-buttons">
-
               <button
                 className="cancel-btn"
                 onClick={() => setShowPaymentModal(false)}
@@ -744,16 +724,13 @@ const TakeQuiz = () => {
               >
                 OK
               </button>
-
             </div>
-
           </div>
         </div>
       )}
       {showPaymentResultModal && (
         <div className="payment-result-overlay">
           <div className="payment-result-modal">
-
             <div
               className={
                 paymentStatus === "SUCCESS"
@@ -771,7 +748,6 @@ const TakeQuiz = () => {
             </h2>
 
             <p>{paymentMessage}</p>
-
           </div>
         </div>
       )}

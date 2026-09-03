@@ -767,3 +767,240 @@
     height: 20px;
   }
 }
+
+/* =========================================
+   RESPONSIVE FIXES ONLY
+   Desktop/Laptop layout remains unchanged
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.take-quiz {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.take-quiz-main-section {
+  min-width: 0;
+  width: 100%;
+}
+
+.test-container-row {
+  width: 100%;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+  .take-quiz-main-section {
+    padding: 15px;
+  }
+
+  .test-container-row {
+    gap: 15px;
+  }
+
+  .test-card {
+    min-width: 0;
+    width: min(300px, calc(50% - 10px));
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .take-quiz {
+    display: block;
+    width: 100%;
+  }
+
+  .Sticky-filterby {
+    width: 100%;
+  }
+
+  .take-quiz-main-section {
+    width: 100%;
+    min-height: 100vh;
+    padding: 12px;
+  }
+
+  .take-quiz-header {
+    width: 100%;
+  }
+
+  .take-quiz-main-section h1 {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .filter-section {
+    box-sizing: border-box;
+    width: min(280px, calc(100vw - 24px));
+    max-height: min(70vh, 500px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .test-container-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .test-card {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 12px;
+  }
+
+  .Status-Lang,
+  .from-to {
+    gap: 8px;
+  }
+
+  .Status-Lang span,
+  .from-to p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .test-details {
+    width: 100%;
+    gap: 5px;
+  }
+
+  .detail-item {
+    min-width: 0;
+  }
+
+  .detail-item p {
+    overflow-wrap: anywhere;
+  }
+
+  .test-footer {
+    gap: 5px;
+  }
+
+  .test-footer div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .play-button {
+    max-width: 100%;
+    height: auto;
+    min-height: 40px;
+    white-space: normal;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE - SINGLE CARD
+========================================= */
+
+@media (max-width: 600px) {
+  .take-quiz-main-section {
+    padding: 10px;
+  }
+
+  .test-container-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .test-card {
+    width: min(100%, 400px);
+    margin: 0 auto;
+  }
+
+  .take-quiz-header {
+    gap: 10px;
+  }
+
+  .take-quiz-main-section h1 {
+    padding: 10px;
+  }
+
+  .filter-toggle-button {
+    white-space: nowrap;
+  }
+}
+
+/* =========================================
+   VERY SMALL SCREENS
+========================================= */
+
+@media (max-width: 380px) {
+  .take-quiz-main-section {
+    padding: 8px;
+  }
+
+  .take-quiz-header {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .take-quiz-main-section h1 {
+    font-size: 1.15rem;
+    padding: 8px;
+  }
+
+  .filter-toggle-button {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .test-card {
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .test-card h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .desc {
+    overflow-wrap: anywhere;
+  }
+
+  .from-to {
+    flex-wrap: wrap;
+  }
+
+  .from-to p {
+    width: 100%;
+  }
+
+  .test-details {
+    gap: 2px;
+  }
+
+  .detail-item p {
+    font-size: 0.7rem;
+  }
+
+  .vl {
+    flex-shrink: 0;
+  }
+
+  .test-footer {
+    flex-wrap: wrap;
+  }
+
+  .test-footer div {
+    width: 100%;
+  }
+
+  .play-button {
+    width: 100%;
+    min-width: 0;
+  }
+}

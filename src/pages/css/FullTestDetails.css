@@ -2,9 +2,11 @@
   display: flex;
   flex-direction: row;
   min-height: 100vh;
+  width: 100%;
   font-family: "Poppins", sans-serif;
   background: #f0f0f04f;
   backdrop-filter: blur(12px);
+  align-items: stretch;
 }
 
 /* Sticky Container - Combines header and buttons, sticky at top */
@@ -12,12 +14,19 @@
   width: clamp(220px, 22vw, 280px);
   min-width: 220px;
   flex-shrink: 0;
+
   padding: clamp(15px, 2vw, 20px);
+
   background-color: #87c7c927;
   border-right: 1px solid #d4f8f8d7;
   box-shadow: 0 4px 8px rgba(202, 239, 253, 0.87);
+
   transition: all 0.3s ease;
   margin-right: 0.75rem;
+
+  /* sidebar full page height */
+  align-self: stretch;
+  min-height: 100%;
 }
 
 /* Sticky Button Section - Left side */
@@ -25,10 +34,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.865rem;
+
   position: relative;
-  margin-top: 0;
-  top: 0;
+  top: auto;
+
   z-index: 30;
+
   padding: clamp(10px, 1.5vw, 15px);
   background-color: #87c7c95b;
   backdrop-filter: blur(12px);
@@ -115,6 +126,8 @@
   display: flex;
   flex-direction: column;
   margin: 1rem;
+  min-width: 0;
+  min-height: calc(100vh - 2rem);
 }
 
 /*for header*/
@@ -666,3 +679,77 @@
     font-size: 0.8rem;
   }
 }
+
+
+
+
+
+/* ================================
+   FULL PAGE SIDEBAR + CONTENT
+   ================================ */
+
+.full-test-details-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* LEFT SIDEBAR */
+.full-test-details-container .sticky-container {
+  flex: 0 0 clamp(220px, 22vw, 280px);
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+
+  align-self: stretch;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: clamp(15px, 2vw, 20px);
+
+  margin: 0;
+
+  background-color: #87c7c927;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 4px 8px rgba(202, 239, 253, 0.87);
+}
+
+/* ACTIONS BOX */
+.full-test-details-container .sticky-buttons {
+  position: sticky;
+  top: 0;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  max-height: none;
+  overflow: visible;
+}
+
+/* RIGHT SIDE */
+.full-test-details-container .main-content-container {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  margin: 1rem;
+
+  min-height: calc(100vh - 2rem);
+  box-sizing: border-box;
+
+  overflow: visible;
+}
+
+/* FORM SHOULD NOT CREATE ITS OWN SCROLL */
+.full-test-details-container .form-content {
+  flex: 1;
+  overflow: visible;
+}
+

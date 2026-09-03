@@ -1,0 +1,709 @@
+.test-submission {
+  display: flex;
+  flex-direction: row;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+}
+/**Info section starts**/
+.Info-section {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  border-radius: 30px 10px 30px 10px;
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+  flex-shrink: 0;
+  padding: clamp(15px, 2vw, 20px);
+  background-color: #87c7c95b;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 4px 8px rgba(202, 239, 253, 0.87);
+  transition: all 0.3s ease;
+  height: calc(100vh - 4.5rem);
+  margin-bottom: 0.9rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 30;
+}
+/*//*
+.Info-section {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  border-radius: 30px 10px 30px 10px;
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+  flex-shrink: 0;
+  padding: clamp(15px, 2vw, 20px);
+  background-color: #87c7c95b;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 4px 8px rgba(202, 239, 253, 0.87);
+  transition: all 0.3s ease;
+  height: calc(100vh - 6.5rem);
+  position: sticky;
+  top: 3.5rem;
+  z-index: 30;
+}
+/**After submission Info section**/
+.Info-section--submitted {
+  overflow-y: auto;
+}
+  /* Custom Scrollbar Styling */
+  .Info-section::-webkit-scrollbar {
+    width: 8px; 
+  }
+
+  .Info-section::-webkit-scrollbar-track {
+    background: #f0fbfc; 
+    border-radius: 10px;
+    margin: 5px 0; 
+  }
+
+  .Info-section::-webkit-scrollbar-thumb {
+   
+  background: linear-gradient(180deg, #126f8ba6, #5da3c4a6, #126f8ba6);
+   border-radius: 10px;
+  }
+  .Info-section::-webkit-scrollbar-thumb:hover {
+    background: #6fa1cfda; 
+  }
+
+.Info-section h2 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+  text-align: center;
+  color: #306694;
+}
+
+.Info-section hr {
+  margin: clamp(6px, 1vw, 8px) 0;
+  border: none;
+  height: 2px;
+  background-color: #e3f0f0ff;
+  opacity: 0.9;
+}
+/**for inner headings and paragraphs**/
+.Info-group {
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+  color: #253d5f;
+  text-shadow: 0 0.2px 1.2px #378ca1ff;
+}
+.Info-group p{
+  color: #306694;
+  text-shadow: 0 0.5px 1.6px #206779ff;
+  
+}
+/**for icons**/
+.icon {
+
+  width: 1.4rem;
+  height: 1.4rem;
+  vertical-align: middle;
+}
+/**For packing h4 and p in one div**/
+.pack-h4-p{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
+
+}
+/***For button styling**/
+.quiz-btn {
+  width: 200px;
+  height: 50px;
+  color: white;
+  border-radius: 30px;
+  padding: 0.8rem 1rem;
+  border: none;
+  background-color: #306694;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.quiz-btn:hover{
+  background: #5188b8ff;
+  transform: translateY(-2px);
+}
+.submit-button-container button{
+  width: 150px;
+  height: 50px;
+  color: white;
+  border-radius: 30px;
+  padding: 0.8rem 1rem;
+  border: none;
+  background-color: #306694;
+  margin-bottom: 10px;
+  cursor: pointer;
+/*hover niche hai details toggle k sath**/
+}
+
+
+/**Info section ends**/
+/**Main section starts**/
+.test-submission-section {
+  flex-grow: 1;
+  padding: clamp(15px, 3vw, 20px);
+  text-align: center;
+  min-height: 100vh;
+}
+/**For header**/
+.test-submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  position: sticky;
+ top:1.5rem;/* top: calc(3.5rem + 10px);/*or 1.5rem*/
+  z-index: 30;
+  gap: clamp(10px, 2vw, 15px);
+  margin-bottom: clamp(10px, 2vw, 15px);
+}
+
+.test-submission-section h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  padding: clamp(10px, 2vw, 15px);
+  border-radius: 10px 20px 10px 20px;
+  border-left: 5px solid #a8cdd8;
+  border-bottom: 2px solid #a8cdd8;
+  border-top: 1px solid #a8cdd8;
+  font-weight: 700;
+  color: #306694;
+  background-color: #f0fbfc94;
+  backdrop-filter: blur(12px);
+  flex: 1;
+  text-align: center;
+}
+/**for quiz questions container**/
+.ques-container-row {
+  display: block;
+  text-align: left;
+  width: 100%;
+  gap: clamp(15px, 2vw, 20px);
+  flex-wrap: wrap;
+}
+
+.ques-card {
+  background: linear-gradient(135deg, #acd9dd86, #c1e9e962);
+  backdrop-filter: blur(12px);
+  border: 1px solid #559aaf5d;
+  border-left: 3px solid #559aafa4;
+  border-bottom: 4px solid #559aafa1;
+  border-radius: 30px 0px 30px 0px;
+  padding: clamp(15px, 2vw, 20px);
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(184, 196, 199, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 10;
+}
+
+.ques-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ques-card h4 {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2f415a;
+}
+/**for packing h4  (questions ) and marks in one div**/
+.pack-h4-marks{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/**For marks styling**/
+.points{
+  font-size: clamp(0.85em, 1vw, 0.9em);
+  color: #0d8f4eff;
+  background-color: #ebf4fcff;
+  backdrop-filter: blur(8px);
+  padding: 0.2rem 0.6rem;
+  border-radius: 1.3rem;
+  font-weight: 600;
+}
+
+.ques-card p {
+  margin: 6px 0;
+  font-size: clamp(0.9em, 1vw, 1em);
+  color: #253d5f;
+  background-color: #ebf4fcff;
+  backdrop-filter: blur(8px);
+  padding: 1rem 1.2rem;
+  border-radius: 30px;
+}
+/***for options container**/
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  color: #253d5f;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.option-label.correct-answer {
+  background-color: #b0f3c0ff;
+  color: #155724;
+}
+
+.option-label.incorrect-answer {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.option-label input[type="radio"] {
+  margin: 0;
+}
+
+/**after submission the popup**/
+.submission-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  z-index: 50;
+}
+
+.popup-content {
+  background-color: #ffffff;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+}
+
+.popup-content h2 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: #306694;
+  margin-bottom: 1rem;
+}
+.popup-content h4{
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  margin-bottom: 0.65rem;
+}
+.popup-button-container{
+  display:flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.popup-button-container button {
+  padding: clamp(0.4rem, 2vw, 0.6rem) clamp(1rem, 2vw, 1.2rem);
+  
+  width: 150px;
+  height: 50px;
+  color: white;
+  border-radius: 30px;
+  padding: 1rem;
+  border: none;
+  background-color: #306694;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: clamp(0.9em, 2vw, 1em);
+}/**submission popup ends**/
+
+/**mainsection ends**/
+
+/**for mobile info section**/
+.mobile-info-section {
+  display: none;
+}
+
+/**toggle button styling (quiz details button)**/
+
+
+.details-toggle{
+  
+  padding: clamp(0.6rem, 1vw, 0.8rem) clamp(1.5rem, 2vw, 2rem);
+  background-color: #306694;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  font-weight: 500;
+  margin-left: 1.5rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.details-toggle:hover, .submit-button-container button:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+
+.details-dropdown {
+  position: absolute;
+  top: 100%;
+  height: 50vh;
+  overflow-y: auto;
+  background-color: #8ec4c5e0;
+  border: 1px solid #d4f8f8d7;
+  border-radius: 10px;
+  padding: clamp(10px, 1.5vw, 12px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  margin-top: 0.3rem;
+  
+  width: clamp(200px, 50vw, 280px);
+  text-align: center;
+}
+/* Custom Scrollbar Styling for details-dropdown */
+.details-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.details-dropdown::-webkit-scrollbar-track {
+  background: #f0fbfc;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+.details-dropdown::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #126f8ba6, #5da3c4a6, #126f8ba6);
+  border-radius: 10px;
+}
+
+.details-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #6fa1cfda;
+}
+/***scroller styling ends**/
+.details-dropdown h4 {
+  font-size: clamp(1em, 2vw, 1.1em);
+  color: #306694;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.details-dropdown p {
+  font-size: clamp(0.9em, 1.8vw, 1em);
+  color: #2f415a;
+  margin-bottom: 10px;
+}
+
+.details-dropdown hr {
+  margin: 10px 0;
+  border: none;
+  height: 1px;
+  background-color: #e3f0f0ff;
+  opacity: 0.9;
+}
+
+.details-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/****Responsiveness********/
+
+@media(max-width: 1400px) {
+  .ques-card {
+    min-width: 300px;
+  }
+  .Info-section {
+    width: 300px;
+  }
+  .bottom-submit-button {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .Info-section {
+    width: clamp(200px, 20vw, 240px);
+    
+    min-width: 200px;
+  }
+  .ques-card {
+    width: 100%;
+  }
+  .bottom-submit-button {
+    display: none;
+
+  }
+  .quiz-btn{
+    width: 140px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .test-submission {
+    flex-direction: column;
+  }
+
+  .Info-section {
+    display: none;
+  }
+
+  .mobile-info-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(4px, 2vw, 8px);
+    padding: clamp(0.3rem, 2vw, 0.5rem);
+    margin-top: 0.3rem;
+    background-color: #f0fbfcda;
+    border-radius: 10px;
+    position: sticky;
+    top: calc(5.2rem + 10px);
+    z-index: 30;
+  }
+/**for left side no. of questions and time left**/
+  .mobile-info-left {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5rem;
+    gap: 0.6rem;
+  }
+
+  .mobile-info-left h4 {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    color: #306694;
+    font-weight: 600;
+  }
+/**for right side instructions **/
+  .mobile-info-right {
+    position: relative;
+    
+  }
+  
+  .mobile-info-right p{
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    margin-bottom: 0.5rem;
+  }
+  .submit-button-container{
+  display: flex;
+  align-items: center;
+  flex-direction:column;
+  }
+  .quiz-btn{
+    width: 200px;
+    height: 50px;
+  }
+/**cards**/
+  .ques-card {
+    width: 100%;
+    max-width: 100%;
+  }
+/**main sections**/
+  .test-submission-main-section {
+    padding: clamp(12px, 2vw, 15px);
+    position: relative;
+  }
+
+  .test-submission-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 1rem;
+  }
+/**for submit button at bottom**/
+  .bottom-submit-button{
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    color: white;
+    border-radius: 30px;
+    padding: 0.8rem 1rem;
+    border: none;
+    background-color: #306694;
+    margin-bottom: 10px;
+    cursor: pointer;
+  
+    margin-top: 20px;
+    display: block;
+    border-radius: 30px;
+  }
+  .bottom-submit-button button:hover{
+    transform :translateY(-2px);
+    background-color: #2563eb;
+  }
+  /**after submitting hitting*/
+  .submission-popup{
+    top:0;
+    
+  }
+  .popup-content{
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+  }
+
+}
+
+@media (max-width: 480px) {
+  .mobile-info-section {
+    flex-direction: row;
+    gap: 10px;
+    position: sticky;
+    top: calc(4.2rem + 10px);
+    z-index: 30;
+  }
+  .mobile-info-left h4 {
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    color: #306694;
+    font-weight: 600;
+  }
+  
+  .mobile-info-right p{
+    font-size: clamp(0.5rem, 1.5vw, 1rem);
+    margin-bottom: 0.5rem;
+  }
+  .details-toggle{
+    
+    font-size: clamp(0.75em, 2vw, 0.8em);
+    padding: clamp(0.7rem, 1vw, 0.75rem) clamp(0.8rem, 2vw, 1rem);
+    
+  }
+
+   .details-dropdown {
+    width: clamp(180px, 80vw, 260px);
+  }
+
+  .test-submission-main-section h1 {
+    font-size: clamp(1.2em, 4vw, 1.5em);
+  }
+
+  .ques-card {
+    width: 100%;
+  }
+  .ques-card h4 {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+  }
+  .options-container {
+    font-size: clamp(0.85rem, 2.5vw, 0.9rem);
+  }
+  .ques-card p {
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
+  }
+  .points{
+    font-size: clamp(0.75em, 2vw, 0.8em);
+    padding: 0.6rem;
+  }
+   .bottom-submit-button {
+    display: block;
+
+  }
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* .quiz-container {
+    width: 50%;
+    margin: auto;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .question-box {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .option-label {
+    display: block;
+    margin: 5px 0;
+  }
+  
+  .submit-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: darkblue;
+  } */
+  
+
+  /* Popup styles */
+/* .popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.popup h2 {
+  margin-bottom: 20px;
+}
+
+.popup-button {
+  margin: 10px;
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.popup-button:hover {
+  background: #2980b9;
+} */
+
+/* Option colors */
+/* .option-label.correct {
+  background-color: #d4edda;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.option-label.wrong {
+  background-color: #f8d7da;
+  border-radius: 5px;
+  padding: 3px;
+} */

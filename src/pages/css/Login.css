@@ -1,0 +1,527 @@
+.body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  flex-direction: row;
+}
+
+.left-section {
+  flex: 1;
+  background-color: rgba(237, 245, 248, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.right-section {
+  flex: 1;
+  background-color: #306994;
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+  color: #fff;
+  min-height: 100vh;
+}
+/**reset password page also inheriting properties from here..**/
+.reset-from-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 auto;
+  min-height: 60vh;
+  margin: clamp(1.2rem, 2.5vw, 2rem);
+  position: relative;
+}
+
+.l-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 3rem;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 15px rgba(135, 180, 247, 0.56);
+  position: relative;
+  z-index: 1;
+}
+
+.l-container h2 {
+  color: #306994;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.welcome-log-text {
+  text-align: center;
+  padding: 3rem;
+}
+
+.welcome-log-text h2 {
+  font-size: 2rem;
+
+  margin-bottom: 1rem;
+}
+
+.welcome-log-text p {
+  font-size: 1.2rem;
+  margin: 3.5rem;
+  margin-bottom: 4rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 30px;
+  font-size: 1.1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.53);
+  color: rgb(57, 68, 104);
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: rgba(105, 132, 153, 0.62);
+}
+
+.input-group label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  background: transparent;
+  padding: 0 5px;
+  color: #333333;
+  font-size: 1rem;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.input-group input:hover {
+  box-shadow: 0.12rem 0.14rem 0.1rem #afdbfcff;
+  transform: scale(1.05);
+}
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -12px;
+  font-size: 0.9rem;
+  color: #306994;
+}
+
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-group {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input {
+  margin-right: 0.5rem;
+}
+
+.checkbox-group label {
+  color: #333;
+}
+
+.forgot-password {
+  cursor: pointer;
+  color: #306994;
+  font-size: 0.85rem;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.s-signup-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #90adc5;
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.s-signup-btn:hover {
+  background-color: #f0f0f0;
+  color: #254d70;
+}
+
+.l-login-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #306994;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1.5rem;
+}
+
+.l-login-btn:hover {
+  background-color: rgba(35, 112, 179, 0.76);
+}
+
+.message {
+  color: #d32f2f;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+/* Background Animation */
+.bg-animation {
+  position: absolute;
+  background: linear-gradient(
+    35deg,
+    rgb(171, 182, 245) 0%,
+    #ffffff 100%,
+    rgb(231, 219, 245) 0%
+  );
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0, 123, 255, 0.2);
+  animation: move 25s infinite;
+}
+
+.circle:nth-child(1) {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: 20%;
+}
+
+.circle:nth-child(2) {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: 15%;
+  animation-duration: 20s;
+}
+
+.circle:nth-child(3) {
+  width: 100px;
+  height: 100px;
+  bottom: 20%;
+  left: 30%;
+  animation-duration: 30s;
+}
+
+@keyframes move {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(100px, 100px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.validation-error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin: 0.4rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/***REsponsiveness****/
+@media (max-width: 768px) {
+  .body {
+    flex-direction: column;
+    min-height: auto;
+    margin: 2rem;
+  }
+
+  .right-section {
+    order: 1;
+    flex: none;
+    width: 100%;
+    min-height: auto;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  .left-section {
+    order: 2;
+    flex: none;
+    width: 100%;
+    min-height: auto;
+    padding: 1rem 0;
+    background-color: rgba(237, 245, 248, 0.4);
+  }
+
+  .l-container {
+    max-width: 85%;
+    padding: 2rem;
+    margin: 0 auto;
+    min-width: 280px;
+  }
+
+  .welcome-log-text {
+    padding: 2rem 1rem;
+  }
+
+  .welcome-log-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .welcome-log-text p {
+    font-size: 1rem;
+    margin: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .input-group input {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .input-group label {
+    font-size: 1rem;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    font-size: 0.8rem;
+    top: -10px;
+  }
+
+  .l-login-btn,
+  .s-signup-btn {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .options-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .forgot-password {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .body {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .l-container {
+    max-width: 90%;
+    min-width: 260px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+  }
+
+  .welcome-text h2 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-text p {
+    font-size: 0.9rem;
+    margin: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group input {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .input-group label {
+    font-size: 0.9rem;
+  }
+  .checkbox-group {
+    font-size: 0.7rem;
+  }
+
+  .l-login-btn,
+  .s-signup-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 410px) {
+  .l-container {
+    min-width: 240px;
+    padding: 1.2rem;
+  }
+
+  .welcome-text h2 {
+    font-size: 1.3rem;
+  }
+
+  .welcome-text p {
+    font-size: 0.75rem;
+    margin: 0.4rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .input-group input {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .input-group label {
+    font-size: 0.85rem;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    font-size: 0.75rem;
+    top: -8px;
+  }
+
+  .l-login-btn,
+  .s-signup-btn {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .options-row {
+    gap: 0.8rem;
+  }
+
+  .forgot-password {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .l-container {
+    min-width: 120px;
+    padding: 1rem;
+  }
+
+  .welcome-text h2 {
+    font-size: 1rem;
+  }
+
+  .welcome-text p {
+    font-size: 0.65rem;
+    margin: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .input-group input {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+
+  .input-group label {
+    font-size: 0.65rem;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    font-size: 0.65rem;
+    top: -8px;
+  }
+
+  .l-login-btn,
+  .s-signup-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+}
+
+.login-back {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #fff;
+  color: #150a6a;
+
+  border: 1px solid #dbeafe;
+  border-radius: 30px;
+
+  padding: 10px 18px;
+  width: auto;
+  min-width: 110px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  background: #2563eb;
+  color: #fff;
+  transform: translateX(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.back-btn svg {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 18px;
+}
+
+.password-toggle:hover {
+  color: #2563eb;
+}

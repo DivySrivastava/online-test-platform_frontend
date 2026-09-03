@@ -1,0 +1,769 @@
+.take-quiz {
+  display: flex;
+
+  flex-direction: row;
+  font-family: "Poppins", sans-serif;
+  background: #f0fbfc8a;
+  backdrop-filter: blur(12px);
+  min-height: 100vh;
+  font-size: 0.95rem;
+}
+
+/******Filterby section*******/
+.filter-section {
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+  flex-shrink: 0;
+  padding: clamp(15px, 2vw, 20px);
+  background-color: #87c7c95b;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 4px 8px rgba(202, 239, 253, 0.87);
+  transition: all 0.3s ease;
+  height: calc(100vh-3rem);
+
+  position: sticky;
+  top: 3rem;
+  /*calc(3rem + 10px);*/
+  z-index: 30;
+}
+
+.filter-section h2 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+
+  text-align: center;
+  color: #306694;
+}
+
+.filter-section hr {
+  margin: clamp(6px, 1vw, 8px) 0;
+  border: none;
+  height: 2px;
+  background-color: #e3f0f0ff;
+  opacity: 0.9;
+}
+
+.filter-group {
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #2f415a;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.filter-group select {
+  width: 100%;
+  padding: clamp(6px, 1vw, 8px);
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f0fbfc;
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  transition: border-color 0.2s ease;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/***Main section of page**/
+.take-quiz-main-section {
+  flex-grow: 1;
+  padding: clamp(15px, 3vw, 20px);
+  text-align: center;
+
+  min-height: 100vh;
+}
+
+/**header**/
+.take-quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  position: static;
+  top: calc(3.5rem + 10px);
+  gap: clamp(10px, 2vw, 15px);
+  margin-bottom: clamp(10px, 2vw, 15px);
+}
+
+.take-quiz-main-section h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  padding: clamp(10px, 2vw, 15px);
+  border-radius: 10px 20px 10px 20px;
+  border-left: 5px solid #a8cdd8;
+  border-bottom: 2px solid #a8cdd8;
+  border-top: 1px solid #a8cdd8;
+  font-weight: 700;
+  color: #306694;
+  background-color: #f0fbfc94;
+  backdrop-filter: blur(12px);
+  flex: 1;
+  text-align: center;
+}
+
+/****Filter by button****/
+.filter-toggle-wrapper {
+  position: relative;
+}
+
+.filter-toggle-button {
+  display: none;
+  padding: clamp(0.8rem, 1vw, 0.85rem) clamp(1rem, 2vw, 1.2rem);
+  background-color: #306694;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.filter-toggle-button:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+
+.filter-toggle-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/**main card content**/
+.test-container-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.2rem);
+  flex-wrap: wrap;
+}
+
+/* Container for no quiz message */
+.no-quiz-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50vh;
+  text-align: center;
+}
+
+/* Small animated icon */
+.no-quiz-animation {
+  width: 80px;
+  height: 80px;
+  background-image: url("../../../public/images/bug-slash.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* 3 animations combined = cute effect */
+  animation:
+    floatUpDown 2.2s ease-in-out infinite,
+    wiggle 1.8s ease-in-out infinite,
+    glowPulse 2.8s ease-in-out infinite;
+}
+
+.no-quiz-text {
+  margin-top: 0.6rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: #306694;
+  font-weight: 600;
+}
+
+/* Floating effect */
+@keyframes floatUpDown {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/*  wiggle effect */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/* Soft glow pulse */
+@keyframes glowPulse {
+  0% {
+    filter: drop-shadow(0 0 0px rgba(255, 200, 0, 0.4));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 6px rgba(255, 200, 0, 0.7));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 0px rgba(255, 200, 0, 0.4));
+  }
+}
+
+.test-card {
+  background: #f0f6fd71;
+
+  border: 1px solid #559aaf5d;
+  border-left: 3px solid #559aafa4;
+  border-bottom: 4px solid #559aafa1;
+  border-radius: 30px 0px 30px 0px;
+  padding: clamp(0.9rem, 2vw, 1.2rem);
+  width: clamp(300px, 25vw, 350px);
+  box-shadow: 0 4px 6px rgba(184, 196, 199, 0.5);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  z-index: 10;
+}
+
+.test-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.test-card h3 {
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2f415a;
+}
+
+.test-card p {
+  margin: 6px 0;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  color: #253d5f;
+}
+
+.Status-Lang {
+  display: flex;
+  justify-content: space-between;
+}
+
+.from-to {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  font-size: 0.85rem;
+  gap: 10px;
+}
+
+/**input field**/
+.desc {
+  padding: 0.5rem;
+  border-radius: 30px;
+  border: 1px solid #93b5e7ff;
+  color: #356175ff;
+  background: #e3fbfd86;
+  transition: all 0.2s ease-in-out;
+}
+
+.test-status1 {
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.test-status2 {
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.test-status1 i {
+  color: green;
+  font-size: 0.85rem;
+}
+
+.play-button:disabled {
+  background-color: #b9b5bcd1;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.test-status2 i {
+  color: red;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.test-lang {
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+/**Test Card Details****/
+.test-details {
+  display: flex;
+  justify-content: space-around;
+
+  margin: 10px 0;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.vl {
+  border-left: 2px solid #559aafa1;
+  height: 50px;
+}
+
+.icon-TakeQuiz {
+  width: 1.4rem;
+  height: 1.4rem;
+  vertical-align: middle;
+}
+
+.test-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  font-size: 0.9rem;
+}
+
+.test-footer img {
+  margin: 10px;
+}
+
+.play-button {
+  margin-top: clamp(10px, 1.5vw, 15px);
+  padding: clamp(0.8rem, 1vw, 0.9rem) clamp(1rem, 2vw, 1.8rem);
+  min-width: 150px;
+  /*********To adjust according to the button content*********/
+  background-color: #306694;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.play-button:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+
+.play-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.last-p {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.payment-modal {
+  width: 500px;
+  max-width: 90%;
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+}
+
+.payment-modal h2 {
+  margin-top: 0;
+}
+
+.payment-modal ul {
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.payment-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.ok-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #0d6efd;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.payment-result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.payment-result-modal {
+  width: 420px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.payment-success-icon,
+.payment-failed-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.payment-result-modal h2 {
+  margin-bottom: 12px;
+}
+
+.payment-result-modal p {
+  color: #555;
+  line-height: 1.6;
+}
+
+/***responsiveness***/
+
+@media (max-width: 1400px) {
+  .test-card {
+    min-width: 300px;
+  }
+
+  .filter-section {
+    width: 300px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .filter-section {
+    width: clamp(200px, 20vw, 240px);
+    min-width: 200px;
+  }
+
+  .test-card {
+    width: clamp(220px, 30vw, 280px);
+  }
+}
+
+@media (max-width: 768px) {
+  .take-quiz {
+    flex-direction: column;
+  }
+
+  .filter-section {
+    display: none;
+    position: fixed;
+    top: calc(18% + 10px);
+    right: clamp(12px, 2vw, 15px);
+    width: clamp(200px, 50vw, 280px);
+    max-height: 50vh;
+    overflow-y: auto;
+    z-index: 40;
+    background-color: #8ec4c5e0;
+    border: 1px solid #d4f8f8d7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: clamp(10px, 1.5vw, 12px);
+  }
+
+  /* Custom Scrollbar Styling */
+  .filter-section::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .filter-section::-webkit-scrollbar-track {
+    background: #f0fbfc;
+    border-radius: 10px;
+    margin: 5px 0;
+  }
+
+  .filter-section::-webkit-scrollbar-thumb {
+    background: #42678894;
+    border-radius: 10px;
+  }
+
+  .filter-section::-webkit-scrollbar-thumb:hover {
+    background: #6fa1cfda;
+  }
+
+  .filter-section h2 {
+    font-size: clamp(1.1em, 3vw, 1.3em);
+    text-align: left;
+    font-weight: 600;
+    color: #306694;
+  }
+
+  .filter-group label {
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    color: #2f415a;
+    font-weight: 600;
+  }
+
+  .filter-section--open {
+    display: block;
+  }
+
+  .filter-toggle-button {
+    display: block;
+  }
+
+  .filter-toggle-wrapper {
+    position: relative;
+  }
+
+  .test-container-row {
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 15px);
+  }
+
+  .test-card {
+    width: clamp(250px, 45vw, 300px);
+    max-width: 100%;
+    padding: 0.2rem;
+  }
+
+  .take-quiz-main-section {
+    padding: clamp(12px, 2vw, 15px);
+    position: relative;
+  }
+
+  .take-quiz-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: static;
+    /* top: calc(3.5rem + 10px); */
+  }
+
+  .test-details {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .detail-item {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-section {
+    width: clamp(180px, 80vw, 260px);
+    right: clamp(8px, 2vw, 10px);
+    top: calc(18% + 10px);
+  }
+
+  .filter-section h2 {
+    font-size: clamp(1em, 3vw, 1.2em);
+  }
+
+  .filter-group label,
+  .filter-group select {
+    font-size: clamp(0.8em, 2vw, 0.85em);
+  }
+
+  .take-quiz-main-section h1 {
+    font-size: clamp(1.2em, 4vw, 1.5em);
+  }
+
+  .filter-toggle-button {
+    padding: clamp(8px, 2vw, 10px);
+  }
+
+  .test-card {
+    min-width: 200px;
+
+    font-size: 0.9rem;
+  }
+
+  .desc {
+    padding: 0.3rem;
+  }
+
+  .test-footer {
+    margin-top: 4px;
+    display: flex;
+    font-size: 0.75rem;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 0.2rem;
+  }
+
+  .icon-TakeQuiz {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .test-status1 {
+    text-align: left;
+    font-size: 0.75rem;
+  }
+
+  .test-status2 i {
+    color: red;
+    text-align: left;
+    font-size: 0.75rem;
+  }
+
+  .test-lang {
+    text-align: right;
+    font-size: 0.75rem;
+  }
+
+  .play-button {
+    height: 40px;
+    width: clamp(100px, 30vw, 150px);
+    padding: clamp(0.6rem, 2vw, 0.85rem);
+  }
+
+  .vl {
+    height: 30px;
+  }
+}
+
+@media (max-width: 380px) {
+  .filter-section {
+    width: clamp(180px, 80vw, 260px);
+    right: clamp(8px, 2vw, 10px);
+    top: calc(18% + 10px);
+  }
+
+  .filter-section h2 {
+    font-size: clamp(1em, 3vw, 1.2em);
+  }
+
+  .filter-group label,
+  .filter-group select {
+    font-size: clamp(0.8em, 2vw, 0.85em);
+  }
+
+  .take-quiz-main-section h1 {
+    font-size: clamp(1.2em, 4vw, 1.5em);
+  }
+
+  .filter-toggle-button {
+    padding: clamp(8px, 2vw, 10px);
+  }
+
+  .test-card {
+    min-width: 176px;
+
+    font-size: 0.8rem;
+  }
+
+  .desc {
+    padding: 0.245rem;
+  }
+
+  .from-to {
+    font-size: 0.595rem;
+  }
+
+  .test-details {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .detail-item p {
+    font-size: 0.595rem;
+  }
+
+  .test-footer {
+    margin-top: 3px;
+    display: flex;
+    font-size: 0.695rem;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 0.2rem;
+  }
+
+  .icon-TakeQuiz {
+    height: 0.9rem;
+    width: 0.9rem;
+  }
+
+  .test-status1 {
+    text-align: left;
+    font-size: 0.595rem;
+  }
+
+  .test-status2 {
+    text-align: left;
+    font-size: 0.695rem;
+  }
+
+  .test-status2 i {
+    color: red;
+    text-align: left;
+    font-size: 0.595rem;
+  }
+
+  .test-lang {
+    text-align: right;
+    font-size: 0.695rem;
+  }
+
+  .play-button {
+    height: 35px;
+    width: clamp(100px, 30vw, 150px);
+    padding: clamp(0.55rem, 2vw, 0.75rem);
+  }
+
+  .vl {
+    height: 20px;
+  }
+}

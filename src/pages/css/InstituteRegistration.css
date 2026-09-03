@@ -1,0 +1,263 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* MAIN WRAPPER */
+.wrapper-institute-regis {
+  min-height: 100vh;
+  width: 100%;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: linear-gradient(160deg, #f0fbfc 0%, #e4f5f6 100%);
+}
+
+.institute-success-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.9),
+    rgb(184, 209, 221)
+  );
+  backdrop-filter: blur(0.625rem);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  width: 300px;
+  max-width: 90%;
+  box-shadow: 0 0.5rem 1rem rgba(154, 191, 247, 0.81);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  text-align: center;
+}
+.institute-success-popup p {
+  font-size: 1rem;
+  color: #306694;
+  text-shadow: 0 0.0625rem 0.125rem rgba(48, 102, 148, 0.5);
+  margin-bottom: 1.5rem;
+}
+.institute-success-popup button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(45deg, rgb(67, 148, 235), rgb(129, 121, 248));
+  border: none;
+  border-radius: 30px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* HEADER */
+.registration-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: clamp(0.7rem, 2vw, 1rem);
+  border-radius: 10px 30px 10px 30px;
+  border-left: 5px solid #a8cdd8;
+  border-bottom: 2px solid #a8cdd8;
+  border-top: 1px solid #a8cdd8;
+  font-weight: 700;
+  color: #306694;
+  background-color: #f0fbfc;
+  box-shadow: 0 4px 14px rgba(100, 150, 170, 0.2);
+  flex: 1;
+
+  flex-wrap: wrap;
+  position: relative;
+  margin-top: 0;
+  gap: clamp(10px, 2vw, 15px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+  transition: box-shadow 0.3s ease;
+}
+.registration-div:hover {
+  background-color: #f0fbfc;
+  box-shadow: 0 4px 10px rgba(156, 173, 180, 0.68);
+}
+.registration-div h1 {
+  font-size: clamp(1rem, 2vw, 2rem);
+
+  text-align: center;
+}
+
+/* LOGO */
+.institute-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.img-institute {
+  border-radius: 50%;
+  height: clamp(3rem, 6vw, 5rem);
+  width: clamp(3rem, 6vw, 5rem);
+}
+
+/* FORM CONTAINER */
+.form-container-institute-regis {
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #cdeee0a8, #d8f3f0a0);
+  border: 1px solid #9ec8d84d;
+  border-radius: 1.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  box-shadow: 0 8px 24px rgba(100, 150, 170, 0.18);
+}
+
+/* INNER FORM BOX */
+.form-container-div-institute-regis {
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+  background: #ffffffcc;
+  backdrop-filter: blur(10px);
+  border-radius: 1.25rem;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  box-shadow: 0 4px 14px rgba(100, 150, 170, 0.15);
+}
+
+/* FORM */
+.form-institute-regis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* INPUTS */
+.form-institute-regis input,
+.form-institute-regis select {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: #f7fdfe;
+  border: 2px solid #d6e6ec;
+  border-radius: 1.875rem;
+  color: #2f415a;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease;
+}
+
+.form-institute-regis input:hover,
+.form-institute-regis select:hover {
+  border-color: #9ec8d8;
+}
+
+.form-institute-regis input:focus,
+.form-institute-regis select:focus {
+  outline: none;
+  border-color: #4cc9f0;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(76, 201, 240, 0.18);
+  transform: translateY(-1px);
+}
+.form-institute-regis label,
+.form-institute-regis input::placeholder {
+  font-weight: 500;
+  color: #2f415a;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  text-shadow: 0 1px 2px #3333337e;
+
+  /*color: #313e61e6;
+  font-weight: 400;*/
+}
+/*for select dropdowns*/
+.form-institute-regis select {
+  appearance: none;
+  color: rgba(41, 59, 87, 0.86);
+  font-weight: 400;
+  padding-right: 2.5rem;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(167, 173, 247) transparent;
+
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232D4A6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}
+
+.form-institute-regis select::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.form-institute-regis select::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 0.625rem;
+}
+
+.form-institute-regis select::-webkit-scrollbar-thumb {
+  background: rgba(157, 152, 236, 0.68);
+  border-radius: 0.625rem;
+}
+/* BUTTON */
+.institute-regis-btn-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.btn-institute-regis {
+  width: clamp(8rem, 20vw, 10rem);
+  padding: clamp(0.65rem, 1.5vw, 0.85rem);
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, #306694, #4d8ab8);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(48, 102, 148, 0.35);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-institute-regis:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 18px rgba(48, 102, 148, 0.45);
+}
+
+.btn-institute-regis:active {
+  transform: scale(0.97);
+}
+
+.btn-institute-regis-back {
+  width: clamp(8rem, 20vw, 10rem);
+  padding: clamp(0.65rem, 1.5vw, 0.85rem);
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, #306694, #4d8ab8);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(48, 102, 148, 0.35);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-institute-regis-back:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 18px rgba(48, 102, 148, 0.45);
+}
+
+.btn-institute-regis-back:active {
+  transform: scale(0.97);
+}

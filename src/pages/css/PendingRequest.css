@@ -1,0 +1,247 @@
+/**header**/
+.pending-req-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(10px, 2vw, 15px);
+  margin: 0.5rem 1rem 1rem 1rem;
+  padding: clamp(10px, 2vw, 15px);
+  border-radius: 10px 20px 10px 20px;
+  border-left: 5px solid #a8cdd8;
+  border-bottom: 2px solid #a8cdd8;
+  border-top: 1px solid #a8cdd8;
+  background-color: #f0fbfc94;
+  backdrop-filter: blur(12px);
+}
+
+.pending-req-header h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: #306694;
+  flex: 1;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  backdrop-filter: none;
+  border-radius: 0;
+}
+
+.pending-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: #306694;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  flex-shrink: 0;
+}
+
+.pending-back-btn:hover {
+  background: #2a5288;
+  transform: scale(1.05);
+}
+
+/*pending request COntainers******
+.pending-req-container {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.2rem);
+  flex-wrap: wrap;
+  width: 100%;
+  text-align: center;
+  margin: clamp(1rem, 2vw, 1.5rem);
+}
+*/
+.pending-req-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  width: 100%;
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+/* CARD */
+.pending-request-card {
+  background: #ffffffd0;
+  border-radius: 16px;
+  padding: clamp(1rem, 2vw, 1.3rem);
+  box-shadow: 0 6px 15px rgba(147, 177, 182, 0.5);
+  border-left: 5px solid #306694;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  transition: 0.3s ease;
+}
+
+.pending-request-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(115, 154, 163, 0.7);
+}
+
+/* TOP SECTION */
+.card-top {
+  display: flex;
+
+  align-items: center;
+  gap: 10px;
+}
+
+.card-top img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  transition: 0.3s ease;
+}
+.card-top img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(48, 102, 148, 0.5);
+}
+
+.card-top h2 {
+  font-size: 1.2rem;
+  color: #306694;
+  flex: 1;
+  margin-left: 1rem;
+}
+
+/* BADGE */
+.badge {
+  background: #306694;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+.badge:hover {
+  background: #2a5288;
+  transform: scale(1.05);
+}
+
+/* DETAILS */
+.card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.card-details div span {
+  font-size: 0.75rem;
+  color: #777;
+}
+.card-details div span:hover {
+  color: #455874;
+  font-weight: 500;
+}
+
+.card-details div p {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2f415a;
+}
+.phn-pend-req {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+/* BUTTONS */
+.pending-request-btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.approve-btn,
+.reject-btn {
+  flex: 1;
+  border-radius: 25px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.approve-btn {
+  background: #306694;
+  color: white;
+  border: none;
+}
+
+.reject-btn {
+  background: white;
+  border: 2px solid #306694;
+  color: #306694;
+}
+.approve-btn:hover {
+  background: #2a5288;
+  transform: scale(1.05);
+}
+.reject-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+/**animation for empty state */
+.empty-state {
+  width: 100%;
+  text-align: center;
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* ANIMATION CIRCLE */
+.empty-animation {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a8cdd8, #306694);
+  position: relative;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* INNER CHECK ICON */
+.empty-animation::after {
+  content: "✔";
+  font-size: 2.5rem;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* PULSE EFFECT */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(48, 102, 148, 0.5);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 25px rgba(48, 102, 148, 0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* TEXT */
+.empty-state h2 {
+  font-size: 1.5rem;
+  color: #306694;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: #666;
+}

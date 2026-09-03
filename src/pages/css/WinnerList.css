@@ -1,0 +1,505 @@
+
+/* MAIN LAYOUT */
+.winner-section {
+  display: flex;
+  min-height: 100vh;
+}
+
+:root {
+  --left-info-width: clamp(180px, 18vw, 220px);
+  --left-info-gap: clamp(0.5rem, 1vw, 1rem);
+
+  --data-cols: clamp(55px, 5vw, 75px) /* Position */ clamp(90px, 9vw, 120px)
+    /* User ID */ minmax(120px, 1.2fr) /* Name */ clamp(70px, 8vw, 100px)
+    /* Marks */ clamp(100px, 10vw, 140px) /* Time Taken */
+    clamp(70px, 6vw, 90px); /* Achievement */
+}
+/****** Filter sidebar *******/
+.filter-section-ws {
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+  flex-shrink: 0;
+  padding: clamp(15px, 2vw, 20px);
+  background-color: #87c7c95b;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 2px 4px rgba(202, 239, 253, 0.87);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  overflow-y: auto;
+}
+
+.filter-section-ws h2 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+  text-align: center;
+  color: #306694;
+}
+
+.filter-section-ws hr {
+  margin: clamp(6px, 1vw, 8px) 0;
+  border: none;
+  height: 2px;
+  background-color: #e3f0f0ff;
+  opacity: 0.9;
+}
+
+.filter-group-ws {
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+}
+
+.filter-group-ws label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px #3333337e;
+  color: #2f415a;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.no-winners {
+  text-align: center;
+  padding: 40px;
+  font-size: 20px;
+  color: #666;
+  font-weight: 600;
+}
+
+.filter-group-ws select {
+  width: 100%;
+  padding: clamp(6px, 1vw, 8px);
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f0fbfc;
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  transition: border-color 0.2s ease;
+}
+
+.filter-group-ws select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.clear-filters {
+  margin: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  color: #33495cff;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px #48607ca4;
+}
+
+.su-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.su-page-info {
+  margin: 0 15px;
+  font-weight: 600;
+}
+
+/****** Filter toggle button (mobile only) ******/
+.filter-toggle-wrapper-ws {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 0.8rem;
+}
+
+.filter-toggle-button-ws {
+  display: none;
+  padding: clamp(8px, 1vw, 10px) clamp(16px, 2vw, 20px);
+  background-color: #306694;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.filter-toggle-button-ws:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+.filter-toggle-button-ws:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Fieldset */
+.winner-fieldset {
+  width: 100%;
+  border: 4px solid #f3fbfc;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  background: linear-gradient(180deg, #f5f8fc, #f1f5f9);
+  box-shadow: 0 4px 12px #717677a9;
+  box-sizing: border-box;
+}
+
+.winner-fieldset legend {
+  padding: 0 10px;
+  float: none;
+  text-align: center;
+}
+
+.winner-fieldset legend h1 {
+  background: #306490;
+  color: white;
+  padding: 8px 30px;
+  border-radius: 20px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 0;
+  display: inline-block;
+}
+
+/* Main section */
+.winner-main-section {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 2rem);
+  overflow-y: auto;
+}
+
+.winner-table-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.winner-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+/* ── Each row scrolls on its own ──
+   The left info block (quiz details / spacer) stays pinned via
+   position: sticky while the data columns scroll underneath it.
+   This keeps every row's scrollbar directly visible and usable,
+   instead of one scrollbar at the very bottom of the whole list. */
+.winner-header {
+  display: flex;
+  align-items: center;
+  gap: var(--left-info-gap);
+
+  font-size: 12px;
+  font-weight: bold;
+
+  padding: 0.4rem 1.2rem;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.winner-header-spacer {
+  display: block;
+  width: var(--left-info-width);
+  flex-shrink: 0;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.winner-header-data {
+  display: grid;
+  grid-template-columns: var(--data-cols);
+  column-gap: 1.5rem;
+  flex-shrink: 0;
+  min-width: 660px;
+  padding: 0 clamp(0.8rem, 1.5vw, 1.2rem);
+  box-sizing: border-box;
+}
+
+.winner-header-data .col-time,
+.student-row .col-time {
+  text-align: center;
+}
+
+.winner-header-data span,
+.student-row > span,
+.student-row > img {
+  text-align: left;
+}
+
+.winner-header-data .col-marks,
+.student-row .col-marks {
+  text-align: center;
+}
+
+.winner-header-data .col-achievement,
+.student-row img.certi-rep {
+  justify-self: center;
+  text-align: center;
+}
+
+.student-row img.certi-rep {
+  width: 22px;
+  cursor: pointer;
+}
+
+.winner-card {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  background: #f8fafc;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  box-shadow: 0 4px 10px rgba(82, 81, 81, 0.68);
+  gap: var(--left-info-gap);
+  box-sizing: border-box;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Visible, grabbable scrollbar for each row */
+.winner-header::-webkit-scrollbar,
+.winner-card::-webkit-scrollbar {
+  height: 8px;
+}
+.winner-header::-webkit-scrollbar-track,
+.winner-card::-webkit-scrollbar-track {
+  background: #f0fbfc;
+  border-radius: 10px;
+}
+.winner-header::-webkit-scrollbar-thumb,
+.winner-card::-webkit-scrollbar-thumb {
+  background: #42678894;
+  border-radius: 10px;
+}
+.winner-header::-webkit-scrollbar-thumb:hover,
+.winner-card::-webkit-scrollbar-thumb:hover {
+  background: #6fa1cfda;
+}
+
+.winner-header-data .col-position,
+.student-row .col-position,
+.winner-header-data span:nth-child(1),
+.student-row > span:first-child {
+  text-align: center;
+}
+
+.winner-header-data .col-name,
+.student-row .col-name,
+.winner-header-data span:nth-child(3),
+.student-row > span:nth-child(3) {
+  text-align: center;
+}
+
+.test-info {
+  width: var(--left-info-width);
+  min-width: var(--left-info-width);
+  flex-shrink: 0;
+  border-right: 2px solid #e5e7eb;
+  padding-right: 15px;
+  box-sizing: border-box;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #f8fafc;
+}
+
+.test-info h2 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.test-info p {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.students-list {
+  flex-shrink: 0;
+  min-width: 660px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.student-row {
+  display: grid;
+  grid-template-columns: var(--data-cols);
+  column-gap: 1.5rem;
+  align-items: center;
+  background: white;
+  padding: clamp(0.6rem, 1vw, 0.9rem) clamp(0.8rem, 1.5vw, 1.2rem);
+  border-radius: 8px;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  font-size: 14px;
+  width: 100%;
+  min-width: 660px;
+  box-sizing: border-box;
+}
+
+.student-row:hover {
+  background: #e0f2fe;
+  transform: translateY(-2px);
+}
+.student-row span:first-child {
+  font-weight: bold;
+}
+.student-row:nth-child(1) span:first-child {
+  color: #f59e0b;
+}
+.student-row:nth-child(2) span:first-child {
+  color: #6b7280;
+}
+.student-row:nth-child(3) span:first-child {
+  color: #b45309;
+}
+.student-row span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-winner {
+  border: none;
+  background: #306490;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  justify-self: start;
+}
+.btn-winner:hover {
+  background: #2f5c8a;
+}
+
+/* NOTE: Sir added this second .no-winners rule (conflicts with the
+   .no-winners rule defined earlier in the file, near .filter-group-ws).
+   Since this one comes later, it will override the earlier one for
+   padding and font-weight. Remove one of the two if you don't want
+   this override. */
+.no-winners {
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .winner-section {
+    flex-direction: column;
+  }
+
+  .filter-section-ws {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(220px, 82vw, 300px);
+    max-height: 55vh;
+    overflow-y: auto;
+    z-index: 10;
+    margin-top: 1rem;
+    background-color: #8ec4c5f2;
+    border: 1px solid #d4f8f8d7;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+    padding: 12px;
+    height: auto;
+  }
+
+  .filter-section--open-ws {
+    display: block;
+  }
+
+  .filter-toggle-button-ws {
+    display: inline-block;
+  }
+
+  .filter-section-ws::-webkit-scrollbar {
+    width: 8px;
+  }
+  .filter-section-ws::-webkit-scrollbar-track {
+    background: #f0fbfc;
+    border-radius: 10px;
+  }
+  .filter-section-ws::-webkit-scrollbar-thumb {
+    background: #42678894;
+    border-radius: 10px;
+  }
+  .filter-section-ws::-webkit-scrollbar-thumb:hover {
+    background: #6fa1cfda;
+  }
+
+  .filter-section-ws h2 {
+    font-size: 1.1em;
+    text-align: left;
+    font-weight: 600;
+    color: #306694;
+  }
+  .filter-group-ws label {
+    font-size: 0.95rem;
+    color: #2f415a;
+    font-weight: 600;
+  }
+
+  .winner-main-section {
+    padding: 12px;
+    width: 100%;
+  }
+}
+
+/* Search input inside sidebar (matches dropdown theme) */
+.su-filter-group input {
+  width: 100%;
+  padding: clamp(0.55rem, 1vw, 0.7rem) clamp(0.7rem, 1.2vw, 0.9rem);
+  border: 1.5px solid #d1d5db;
+  border-radius: 30px;
+  background-color: #f0fbfc;
+  color: #2f415a;
+  font-size: clamp(0.85em, 2vw, 0.9em);
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.su-filter-group input::placeholder {
+  color: #6b8496;
+}
+
+.su-filter-group input:hover {
+  border-color: #9ec8d8;
+}
+
+.su-filter-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Optional: search icon inside the field */
+.su-filter-group {
+  position: relative;
+}
+
+.su-filter-group input {
+  padding-left: 2.4rem;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23306694' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3ccircle cx='11' cy='11' r='7'%3e%3c/circle%3e%3cline x1='21' y1='21' x2='16.65' y2='16.65'%3e%3c/line%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: left 0.8rem center;
+  background-size: 1rem;
+}

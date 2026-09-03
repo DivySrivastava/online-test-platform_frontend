@@ -985,3 +985,21 @@ h2 {
   opacity: 1 !important;
   z-index: 3;
 }
+
+/* =========================================================
+   LEFT SIDEBAR - MENU & USER FEEDBACK
+   ========================================================= */
+
+.menu-box {
+  background: #d1e7e5 !important;
+}
+
+.feedback-box {
+  background: #c7e1df !important;
+}
+.menu-item {
+  background: #ecf2f2 !important;
+}
+.menu-item:hover {
+  background: #c9e3e1 !important;
+}

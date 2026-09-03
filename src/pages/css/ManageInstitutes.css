@@ -365,11 +365,11 @@
     right: clamp(12px, 2vw, 15px);
     width: clamp(200px, 50vw, 280px);
     max-height: 60vh;
-    background-color: #87c7c9e5;
+    background-color: #d4ecef;
     overflow-y: auto;
     border-radius: 14px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
-    z-index: 80;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
     padding: clamp(10px, 1.5vw, 12px);
     margin: 0;
   }
@@ -493,5 +493,24 @@
 
   .table-wrap::-webkit-scrollbar-thumb:hover {
     background: #6fa1cfda;
+  }
+}
+
+.filter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 40, 60, 0.35);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 999;
+  animation: fadeInOverlay 0.2s ease;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

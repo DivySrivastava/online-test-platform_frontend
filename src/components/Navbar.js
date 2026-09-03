@@ -34,6 +34,10 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
   //to handle smooth scrolling to section
   const handleScroll = (event, sectionId) => {
     // IMPORTANT: stop the browser's default anchor (#hash) jump.
@@ -287,7 +291,7 @@ const Navbar = () => {
         )}
 
         {/* Mobile menu toggle button */}
-        {!isDashboardRoute && (
+        {!isDashboardRoute && !user && (
           <div
             className="menu-icon"
             onClick={toggleMenu}
@@ -302,92 +306,94 @@ const Navbar = () => {
         )}
 
         <>
-          {/**mobile nav links shown when menu is open */}
-          <div
-            className={`nav-links ${isMenuOpen ? "active" : ""}`}
-            ref={mobileNavRef}
-            id="mobile-nav"
-            aria-hidden={!isMenuOpen}
-          >
-            <ul className="nav-links-list">
-              <li>
-                <a
-                  href="#home"
-                  onClick={(e) => handleScroll(e, "home")}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#education"
-                  onClick={(e) => handleScroll(e, "education")}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Education
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#quiz"
-                  onClick={(e) => handleScroll(e, "quiz")}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Quiz
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#humanity-science"
-                  onClick={(e) => handleScroll(e, "humanity-science")}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Humanity & Science
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#aboutUs"
-                  onClick={(e) => handleScroll(e, "aboutUs")}
-                  tabIndex={isMenuOpen ? 0 : 1}
-                >
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#FeedbackForm"
-                  onClick={(e) => handleScroll(e, "feedback")}
-                  tabIndex={isMenuOpen ? 0 : 1}
-                >
-                  Feedback
-                </a>
-              </li>
-            </ul>
-            {/* Mobile navigation buttons */}
-
-            {!user && (
-              <div className="nav-btns nav-btns-mobile">
-                <button
-                  className="login-btn"
-                  onClick={handleLogin}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Login
-                </button>
-                <div>
-                  <button
-                    className="signup-btn"
-                    onClick={handleSignup}
+          {/**mobile nav links shown when menu is open — only on public pages */}
+          {!isDashboardRoute && (
+            <div
+              className={`nav-links ${isMenuOpen ? "active" : ""}`}
+              ref={mobileNavRef}
+              id="mobile-nav"
+              aria-hidden={!isMenuOpen}
+            >
+              <ul className="nav-links-list">
+                <li>
+                  <a
+                    href="#home"
+                    onClick={(e) => handleScroll(e, "home")}
                     tabIndex={isMenuOpen ? 0 : -1}
                   >
-                    Sign Up
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#education"
+                    onClick={(e) => handleScroll(e, "education")}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Education
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#quiz"
+                    onClick={(e) => handleScroll(e, "quiz")}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Quiz
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#humanity-science"
+                    onClick={(e) => handleScroll(e, "humanity-science")}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Humanity & Science
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#aboutUs"
+                    onClick={(e) => handleScroll(e, "aboutUs")}
+                    tabIndex={isMenuOpen ? 0 : 1}
+                  >
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#FeedbackForm"
+                    onClick={(e) => handleScroll(e, "feedback")}
+                    tabIndex={isMenuOpen ? 0 : 1}
+                  >
+                    Feedback
+                  </a>
+                </li>
+              </ul>
+              {/* Mobile navigation buttons */}
+
+              {!user && (
+                <div className="nav-btns nav-btns-mobile">
+                  <button
+                    className="login-btn"
+                    onClick={handleLogin}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Login
                   </button>
+                  <div>
+                    <button
+                      className="signup-btn"
+                      onClick={handleSignup}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Sign Up
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {/**desktop nav links */}
           <div className="nav-links desktop-nav-links">

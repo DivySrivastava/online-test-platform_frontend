@@ -461,14 +461,9 @@
 
   .actions-dropdown-container {
     display: block;
-  }
-
-  .actions-dropdown-container {
-    position: sticky;
-    top: calc(5rem + 30px + 20px);
+    position: relative;
     z-index: 40;
   }
-
   .form-group {
     min-width: 100%;
   }

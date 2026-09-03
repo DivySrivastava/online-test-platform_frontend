@@ -1,57 +1,117 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
 .pastTest {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   font-family: "Poppins", sans-serif;
+
   background: #f0fbfc8a;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
   min-height: 100vh;
   font-size: 0.95rem;
+
+  overflow-x: hidden;
 }
 
-/******Filterby section*******/
+/* =========================================================
+   FILTER SECTION
+========================================================= */
+
 .Sticky-filterby {
   align-self: stretch;
+  flex-shrink: 0;
 }
 
 .filter-section {
   width: clamp(220px, 22vw, 280px);
   min-width: 220px;
+
   flex-shrink: 0;
+
   padding: clamp(15px, 2vw, 20px);
+
   background-color: #87c7c95b;
+
   border-right: 1px solid #d4f8f8d7;
+
   box-shadow: 0 2px 4px rgba(202, 239, 253, 0.87);
+
   transition: all 0.3s ease;
+
   height: 100%;
   min-height: calc(100vh - 3rem);
+
   position: sticky;
   top: 3rem;
+
   z-index: 30;
 }
 
 .filter-section h2 {
   font-size: clamp(1.2rem, 3vw, 1.5rem);
-  margin-bottom: clamp(12px, 1.5vw, 15px);
+
+  margin: 0 0 clamp(12px, 1.5vw, 15px);
+
   font-weight: 600;
 
   text-align: center;
+
   color: #306694;
 }
 
 .filter-section hr {
   margin: clamp(6px, 1vw, 8px) 0;
+
   border: none;
+
   height: 2px;
+
   background-color: #e3f0f0ff;
+
   opacity: 0.9;
 }
 
+/* =========================================================
+   FILTER GROUP
+========================================================= */
+
 .filter-group {
   margin-bottom: clamp(12px, 1.5vw, 15px);
+
   padding: clamp(10px, 1.5vw, 14px);
+
   border-radius: 12px;
+
   background-color: #f0fbfc70;
+
   box-shadow: 0 2px 6px rgba(48, 102, 148, 0.12);
+
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -60,7 +120,9 @@
 
 .filter-group:hover {
   transform: translateY(-4px);
+
   background-color: #f0fbfcb0;
+
   box-shadow:
     0 10px 20px rgba(48, 102, 148, 0.28),
     0 0 0 1px rgba(59, 130, 246, 0.25);
@@ -68,41 +130,72 @@
 
 .filter-group label {
   display: block;
+
   margin-bottom: 4px;
+
   font-weight: 500;
+
   text-shadow: 0 1px 2px #3333337e;
+
   color: #2f415a;
+
   font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
+/* =========================================================
+   SELECT
+========================================================= */
+
 .filter-group select {
   width: 100%;
+
   padding: clamp(6px, 1vw, 8px);
+
   border: 1px solid #d1d5db;
+
   border-radius: 6px;
+
   background-color: #f0fbfc;
+
   font-size: clamp(0.85em, 2vw, 0.9em);
+
   transition: border-color 0.2s ease;
 }
 
 .filter-group select:focus {
   outline: none;
+
   border-color: #3b82f6;
+
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+/* =========================================================
+   INPUT
+========================================================= */
+
 .filter-group input {
   width: 100%;
+
   padding: clamp(8px, 1vw, 10px) clamp(10px, 1.2vw, 12px) clamp(8px, 1vw, 10px)
     36px;
+
   border: 1px solid #d1d5db;
+
   border-radius: 30px;
+
   background-color: #f0fbfc;
+
   font-size: clamp(0.85em, 2vw, 0.9em);
+
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23306694' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+
   background-repeat: no-repeat;
+
   background-position: 12px center;
+
   background-size: 15px 15px;
+
   transition:
     border-color 0.25s ease,
     box-shadow 0.25s ease,
@@ -120,26 +213,47 @@
 
 .filter-group input:focus {
   outline: none;
+
   background-color: #ffffff;
+
   border-color: #3b82f6;
+
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+
   transform: translateY(-2px);
 }
 
+/* =========================================================
+   CLEAR FILTER BUTTON
+========================================================= */
+
 .clear-filters-btn {
   width: 100%;
+
   box-sizing: border-box;
+
   margin: 0.5rem 0 0;
+
   padding: clamp(10px, 1.4vw, 12px);
+
   border-radius: 10px;
+
   text-align: center;
+
   font-weight: 600;
+
   color: #ffffff;
+
   font-size: 1rem;
+
   cursor: pointer;
+
   background-color: #d32f2f;
+
   border: 2px solid #d32f2f;
+
   box-shadow: 0 2px 6px rgba(211, 47, 47, 0.25);
+
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -149,8 +263,11 @@
 
 .clear-filters-btn:hover {
   transform: translateY(-4px);
+
   background-color: #b71c1c;
+
   border-color: #7f0000;
+
   box-shadow:
     0 0 0 4px rgba(211, 47, 47, 0.22),
     0 10px 20px rgba(211, 47, 47, 0.35);
@@ -158,64 +275,114 @@
 
 .clear-filters-btn:active {
   transform: translateY(-1px);
+
   box-shadow:
     0 0 0 2px rgba(211, 47, 47, 0.3),
     0 4px 10px rgba(211, 47, 47, 0.3);
 }
 
-/***Main section of page**/
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
 .pastTest-main-section {
-  flex-grow: 1;
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  width: 100%;
+
   padding: clamp(8px, 1.5vw, 12px) clamp(15px, 3vw, 20px) clamp(15px, 3vw, 20px);
+
   text-align: center;
 
   min-height: 100vh;
+
+  overflow-x: hidden;
 }
 
-/**header**/
+/* =========================================================
+   HEADER
+========================================================= */
+
 .pastTest-header {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   flex-wrap: wrap;
+
   position: static;
-  top: calc(3.5rem + 10px);
+
   z-index: 30;
+
   gap: clamp(10px, 2vw, 15px);
+
   margin-bottom: clamp(10px, 2vw, 15px);
 }
 
 .pastTest-main-section h1 {
   font-size: clamp(1.5rem, 4vw, 2rem);
+
   padding: clamp(10px, 2vw, 15px);
+
+  margin: 0;
+
   border-radius: 10px 20px 10px 20px;
+
   border-left: 5px solid #a8cdd8;
+
   border-bottom: 2px solid #a8cdd8;
+
   border-top: 1px solid #a8cdd8;
+
   font-weight: 700;
+
   color: #306694;
+
   background-color: #f0fbfc94;
+
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
   flex: 1;
+
+  min-width: 0;
+
   text-align: center;
 }
 
-/****Filter by button****/
+/* =========================================================
+   FILTER TOGGLE BUTTON
+========================================================= */
+
 .filter-toggle-wrapper {
   position: relative;
 }
 
 .filter-toggle-button {
   display: none;
+
   padding: clamp(8px, 1vw, 10px) clamp(16px, 2vw, 20px);
+
   background-color: #306694;
+
   color: white;
+
   border: none;
+
   border-radius: 30px;
+
   cursor: pointer;
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
   font-size: clamp(0.85em, 2vw, 0.9em);
+
   font-weight: 500;
+
   transition:
     background-color 0.2s ease,
     transform 0.2s ease;
@@ -223,48 +390,76 @@
 
 .filter-toggle-button:hover {
   background-color: #2563eb;
+
   transform: scale(1.05);
 }
 
 .filter-toggle-button:focus {
   outline: none;
+
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-/****Table container*******/
+/* =========================================================
+   TABLE
+========================================================= */
+
 .table-container {
+  width: 100%;
+
+  max-width: 100%;
+
   border-radius: 30px 30px 10px 10px;
-  margin: 0.8rem 1rem 1rem;
+
+  margin: 0.8rem 0 1rem;
+
   overflow: hidden;
-  /* Clips table corners to match border-radius */
+
   border: 2px solid #a8cdd8;
+
   box-shadow: 0 4px 8px #90aeb8c4;
+}
+
+.table-scroll {
+  width: 100%;
+
+  max-width: 100%;
+
+  overflow-x: auto;
+
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
   width: 100%;
+
+  min-width: 850px;
+
   border-collapse: collapse;
 }
 
 thead {
   background: #306694;
+
   color: white;
 }
 
 thead tr:first-child th:first-child {
   border-top-left-radius: 28px;
-  /* Matches container's top-left radius (30px - 2px border) */
 }
 
 thead tr:first-child th:last-child {
   border-top-right-radius: 28px;
-  /* Matches container's top-right radius */
 }
 
 th,
 td {
   border: 1px solid #a8cdd8;
+
   padding: clamp(8px, 1vw, 12px);
+
   text-align: center;
 
   font-size: clamp(0.9rem, 1.5vw, 1rem);
@@ -276,18 +471,21 @@ th {
 
 td {
   background-color: #ffffff;
+
   color: #2f415a;
 }
 
 .certi-rep {
   width: 30px;
+
   height: 30px;
+
   cursor: pointer;
 }
 
-/* ===========================
-   Summary Cards
-=========================== */
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
 
 .payment-summary {
   display: flex;
@@ -296,11 +494,15 @@ td {
 
   gap: 15px;
 
+  width: 100%;
+
   margin: 14px 0 12px;
 }
 
 .summary-card {
   flex: 1;
+
+  min-width: 0;
 
   background: #ffffff;
 
@@ -341,8 +543,6 @@ td {
   color: #2e5e92;
 }
 
-/* Individual Card Colors */
-
 .summary-card.revenue {
   border-top-color: #1565c0;
 }
@@ -358,6 +558,10 @@ td {
 .summary-card.failed {
   border-top-color: #d32f2f;
 }
+
+/* =========================================================
+   STATUS
+========================================================= */
 
 .status-column {
   font-weight: 600;
@@ -395,6 +599,18 @@ td {
   background: #17a2b8;
 }
 
+.payment-status {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  font-weight: 600;
+}
+
 .view-icon {
   color: #306694;
 
@@ -411,25 +627,17 @@ td {
   transform: scale(1.15);
 }
 
-.payment-status {
-  display: flex;
+.disabled-eye {
+  color: #bdbdbd;
 
-  align-items: center;
+  cursor: not-allowed;
 
-  gap: 8px;
-
-  font-weight: 600;
+  pointer-events: none;
 }
 
-.status-dot {
-  width: 10px;
-
-  height: 10px;
-
-  border-radius: 50%;
-
-  display: inline-block;
-}
+/* =========================================================
+   PAYMENT MODAL
+========================================================= */
 
 .payment-modal-overlay {
   position: fixed;
@@ -449,6 +657,8 @@ td {
 
 .payment-modal {
   width: 850px;
+
+  max-width: calc(100vw - 30px);
 
   max-height: 90vh;
 
@@ -551,117 +761,313 @@ td {
   background: #0b5ed7;
 }
 
-.view-icon {
-  font-size: 18px;
+/* =========================================================
+   MOBILE 768px
+========================================================= */
 
-  color: #0d6efd;
-
-  cursor: pointer;
-}
-
-.view-icon:hover {
-  color: #084298;
-}
-
-.disabled-eye {
-  color: #bdbdbd;
-
-  cursor: not-allowed;
-
-  pointer-events: none;
-}
-
-/****Responsiveness******/
 @media (max-width: 768px) {
   .pastTest {
-    flex-direction: column;
+    display: block;
+
+    width: 100%;
+
+    max-width: 100%;
+
+    min-width: 0;
+
+    overflow-x: hidden;
   }
+
+  /* -------------------------------------------------------
+     HIDE DESKTOP FILTER
+  ------------------------------------------------------- */
+
+  .Sticky-filterby {
+    width: 0;
+
+    height: 0;
+
+    position: static;
+  }
+
+  /* -------------------------------------------------------
+     MOBILE FILTER PANEL
+     
+     IMPORTANT:
+     Filter size remains fixed/same.
+  ------------------------------------------------------- */
 
   .filter-section {
     display: none;
+
     position: fixed;
-    top: calc(4rem + 10px);
-    right: clamp(12px, 2vw, 15px);
-    width: clamp(200px, 50vw, 280px);
-    max-height: 50vh;
+
+    top: calc(3.5rem + 10px);
+
+    right: 10px;
+
+    width: 280px;
+
+    max-width: calc(100vw - 20px);
+
+    min-width: 0;
+
+    height: auto;
+
+    min-height: 0;
+
+    max-height: calc(100vh - 100px);
+
     overflow-y: auto;
-    z-index: 40;
-    background-color: #8ec4c5e0;
+
+    padding: 12px;
+
+    background-color: rgba(142, 196, 197, 0.94);
+
     border: 1px solid #d4f8f8d7;
+
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: clamp(10px, 1.5vw, 12px);
+
+    box-shadow:
+      0 8px 25px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    z-index: 1002;
   }
 
-  /* Custom Scrollbar Styling */
-  .filter-section::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .filter-section::-webkit-scrollbar-track {
-    background: #f0fbfc;
-    border-radius: 10px;
-    margin: 5px 0;
-  }
-
-  .filter-section::-webkit-scrollbar-thumb {
-    background: #42678894;
-    border-radius: 10px;
-  }
-
-  .filter-section::-webkit-scrollbar-thumb:hover {
-    background: #6fa1cfda;
-  }
-
-  .filter-section h2 {
-    font-size: clamp(1.1em, 3vw, 1.3em);
-    text-align: left;
-    font-weight: 600;
-    text-shadow: 0 1px 2px #7e8185ea;
-    color: #306694;
-  }
-
-  .filter-group label {
-    font-size: clamp(1rem, 1.5vw, 1.5rem);
-    color: #2f415a;
-    text-shadow: none;
-    font-weight: 600;
-  }
+  /* OPEN FILTER */
 
   .filter-section--open {
     display: block;
   }
 
-  .filter-toggle-button {
-    display: block;
+  /* -------------------------------------------------------
+     BACKGROUND BLUR ONLY
+     
+     Filter khud blur nahi hoga.
+  ------------------------------------------------------- */
+
+  .filter-backdrop {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+
+    z-index: 1000;
+
+    pointer-events: auto;
   }
+
+  /* -------------------------------------------------------
+     FILTER HEADING
+  ------------------------------------------------------- */
+
+  .filter-section h2 {
+    font-size: 1.2rem;
+
+    text-align: left;
+
+    font-weight: 600;
+
+    text-shadow: 0 1px 2px #7e8185ea;
+
+    color: #306694;
+
+    margin-bottom: 12px;
+  }
+
+  /* -------------------------------------------------------
+     FILTER LABEL
+  ------------------------------------------------------- */
+
+  .filter-group label {
+    font-size: 0.95rem;
+
+    color: #2f415a;
+
+    text-shadow: none;
+
+    font-weight: 600;
+  }
+
+  /* -------------------------------------------------------
+     FILTER TOGGLE
+  ------------------------------------------------------- */
 
   .filter-toggle-wrapper {
     position: relative;
+
+    z-index: 1003;
+
+    flex-shrink: 0;
   }
+
+  .filter-toggle-button {
+    display: block;
+
+    padding: 9px 16px;
+
+    white-space: nowrap;
+
+    background-color: #306694;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    font-size: 0.9rem;
+
+    font-weight: 500;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* -------------------------------------------------------
+     MAIN CONTENT
+  ------------------------------------------------------- */
 
   .pastTest-main-section {
-    padding: clamp(12px, 2vw, 15px);
-    position: relative;
+    display: block;
+
+    width: 100%;
+
+    max-width: 100%;
+
+    min-width: 0;
+
+    padding: 10px;
+
+    margin: 0;
+
+    overflow-x: hidden;
   }
+
+  /* -------------------------------------------------------
+     HEADER
+  ------------------------------------------------------- */
 
   .pastTest-header {
+    width: 100%;
+
+    display: flex;
+
     flex-direction: row;
+
     justify-content: space-between;
+
     align-items: center;
+
+    flex-wrap: nowrap;
+
+    gap: 8px;
+
     position: sticky;
-    top: calc(3.5rem + 10px);
+
+    top: 0;
+
+    z-index: 999;
+
+    margin-bottom: 12px;
   }
 
+  .pastTest-main-section h1 {
+    flex: 1;
+
+    min-width: 0;
+
+    margin: 0;
+
+    padding: 10px 8px;
+
+    font-size: 1.35rem;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  /* -------------------------------------------------------
+     SUMMARY CARDS
+  ------------------------------------------------------- */
+
+  .payment-summary {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin: 12px 0;
+  }
+
+  .summary-card {
+    width: 100%;
+
+    min-width: 0;
+
+    padding: 10px 6px;
+  }
+
+  .summary-title {
+    font-size: 13px;
+  }
+
+  .summary-value {
+    font-size: 20px;
+  }
+
+  /* -------------------------------------------------------
+     TABLE
+  ------------------------------------------------------- */
+
   .table-container {
-    margin: 0.7rem;
+    width: 100%;
+
+    max-width: 100%;
+
+    margin: 10px 0;
 
     border-radius: 20px 20px 10px 10px;
+
+    overflow: hidden;
+  }
+
+  .table-scroll {
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+  }
+
+  table {
+    min-width: 850px;
   }
 
   thead tr:first-child th:first-child {
     border-top-left-radius: 18px;
-    /* Matches container's top-left radius (20px - 2px border) */
   }
 
   thead tr:first-child th:last-child {
@@ -670,93 +1076,282 @@ td {
 
   th,
   td {
-    padding: clamp(6px, 1vw, 8px);
-    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    padding: 7px;
+
+    font-size: 0.85rem;
+
+    white-space: nowrap;
+  }
+
+  /* -------------------------------------------------------
+     TABLE SCROLLBAR
+  ------------------------------------------------------- */
+
+  .table-scroll::-webkit-scrollbar {
+    height: 7px;
+  }
+
+  .table-scroll::-webkit-scrollbar-track {
+    background: #f0fbfc;
+
+    border-radius: 10px;
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: #42678894;
+
+    border-radius: 10px;
   }
 }
 
+/* =========================================================
+   SMALL MOBILE 480px
+========================================================= */
+
 @media (max-width: 480px) {
+  .pastTest {
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow-x: hidden;
+  }
+
+  /* -------------------------------------------------------
+     FILTER
+     
+     Same visual size, but never wider than screen.
+  ------------------------------------------------------- */
+
   .filter-section {
-    width: clamp(180px, 80vw, 260px);
-    right: clamp(8px, 2vw, 10px);
+    width: 280px;
+
+    max-width: calc(100vw - 20px);
+
+    right: 10px;
+
     top: calc(3.5rem + 10px);
+
+    max-height: calc(100vh - 90px);
+
+    padding: 12px;
   }
 
-  .filter-section h2 {
-    font-size: clamp(1em, 3vw, 1.2em);
-  }
-
-  .filter-group label,
-  .filter-group select {
-    font-size: clamp(0.8em, 2vw, 0.85em);
-  }
+  /* -------------------------------------------------------
+     MAIN
+  ------------------------------------------------------- */
 
   .pastTest-main-section {
-    padding: clamp(6px, 1vw, 8px);
+    width: 100%;
+
+    max-width: 100%;
+
+    padding: 8px;
+
+    margin: 0;
+
+    overflow-x: hidden;
+  }
+
+  /* -------------------------------------------------------
+     HEADER
+  ------------------------------------------------------- */
+
+  .pastTest-header {
+    width: 100%;
+
+    gap: 6px;
+
+    margin-bottom: 10px;
   }
 
   .pastTest-main-section h1 {
-    font-size: clamp(1.2em, 4vw, 1.5em);
+    font-size: 1.15rem;
+
+    padding: 9px 6px;
+
+    border-left-width: 4px;
+
+    white-space: nowrap;
   }
 
   .filter-toggle-button {
-    padding: clamp(8px, 2vw, 10px);
+    padding: 8px 12px;
+
+    font-size: 0.82rem;
   }
+
+  /* -------------------------------------------------------
+     SUMMARY
+  ------------------------------------------------------- */
+
+  .payment-summary {
+    width: 100%;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin: 10px 0;
+  }
+
+  .summary-card {
+    padding: 9px 5px;
+
+    border-radius: 10px;
+  }
+
+  .summary-title {
+    font-size: 12px;
+
+    line-height: 1.3;
+  }
+
+  .summary-value {
+    margin-top: 5px;
+
+    font-size: 18px;
+  }
+
+  /* -------------------------------------------------------
+     TABLE
+  ------------------------------------------------------- */
 
   .table-container {
-    margin: 0.6rem;
+    width: 100%;
+
+    margin: 8px 0;
+
+    border-radius: 18px 18px 8px 8px;
+  }
+
+  .table-scroll {
+    width: 100%;
+
     overflow-x: auto;
-    border-radius: 20px 20px 10px 10px;
+
+    overflow-y: hidden;
   }
 
-  .table-container::-webkit-scrollbar {
-    height: 8px;
+  table {
+    min-width: 850px;
   }
 
-  .table-container::-webkit-scrollbar-track {
+  th,
+  td {
+    padding: 6px;
+
+    font-size: 0.8rem;
+  }
+
+  /* -------------------------------------------------------
+     FILTER GROUP
+  ------------------------------------------------------- */
+
+  .filter-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .filter-group {
+    padding: 10px;
+
+    margin-bottom: 10px;
+  }
+
+  .filter-group label {
+    font-size: 0.85rem;
+  }
+
+  .filter-group select {
+    font-size: 0.85rem;
+
+    padding: 7px;
+  }
+
+  .filter-group input {
+    font-size: 0.85rem;
+
+    padding-top: 8px;
+
+    padding-bottom: 8px;
+  }
+
+  .clear-filters-btn {
+    font-size: 0.9rem;
+
+    padding: 9px;
+  }
+
+  /* -------------------------------------------------------
+     SCROLLBAR
+  ------------------------------------------------------- */
+
+  .table-scroll::-webkit-scrollbar {
+    height: 7px;
+  }
+
+  .table-scroll::-webkit-scrollbar-track {
     background: #f0fbfc;
+
     border-radius: 10px;
-    margin: 5px 0;
   }
 
-  .table-container::-webkit-scrollbar-thumb {
+  .table-scroll::-webkit-scrollbar-thumb {
     background: #42678894;
-    border-radius: 10px;
-  }
 
-  .table-container::-webkit-scrollbar-thumb:hover {
-    background: #6fa1cfda;
+    border-radius: 10px;
   }
 }
 
-/****Pagination*******/
+/* =========================================================
+   PAGINATION
+========================================================= */
+
 .pagination {
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   gap: clamp(14px, 2vw, 22px);
+
   padding: clamp(14px, 2vw, 18px);
+
   background-color: #ffffff;
 }
 
 .pagination span {
   font-weight: 600;
+
   color: #2f415a;
+
   font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .pagination-arrow-btn {
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   width: 40px;
+
   height: 40px;
+
   border-radius: 50%;
+
   border: 2px solid #306694;
+
   background-color: #f0fbfc;
+
   color: #306694;
+
   font-size: 1rem;
+
   cursor: pointer;
+
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -766,8 +1361,11 @@ td {
 
 .pagination-arrow-btn:hover:not(:disabled) {
   background-color: #306694;
+
   color: #ffffff;
+
   transform: scale(1.12);
+
   box-shadow: 0 4px 12px rgba(48, 102, 148, 0.4);
 }
 
@@ -777,7 +1375,10 @@ td {
 
 .pagination-arrow-btn:disabled {
   opacity: 0.4;
+
   cursor: not-allowed;
+
   border-color: #b9c9d1;
+
   color: #b9c9d1;
 }

@@ -1083,6 +1083,9 @@
     width: 100%;
     margin-bottom: clamp(0.6rem, 1.5vw, 0.8rem);
   }
+  .menu-box {
+    display: none;
+  }
   .middle-section {
     order: 1;
     margin: -1rem 0 0 0;

@@ -190,6 +190,14 @@ const WinnerSection = () => {
                 </div>
             </div>*/}
 
+      {/* NEW — overlay */}
+      {isFilterOpen && (
+        <div
+          className="filter-overlay"
+          onClick={() => setIsFilterOpen(false)}
+        />
+      )}
+
       <aside
         className={`su-filter${isFilterOpen ? " su-filter--open" : ""}`}
         ref={filterRef}
@@ -256,24 +264,6 @@ const WinnerSection = () => {
           </select>
         </div>
 
-        {/* <div className="su-filter-group">
-                    <label>Search By</label>
-                    <select
-                        value={filters.search_type}
-                        onChange={(e) => {
-                            setFilters(prev => ({
-                                ...prev,
-                                search_type: e.target.value,
-                                search: ""
-                            }));
-
-                        }}
-                    >
-                        <option value="name">Search By Quiz Name</option>
-                        <option value="id">Search By Quiz ID</option>
-                    </select>
-                </div> */}
-
         <div className="su-filter-group">
           <label>
             {/* {filters.search_type === "name" ? "Quiz Name" : "Quiz ID"} */}
@@ -316,6 +306,7 @@ const WinnerSection = () => {
           Clear Search & Filter
         </div>
       </aside>
+      
       {/* ── Main content ── */}
       <div className="winner-main-section">
         <fieldset className="winner-fieldset">
@@ -328,8 +319,7 @@ const WinnerSection = () => {
                         which is position:relative so the sidebar dropdown anchors
                         directly below this button on mobile.
                     */}
-
-          <div className="filter-toggle-wrapper-ws" ref={filterRef}>
+          <div className="filter-toggle-wrapper-ws">
             <button
               className="filter-toggle-button-ws"
               onClick={toggleFilter}
@@ -338,82 +328,10 @@ const WinnerSection = () => {
               {isFilterOpen ? "Hide Filters" : "Filter By"}
             </button>
           </div>
-          {/* <div className="filter-toggle-wrapper-ws" ref={filterRef}>
-                        <button
-                            className="filter-toggle-button-ws"
-                            onClick={toggleFilter}
-                            ref={buttonRef}
-                        >
-                            {isFilterOpen ? "Hide Filters" : "Filter By"}
-                        </button>
 
-                        <div
-                            className={`filter-section-ws ${isFilterOpen ? "filter-section--open-ws" : ""}`}
-                        >
-                            {/* FILTER CONTENT 
-                            <h2>Filter By</h2>
-                            <hr />
-                            <div className="filter-group-ws">
-                                <label>State</label>
-                                <select>
-                                    <option value="">All States</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="rejected">Rejected</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="scheduled">Scheduled</option>
-                                    <option value="live">Live</option>
-                                    <option value="expired">Expired</option>
-                                    <option value="deleted">Deleted</option>
-                                </select>
-                            </div>
-                            <hr />
-                            <div className="filter-group-ws">
-                                <label>Visibility</label>
-                                <select>
-                                    <option value="">All</option>
-                                    <option value="institution-based">Institution Based</option>
-                                    <option value="global">Global</option>
-                                    <option value="interest-based">Interest Based</option>
-                                </select>
-                            </div>
-                            <hr />
-                            <div className="filter-group-ws">
-                                <label>Language</label>
-                                <select>
-                                    <option value="">All Languages</option>
-                                    <option value="english">English</option>
-                                    <option value="hindi">Hindi</option>
-                                </select>
-                            </div>
-                            <hr />
-                            <div className="filter-group-ws">
-                                <label>Categories</label>
-                                <select>
-                                    <option value="">All Categories</option>
-                                    <option value="general">General</option>
-                                    <option value="academic">Academic</option>
-                                    <option value="competitive">Competitive</option>
-                                    <option value="mock">Mock</option>
-                                </select>
-                            </div>
-                            <hr />
-                            <div className="filter-group-ws">
-                                <label>Pricing</label>
-                                <select>
-                                    <option value="">All</option>
-                                    <option value="unpaid">Unpaid</option>
-                                    <option value="paid">Paid</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> */}
 
           <div className="winner-table-cards">
-            {/*
-              Header row:
-              - 1 invisible spacer span (mimic left-info-width + gap)
-              - 6 label spans (match --data-cols exactly), wrapped for alignment
-            */}
+        
             <div className="winner-header">
               <span className="winner-header-spacer" aria-hidden="true" />
               <div className="winner-header-data">

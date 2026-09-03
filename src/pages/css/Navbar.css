@@ -1,10 +1,12 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
- 
+
 /* Restore original navbar styling */
 .sahash-navbar {
   position: sticky;
@@ -24,7 +26,7 @@
   align-items: center;
   height: clamp(56px, 8vh, 64px);
   padding: 0 clamp(8px, 1.5vw, 12px);
-  max-width: full;/****************check here if ur side navbar is still not displaying full...*/
+  max-width: full; /****************check here if ur side navbar is still not displaying full...*/
   margin: 0 auto;
   position: relative;
 }
@@ -70,7 +72,7 @@
 }
 
 .sa-name {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: clamp(1rem, 2.5vw, 1.25rem);
   color: #2563eb;
@@ -85,7 +87,7 @@
 }
 
 .sa-desc {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: clamp(0.5rem, 2vw, 0.875rem);
   color: #2563eb;
@@ -112,7 +114,7 @@
 }
 
 .nav-links li a {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: clamp(0.875rem, 1.5vw, 1rem);
   color: #1e3a8a;
@@ -123,7 +125,7 @@
 }
 
 .nav-links li a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -142,7 +144,6 @@
 .nav-links li a:hover,
 .nav-links li a:focus {
   color: #1d4ed8;
-  
 }
 
 .menu-icon {
@@ -178,7 +179,6 @@
 }
 
 #mobile-nav.active {
-  
   flex-direction: column;
   background: linear-gradient(45deg, #dbeaffff, #fcfcf2ff);
   backdrop-filter: saturate(180%) blur(15px);
@@ -204,7 +204,7 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 0.75rem;
-  
+
   align-items: center;
 }
 
@@ -294,23 +294,20 @@
   display: flex;
 }
 
-@media (max-width: 1024px) 
-{
+@media (max-width: 1024px) {
   .desktop-nav-links,
   .desktop-nav-btns {
     display: none;
   }
-  #mobile-nav.active{
-    display: flex;/**********keep an eye here* just in case*****/
+  #mobile-nav.active {
+    display: flex; /**********keep an eye here* just in case*****/
   }
-
-
 
   .nav-btns-mobile {
     display: flex;
     flex-direction: row;
     align-items: center;
-    
+
     gap: 0.75rem;
     margin-top: 1rem;
   }
@@ -320,10 +317,8 @@
   }
 
   .nav-links-list {
-    
     flex-direction: column;
     width: 100%;
-    
   }
 
   .nav-links li {
@@ -336,7 +331,7 @@
     font-size: clamp(1rem, 3vw, 1.25rem);
     padding: 0.75rem;
   }
-/*
+  /*
   .dropdown-content {
     position: static;
     min-width: 100%;
@@ -360,8 +355,6 @@
   .nav-bar {
     padding: 0 clamp(6px, 1.5vw, 8px);
   }
-
- 
 
   .logo-container {
     width: 120px;
@@ -403,7 +396,7 @@
     padding: clamp(1rem, 3vw, 1.5rem);
   }
 
-  #mobile-nav.active{
+  #mobile-nav.active {
     width: 60%;
     margin-right: 0.5rem;
   }
@@ -411,14 +404,13 @@
   .nav-links li a {
     font-size: clamp(0.875rem, 3vw, 1rem);
     padding: 0.5rem;
-    
   }
-  
+
   .nav-btns-mobile {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    
+
     margin-top: 0.625rem;
   }
   .login-btn,
@@ -437,17 +429,15 @@
   object-fit: cover; /* Keeps aspect ratio and crops extra */
 }
 
+/* Profile Menu CSS */
 
- /* Profile Menu CSS */
-
- /* src/components/Navbar.css */
+/* src/components/Navbar.css */
 .profile-container {
   position: relative;
   display: inline-block;
   text-align: center;
   cursor: pointer;
   transition: 0.3s ease;
-  
 }
 
 .profile-icon {
@@ -464,12 +454,11 @@
   /* margin-top: 2px; */
 }
 
-
 .profile-name {
   font-size: 16px;
   /* margin-top: 2px; */
 }
-.admin-role:hover{
+.admin-role:hover {
   transform: translateY(-2px);
 }
 
@@ -505,7 +494,7 @@
   background-color: #f5f5f5;
 }
 
-.profile-icon:hover{
+.profile-icon:hover {
   transform: scale(1.1);
 }
 
@@ -520,7 +509,10 @@
   border-radius: 999px;
   font-weight: 700;
   text-decoration: none !important;
-  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
   box-shadow: 0 4px 12px rgba(47, 65, 87, 0.25);
 }
 
@@ -553,3 +545,66 @@
   transform: none;
 }
 
+/* =========================================================
+   PROFILE DROPDOWN - MOBILE OVERLAP FIX
+   ========================================================= */
+
+.profile-container {
+  position: relative;
+  z-index: 11000;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 11001;
+
+  /* Background ko solid rakho */
+  background: #ffffff;
+
+  /* Neeche ka content visible nahi hoga */
+  opacity: 1;
+
+  /* Dropdown ke andar ka content clear rahe */
+  isolation: isolate;
+
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+
+  overflow: hidden;
+}
+
+/* Dropdown ke andar ke elements bhi upar rahenge */
+.dropdown-menu a,
+.dropdown-menu span,
+.dropdown-menu hr {
+  position: relative;
+  z-index: 11002;
+}
+/* =========================================================
+   PROFILE DROPDOWN ABOVE ALL WINNER CONTENT
+   ========================================================= */
+
+.profile-container {
+  position: relative !important;
+  z-index: 999999 !important;
+}
+
+.dropdown-menu {
+  position: absolute !important;
+  z-index: 1000000 !important;
+
+  background: #ffffff !important;
+  opacity: 1 !important;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+
+  isolation: isolate;
+}
+
+/* Dropdown items */
+.dropdown-menu a,
+.dropdown-menu span,
+.dropdown-menu hr {
+  position: relative;
+  z-index: 1000001;
+}

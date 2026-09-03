@@ -1,4 +1,3 @@
-
 /* MAIN LAYOUT */
 .winner-section {
   display: flex;
@@ -397,66 +396,99 @@
 @media (max-width: 768px) {
   .winner-section {
     flex-direction: column;
+    position: relative;
   }
 
-  .filter-section-ws {
+  .su-filter {
     display: none;
-    position: absolute;
-    top: calc(100% + 10px);
+
+    position: fixed;
+    top: 80px;
     left: 50%;
     transform: translateX(-50%);
-    width: clamp(220px, 82vw, 300px);
+
+    width: min(82vw, 300px);
+    min-width: 0;
     max-height: 55vh;
+    height: auto;
+
+    margin: 0;
+    padding: 14px;
+
+    box-sizing: border-box;
     overflow-y: auto;
-    z-index: 10;
-    margin-top: 1rem;
+
     background-color: #8ec4c5f2;
     border: 1px solid #d4f8f8d7;
-    border-radius: 10px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-    padding: 12px;
-    height: auto;
+    border-radius: 12px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+
+    z-index: 1003;
   }
 
-  .filter-section--open-ws {
+  .su-filter--open {
     display: block;
+  }
+
+  .filter-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    z-index: 1000;
   }
 
   .filter-toggle-button-ws {
     display: inline-block;
   }
 
-  .filter-section-ws::-webkit-scrollbar {
-    width: 8px;
-  }
-  .filter-section-ws::-webkit-scrollbar-track {
-    background: #f0fbfc;
-    border-radius: 10px;
-  }
-  .filter-section-ws::-webkit-scrollbar-thumb {
-    background: #42678894;
-    border-radius: 10px;
-  }
-  .filter-section-ws::-webkit-scrollbar-thumb:hover {
-    background: #6fa1cfda;
+  .filter-toggle-wrapper-ws {
+    position: relative;
+    z-index: 1002;
   }
 
-  .filter-section-ws h2 {
-    font-size: 1.1em;
-    text-align: left;
-    font-weight: 600;
-    color: #306694;
+  .filter-toggle-button-ws {
+    display: inline-block;
+    position: relative;
+    z-index: 1004;
   }
-  .filter-group-ws label {
-    font-size: 0.95rem;
-    color: #2f415a;
-    font-weight: 600;
-  }
+}
 
-  .winner-main-section {
-    padding: 12px;
-    width: 100%;
-  }
+.filter-section-ws::-webkit-scrollbar {
+  width: 8px;
+}
+.filter-section-ws::-webkit-scrollbar-track {
+  background: #f0fbfc;
+  border-radius: 10px;
+}
+.filter-section-ws::-webkit-scrollbar-thumb {
+  background: #42678894;
+  border-radius: 10px;
+}
+.filter-section-ws::-webkit-scrollbar-thumb:hover {
+  background: #6fa1cfda;
+}
+
+.filter-section-ws h2 {
+  font-size: 1.1em;
+  text-align: left;
+  font-weight: 600;
+  color: #306694;
+}
+.filter-group-ws label {
+  font-size: 0.95rem;
+  color: #2f415a;
+  font-weight: 600;
+}
+
+.winner-main-section {
+  padding: 12px;
+  width: 100%;
 }
 
 /* Search input inside sidebar (matches dropdown theme) */
@@ -502,4 +534,599 @@
   background-repeat: no-repeat;
   background-position: left 0.8rem center;
   background-size: 1rem;
+}
+
+/* =========================================================
+   FILTER - DESKTOP SIDEBAR
+   ========================================================= */
+
+.su-filter {
+  width: clamp(220px, 22vw, 280px);
+  min-width: 220px;
+  flex-shrink: 0;
+
+  padding: clamp(15px, 2vw, 20px);
+
+  background-color: #87c7c95b;
+  border-right: 1px solid #d4f8f8d7;
+  box-shadow: 0 2px 4px rgba(202, 239, 253, 0.87);
+
+  height: 100vh;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 30;
+  overflow-y: auto;
+
+  box-sizing: border-box;
+}
+
+/* Filter heading */
+
+.su-filter h2 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+  text-align: center;
+  color: #306694;
+}
+
+/* Filter fields */
+
+.su-filter-group {
+  margin-bottom: clamp(12px, 1.5vw, 15px);
+}
+
+.su-filter-group label {
+  display: block;
+  margin-bottom: 6px;
+
+  font-weight: 500;
+  color: #2f415a;
+
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.su-filter-group select {
+  width: 100%;
+  padding: clamp(6px, 1vw, 8px);
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background-color: #f0fbfc;
+
+  font-size: clamp(0.85em, 2vw, 0.9em);
+
+  box-sizing: border-box;
+}
+
+/* Clear button */
+
+.su-clear-filter {
+  margin: 0.5rem;
+
+  text-align: center;
+
+  font-weight: 600;
+  color: white;
+
+  background: #c7445d;
+
+  padding: 10px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.su-clear-filter:hover {
+  background: #b93650;
+}
+
+/* =========================================================
+   MOBILE FILTER
+   ========================================================= */
+
+@media (max-width: 768px) {
+  /* Desktop sidebar hidden */
+  .su-filter {
+    display: none;
+
+    position: absolute;
+
+    top: calc(100% + 10px);
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: min(82vw, 300px);
+    min-width: 0;
+
+    max-height: 55vh;
+    height: auto;
+
+    margin: 0;
+    padding: 14px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+
+    background-color: #8ec4c5f2;
+
+    border: 1px solid #d4f8f8d7;
+    border-radius: 12px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+
+    z-index: 1003;
+  }
+
+  /* JS se filter open hone par */
+  .su-filter--open {
+    display: block;
+  }
+
+  /* =====================================================
+     BACKGROUND BLUR
+     ===================================================== */
+
+  .filter-overlay {
+    display: block;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.15);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    z-index: 1000;
+  }
+
+  /* Filter button overlay ke upar */
+  .filter-toggle-wrapper-ws {
+    position: relative;
+    z-index: 1002;
+  }
+
+  .filter-toggle-button-ws {
+    position: relative;
+    z-index: 1002;
+  }
+}
+
+/* =========================================================
+   DESKTOP PAR OVERLAY NAHI
+   ========================================================= */
+
+@media (min-width: 769px) {
+  .filter-overlay {
+    display: none;
+  }
+
+  .su-filter {
+    display: block;
+    position: sticky;
+    top: 0;
+
+    transform: none;
+
+    width: clamp(220px, 22vw, 280px);
+    min-width: 220px;
+
+    height: 100vh;
+
+    margin: 0;
+
+    z-index: 30;
+  }
+
+  .filter-toggle-button-ws {
+    display: none;
+  }
+}
+
+/* =========================================================
+   FINAL FIX - MOBILE FILTER PANEL
+   ========================================================= */
+
+@media (max-width: 768px) {
+  /* Main page */
+  .winner-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  .winner-main-section {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  /* FILTER BUTTON */
+  .filter-toggle-wrapper-ws {
+    position: relative !important;
+    z-index: 10001 !important;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .filter-toggle-button-ws {
+    display: inline-block !important;
+    position: relative !important;
+    z-index: 10002 !important;
+  }
+
+  /* =====================================================
+     FILTER PANEL
+     ===================================================== */
+
+  .winner-section .su-filter {
+    display: none !important;
+
+    position: fixed !important;
+
+    top: 200px !important;
+    left: 50% !important;
+
+    transform: translateX(-50%) !important;
+
+    width: 300px !important;
+    max-width: calc(100vw - 30px) !important;
+
+    min-width: 0 !important;
+
+    height: auto !important;
+    max-height: calc(100vh - 300px) !important;
+
+    margin: 0 !important;
+    padding: 18px !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+
+    background: #8ec4c5 !important;
+
+    border: 1px solid #d4f8f8 !important;
+    border-radius: 12px !important;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+
+    z-index: 2147483647 !important;
+  }
+
+  /* OPEN STATE */
+  .winner-section .su-filter.su-filter--open {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* =====================================================
+     BACKGROUND OVERLAY + BLUR
+     ===================================================== */
+
+  .winner-section .filter-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    background: rgba(20, 35, 45, 0.12) !important;
+
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+
+    z-index: 2147483646 !important;
+  }
+
+  /* Filter itself should NOT blur */
+  .winner-section .su-filter,
+  .winner-section .su-filter * {
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Filter fields */
+  .winner-section .su-filter select,
+  .winner-section .su-filter input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Clear button */
+  .winner-section .su-clear-filter {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 769px) {
+  .winner-section {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .winner-section .su-filter {
+    display: block !important;
+
+    position: sticky !important;
+    top: 0 !important;
+
+    width: clamp(220px, 22vw, 280px) !important;
+    min-width: 220px !important;
+
+    height: 100vh !important;
+
+    transform: none !important;
+
+    z-index: 30 !important;
+  }
+
+  .filter-overlay {
+    display: none !important;
+  }
+
+  .filter-toggle-button-ws {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   WINNER FILTER - FINAL POSITION FIX
+   ========================================================= */
+
+/* =========================
+   DESKTOP
+   ========================= */
+
+@media (min-width: 769px) {
+  .winner-section {
+    display: flex;
+    min-height: 100vh;
+    align-items: flex-start;
+  }
+
+  /* wrapper doesn't disturb desktop layout */
+  .filter-toggle-wrapper-ws {
+    display: contents;
+  }
+
+  .filter-toggle-button-ws {
+    display: none !important;
+  }
+
+  .su-filter {
+    display: block !important;
+
+    position: sticky !important;
+    top: 0 !important;
+
+    width: clamp(220px, 22vw, 280px) !important;
+    min-width: 220px !important;
+
+    height: 100vh !important;
+
+    margin: 0 !important;
+    padding: clamp(15px, 2vw, 20px) !important;
+
+    box-sizing: border-box !important;
+
+    background: #87c7c95b !important;
+
+    border-right: 1px solid #d4f8f8d7 !important;
+
+    border-radius: 0 !important;
+
+    box-shadow: 0 2px 4px rgba(202, 239, 253, 0.87) !important;
+
+    overflow-y: auto !important;
+
+    transform: none !important;
+
+    z-index: 30 !important;
+  }
+
+  .filter-overlay {
+    display: none !important;
+  }
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+  .winner-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .winner-main-section {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  /* BUTTON + FILTER PARENT */
+  .filter-toggle-wrapper-ws {
+    position: relative !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+
+    width: 100% !important;
+
+    margin-bottom: 12px;
+
+    z-index: 10002 !important;
+  }
+
+  /* BUTTON */
+  .filter-toggle-button-ws {
+    display: inline-block !important;
+
+    position: relative !important;
+
+    z-index: 10004 !important;
+
+    padding: 8px 18px;
+
+    background: #306694;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  /* =====================================================
+     FILTER BOX
+     ===================================================== */
+
+  .su-filter {
+    display: none !important;
+
+    position: absolute !important;
+
+    /* 👇 EXACTLY BUTTON KE NICHE */
+    top: calc(100% + 8px) !important;
+
+    left: 50% !important;
+
+    transform: translateX(-50%) !important;
+
+    width: min(300px, calc(100vw - 30px)) !important;
+
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    max-height: 55vh !important;
+
+    padding: 18px !important;
+
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+
+    background: #8ec4c5 !important;
+
+    border: 1px solid #d4f8f8 !important;
+
+    border-radius: 12px !important;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+
+    z-index: 10003 !important;
+  }
+
+  /* FILTER OPEN */
+
+  .su-filter.su-filter--open {
+    display: block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+  }
+
+  /* =====================================================
+     BACKGROUND BLUR
+     ===================================================== */
+
+  .filter-overlay {
+    display: block !important;
+
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+
+    height: 100vh !important;
+
+    background: rgba(20, 35, 45, 0.12) !important;
+
+    backdrop-filter: blur(6px) !important;
+
+    -webkit-backdrop-filter: blur(6px) !important;
+
+    z-index: 10000 !important;
+  }
+
+  /* FILTER CLEAR / SHARP */
+
+  .su-filter,
+  .su-filter * {
+    filter: none !important;
+
+    backdrop-filter: none !important;
+
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .su-filter-group select,
+  .su-filter-group input {
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+  }
+}
+
+/* =========================================================
+   PROFILE MENU MUST STAY ABOVE WINNER FILTER
+   ========================================================= */
+
+/* Winner filter layer ko neeche rakho */
+.filter-area-ws {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.filter-toggle-wrapper-ws {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.filter-toggle-button-ws {
+  position: relative !important;
+  z-index: 11 !important;
+}
+
+/* Filter panel bhi profile menu ke neeche */
+.su-filter {
+  z-index: 20 !important;
+}
+
+/* Filter overlay */
+.filter-overlay {
+  z-index: 30 !important;
 }

@@ -596,14 +596,13 @@ const FullTestDetails = () => {
           {/* <button className="action-button preview-button">Preview</button> */}
           {test && (
             <>
-              {(test.test_status == 'Live' || test.test_status == 'Expired') &&
-                (test.total_participated > 0) && (
-                  <button className="action-button download-button"
+              {(test.test_status == "Live" || test.test_status == "Expired") &&
+                test.total_participated > 0 && (
+                  <button
+                    className="action-button download-button"
                     onClick={() => listOfParticipants(test.test_id)}
                   >
-
                     List of Participants
-
                   </button>
                 )}
 
@@ -750,26 +749,25 @@ const FullTestDetails = () => {
           {showDropdown && (
             <div className="actions-dropdown" ref={dropdownRef}>
               <div className="actions-dropdown-content">
-                <button className="action-button preview-button">
-                  Preview
-                </button>
                 {test && (
                   <>
-                    {(test.test_status == 'Live' || test.test_status == 'Expired') &&
-                      (test.total_participated > 0) && (
-                        <button className="action-button download-button"
+                    {(test.test_status == "Live" ||
+                      test.test_status == "Expired") &&
+                      test.total_participated > 0 && (
+                        <button
+                          className="action-button download-button"
                           onClick={() => listOfParticipants(test.test_id)}
                         >
-
                           List of Participants
-
                         </button>
                       )}
 
                     {test.test_lang != "both" && (
                       <button
                         className="action-button download-button"
-                        onClick={() => handlePreview(test.test_id, test.test_lang)}
+                        onClick={() =>
+                          handlePreview(test.test_id, test.test_lang)
+                        }
                       >
                         Quiz Preview
                       </button>

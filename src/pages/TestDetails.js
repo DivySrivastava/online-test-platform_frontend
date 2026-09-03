@@ -156,6 +156,13 @@ const TestDetails = () => {
 
   return (
     <div className="test-details-page">
+      {/* Filter overlay - dims/blurs background when filter panel is open (mobile) */}
+      {isFilterOpen && (
+        <div
+          className="filter-overlay"
+          onClick={() => setIsFilterOpen(false)}
+        />
+      )}
       {/* Filter Sidebar */}
       <div className="Sticky-filterby">
         <div

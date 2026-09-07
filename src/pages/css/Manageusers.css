@@ -215,6 +215,9 @@
   .menu-toggle-btn {
     display: block;
   }
+  .menu-toggle-btn {
+    display: none;
+  }
 }
 @media (max-width: 400px) {
   .manageuser-card {

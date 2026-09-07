@@ -199,7 +199,7 @@ const Dashboard = () => {
 
     try {
       const response = await axios.get(
-        `${API_URL}/institute/standards/${user.institute_id}`
+        `${API_URL}/institute/standards/${user.institute_id}`,
       );
 
       setManageItems(
@@ -207,7 +207,7 @@ const Dashboard = () => {
           id: item.standard_id,
           name: item.item_name,
           creator_name: item.creator_name,
-        }))
+        })),
       );
     } catch (error) {
       console.error("Error fetching standards:", error);
@@ -222,7 +222,7 @@ const Dashboard = () => {
         response.data.map((item) => ({
           id: item.interest_id,
           name: item.interest_name,
-        }))
+        })),
       );
     } catch (error) {
       console.error("Error fetching interests:", error);
@@ -231,12 +231,9 @@ const Dashboard = () => {
 
   const fetchEmailSignupStatus = async () => {
     try {
-      const response = await axios.get(
-        `${API_URL}/user/email-signup`
-      );
+      const response = await axios.get(`${API_URL}/user/email-signup`);
 
       setAllowEmailSignup(response.data.allowEmailSignup);
-
     } catch (error) {
       console.error("Error fetching email signup status:", error);
     }
@@ -255,7 +252,6 @@ const Dashboard = () => {
         });
 
         await fetchStandards();
-
       } else if (user.role_id === 4) {
         response = await axios.post(`${API_URL}/user/add-standard`, {
           student_id: user.user_id,
@@ -263,19 +259,15 @@ const Dashboard = () => {
         });
       }
 
-      toast.success(
-        response?.data?.message || "Standard added successfully."
-      );
+      toast.success(response?.data?.message || "Standard added successfully.");
 
       setNewStandard("");
       setActiveModal("manage");
-
     } catch (error) {
       console.error("Error adding standard:", error);
-
       toast.error(
         error.response?.data?.message ||
-        "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
     }
   };
@@ -325,33 +317,41 @@ const Dashboard = () => {
 
   const closeManage = () => {
     setActiveModal(null);
-
     if (location.pathname === "/dashboard/managestandards") {
       navigate("/dashboard", { replace: true });
     }
   };
 
-  const handleDelete = (id) => {
-    if (!window.confirm("Delete this standard?")) return;
+  const [deleteStandardId, setDeleteStandardId] = useState(null);
 
-    axios.delete(`${API_URL}/institute/delete-standard/${id}`).then(() => {
+  const handleDelete = (id) => {
+    setDeleteStandardId(id);
+  };
+
+  const confirmDeleteStandard = async () => {
+    try {
+      await axios.delete(
+        `${API_URL}/institute/delete-standard/${deleteStandardId}`,
+      );
       fetchStandards();
-    });
+      toast.success(`${standardTitle} deleted successfully!`);
+    } catch (error) {
+      console.error("Error deleting standard:", error);
+      toast.error(`Failed to delete ${standardTitle.toLowerCase()}`);
+    } finally {
+      setDeleteStandardId(null);
+    }
   };
 
   const handleEmailSignupToggle = async (e) => {
     const enabled = e.target.checked;
 
     try {
-      const response = await axios.patch(
-        `${API_URL}/user/email-signup`,
-        {
-          enabled
-        }
-      );
+      const response = await axios.patch(`${API_URL}/user/email-signup`, {
+        enabled,
+      });
 
       setAllowEmailSignup(response.data.allowEmailSignup);
-
     } catch (error) {
       console.error("Error updating email signup:", error);
 
@@ -359,8 +359,6 @@ const Dashboard = () => {
       setAllowEmailSignup((prev) => !prev);
     }
   };
-
-
 
   const handleDeleteFeedback = async (id) => {
     try {
@@ -547,15 +545,15 @@ const Dashboard = () => {
         icon: "rupee.png",
       },
       ...(user?.institute_id &&
-        (user?.standard_type == null || user?.standard_type === "")
+      (user?.standard_type == null || user?.standard_type === "")
         ? [
-          {
-            id: 4,
-            title: `Add/Update ${standardTitle}`,
-            pagename: "addstandard",
-            icon: "online-course.png",
-          },
-        ]
+            {
+              id: 4,
+              title: `Add/Update ${standardTitle}`,
+              pagename: "addstandard",
+              icon: "online-course.png",
+            },
+          ]
         : []),
       {
         id: 5,
@@ -884,6 +882,84 @@ const Dashboard = () => {
 
   console.log("per:", per);
   console.log("rolePanels:", rolePanels);
+
+  // ✅ Shared Announcements block — reused on desktop (right section)
+  // and mobile/tablet (injected inside middle-section, above Take Quiz)
+  const announcementsBlock = (
+    <>
+      <div className="feedback-section-d">
+        {/** for section headings */}
+        <div className="announce-head-icon">
+          <h3>Announcements</h3>
+          <span
+            className="announce-icon"
+            title=" Announcements"
+            onClick={() => console.log("Refresh announcements")}
+          >
+            <img src={"/images/11182227.png"} alt="Announcements" />
+          </span>
+        </div>
+      </div>
+      <div className="announcements-list">
+        <div className="feedback-scroll">
+          {/**Its required so that the scrolling could be done smoothly */}
+          {!announcements || announcements.length === 0 ? (
+            <div className="no-announcement-container">
+              <img
+                src={"/images/message.jpeg"}
+                alt="No Announcements"
+                className="no-announcement-image"
+              />
+              <p>No announcements available.</p>
+            </div>
+          ) : (
+            announcements.map((announcement) => (
+              <article key={announcement.id} className="feedback-card">
+                <h4>{announcement.title}</h4>
+                <p>{announcement.content}</p>
+                <span className="announcement-date">{announcement.date}</span>
+              </article>
+            ))
+          )}
+        </div>
+      </div>
+    </>
+  );
+
+  // ✅ Shared Permissions block — reused on desktop (right section, below
+  // announcements) and mobile (injected inside announcements-section,
+  // right above the "User Feedback" box). Only role 1 (Super Admin) sees it.
+  const permissionsBlock = role === 1 && (
+    <div className="permissions-section">
+      <div className="announce-head-icon">
+        <h3>Manage Admin Permissions</h3>
+        <span className="permissions-icon" title="Manage Permissions">
+          <img src={"/images/permission.png"} alt="Permissions" />
+        </span>
+      </div>
+      <div className="feedback-scroll">
+        {permissions.map((permission) => (
+          <article className="permission-card" key={permission.id}>
+            <div className="toggle-head">
+              <h4>{permission.title}</h4>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={permission.enabled}
+                  onChange={() =>
+                    togglePermission(permission.title, permission.id)
+                  }
+                />
+                <span className="slider round"></span>
+              </label>
+            </div>
+            <p>{permission.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <main role="main" className="dashboard-main">
       {/* Main content container with three-column layout */}
@@ -955,11 +1031,12 @@ const Dashboard = () => {
                   <Link
                     to={`/dashboard/${item.pagename}`}
                     key={item.id}
-                    className={`menu-item ${item.pagename === "achievements" &&
+                    className={`menu-item ${
+                      item.pagename === "achievements" &&
                       achievementCount.unseenAchievements > 0
-                      ? "achievement-highlight"
-                      : ""
-                      }`}
+                        ? "achievement-highlight"
+                        : ""
+                    }`}
                   >
                     <img
                       src={`/images/${item.icon}`}
@@ -985,6 +1062,11 @@ const Dashboard = () => {
               })}
             </div>
           </div>
+
+          {/* Mobile-only: Manage Admin Permissions — shows above User
+              Feedback on mobile. Hidden on desktop via CSS
+              (.mobile-permissions-block { display: none; }) */}
+          <div className="mobile-permissions-block">{permissionsBlock}</div>
 
           {(role === 1 || role === 2) && (
             <div className="feedback-box">
@@ -1176,6 +1258,11 @@ const Dashboard = () => {
             </div>
           )}
 
+          {/* Mobile/Tablet-only Announcements — sits between Performance Metrics
+              and the Take Quiz / Past Quizzes cards. Hidden on desktop via CSS
+              (.mobile-announcements-block { display: none; }) */}
+          <div className="mobile-announcements-block">{announcementsBlock}</div>
+
           <div className="management-grid">
             {rolePanels
               .filter((panel) => per.includes(panel.id))
@@ -1254,88 +1341,28 @@ const Dashboard = () => {
           aria-labelledby="feedback-permissions-heading"
         >
           <div className="feedback-permissions-container">
-            {/* Feedback Subsection */}
-            <div className="feedback-section-d">
-              {/** for section headings */}
-              <div className="announce-head-icon">
-                <h3>Announcements</h3>
-                <span
-                  className="announce-icon"
-                  title=" Announcements"
-                  onClick={() => console.log("Refresh announcements")}
-                >
-                  <img src={"/images/11182227.png"} alt="Announcements" />
-                </span>
-              </div>
-            </div>
-            <div className="announcements-list">
-              <div className="feedback-scroll">
-                {/**Its required so that the scrolling could be done smoothly */}
-                {!announcements || announcements.length === 0 ? (
-                  <div className="no-announcement-container">
-                    <img
-                      src={"/images/message.jpeg"}
-                      alt="No Announcements"
-                      className="no-announcement-image"
-                    />
-                    <p>No announcements available.</p>
-                  </div>
-                ) : (
-                  announcements.map((announcement) => (
-                    <article key={announcement.id} className="feedback-card">
-                      <h4>{announcement.title}</h4>
-                      <p>{announcement.content}</p>
-                      <span className="announcement-date">
-                        {announcement.date}
-                      </span>
-                    </article>
-                  ))
-                )}
-              </div>
+            {/* Feedback Subsection — desktop only, hidden on mobile/tablet via CSS
+                (.desktop-announcements-block { display: none; } in the media query) */}
+            <div className="desktop-announcements-block">
+              {announcementsBlock}
             </div>
             <hr></hr>
-            {/* permissions Subsection */}
-            {/**role_id===1 : super admin and role_id!== 1 admin*/}
-            {role === 1 && (
-              <div className="permissions-section">
-                <div className="announce-head-icon">
-                  <h3>Other Actions</h3>
-                  <span className="permissions-icon" title="Manage Permissions">
-                    <img src={"/images/permission.png"} alt="Permissions" />
-                  </span>
-                </div>
-                <div className="feedback-scroll">
-                  <article className="permission-card">
-                    <div className="toggle-head">
-                      <h4>Enable E-mail Signup</h4>
 
-                      <label className="switch">
-                        <input
-                          type="checkbox"
-                          checked={allowEmailSignup}
-                          onChange={handleEmailSignupToggle}
-                        />
-                        <span className="slider round"></span>
-                      </label>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            )}
+            <hr></hr>
+
+            {/* Permissions Subsection — desktop only */}
+            <div className="desktop-permissions-block">{permissionsBlock}</div>
           </div>
         </section>
         {activeModal === "manage" &&
           createPortal(
             <div className="modal-overlay">
               <div className="manage-modal">
-
                 {/* Header */}
                 <div className="modal-header">
                   <h3>
                     Manage{" "}
-                    {manageType === "standard"
-                      ? standardTitle
-                      : "Interest"}
+                    {manageType === "standard" ? standardTitle : "Interest"}
                   </h3>
 
                   <button
@@ -1351,7 +1378,6 @@ const Dashboard = () => {
                 <div className="modal-body">
                   <div className="standard-table-wrapper">
                     <table className="standard-table">
-
                       <thead>
                         <tr>
                           <th>S.No.</th>
@@ -1369,9 +1395,7 @@ const Dashboard = () => {
                           </th>
 
                           {/* Creator Name only for Standards */}
-                          {manageType === "standard" && (
-                            <th>Creator Name</th>
-                          )}
+                          {manageType === "standard" && <th>Creator Name</th>}
 
                           <th>Delete</th>
                         </tr>
@@ -1394,7 +1418,6 @@ const Dashboard = () => {
                         ) : (
                           manageItems.map((item, index) => (
                             <tr key={item.id}>
-
                               <td>{index + 1}</td>
 
                               <td>{item.id}</td>
@@ -1415,12 +1438,10 @@ const Dashboard = () => {
                                   Delete
                                 </button>
                               </td>
-
                             </tr>
                           ))
                         )}
                       </tbody>
-
                     </table>
                   </div>
                 </div>
@@ -1439,10 +1460,9 @@ const Dashboard = () => {
                       : "Add New Interest"}
                   </button>
                 </div>
-
               </div>
             </div>,
-            document.body
+            document.body,
           )}
         {activeModal === "add" && (
           <div className="modal-overlay">
@@ -1491,40 +1511,76 @@ const Dashboard = () => {
           </div>
         )}
 
-        {deleteFeedbackId && (
-          <div className="modal-overlay">
-            <div className="delete-confirm-dialog">
-              <div className="delete-dialog-icon">🗑️</div>
+        {deleteFeedbackId &&
+          createPortal(
+            <div className="modal-overlay">
+              <div className="delete-confirm-dialog">
+                <div className="delete-dialog-icon">🗑️</div>
 
-              <h3>Delete Feedback?</h3>
+                <h3>Delete Feedback?</h3>
 
-              <p>
-                Are you sure you want to delete this feedback?
-                <br />
-                This action cannot be undone.
-              </p>
+                <p>
+                  Are you sure you want to delete this feedback?
+                  <br />
+                  This action cannot be undone.
+                </p>
 
-              <div className="delete-dialog-actions">
-                <button
-                  className="delete-cancel-btn"
-                  onClick={() => setDeleteFeedbackId(null)}
-                >
-                  Cancel
-                </button>
+                <div className="delete-dialog-actions">
+                  <button
+                    className="delete-cancel-btn"
+                    onClick={() => setDeleteFeedbackId(null)}
+                  >
+                    Cancel
+                  </button>
 
-                <button
-                  className="delete-confirm-btn"
-                  onClick={async () => {
-                    await handleDeleteFeedback(deleteFeedbackId);
-                    setDeleteFeedbackId(null);
-                  }}
-                >
-                  Delete
-                </button>
+                  <button
+                    className="delete-confirm-btn"
+                    onClick={async () => {
+                      await handleDeleteFeedback(deleteFeedbackId);
+                      setDeleteFeedbackId(null);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </div>,
+            document.body,
+          )}
+
+        {deleteStandardId &&
+          createPortal(
+            <div className="modal-overlay">
+              <div className="delete-confirm-dialog">
+                <div className="delete-dialog-icon">🗑️</div>
+
+                <h3>Delete {standardTitle}?</h3>
+
+                <p>
+                  Are you sure you want to delete this{" "}
+                  {standardTitle.toLowerCase()}?
+                  <br />
+                  This action cannot be undone.
+                </p>
+
+                <div className="delete-dialog-actions">
+                  <button
+                    className="delete-confirm-btn"
+                    onClick={confirmDeleteStandard}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="delete-cancel-btn"
+                    onClick={() => setDeleteStandardId(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
       </div>
     </main>
   );

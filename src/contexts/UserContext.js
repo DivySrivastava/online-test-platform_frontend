@@ -1,7 +1,12 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 export const UserContext = createContext();
 
@@ -15,69 +20,103 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load user from token on app start / refresh
-  const loadUserFromToken = async () => {
+  // Prevent logout from being executed multiple times together
+  const logoutInProgress = useRef(false);
+
+  // Load user from token
+  const loadUserFromToken = useCallback(async () => {
     const token = localStorage.getItem("token");
     const expiry = localStorage.getItem("sessionExpiry");
 
-    // If expiry already passed (e.g. tab was closed and reopened later), force logout
-    if (token && expiry && Date.now() > Number(expiry)) {
-      logoutUser();
+    // No token
+    if (!token) {
       setLoading(false);
       return;
     }
 
-    if (!token) {
+    // Session expired
+    if (expiry && Date.now() > Number(expiry)) {
+      logoutUser(false);
       setLoading(false);
       return;
     }
 
     try {
       const res = await axios.get(`${API_URL}/auth/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      setUser(res.data.user); // ✅ Full user object
-
+      setUser(res.data.user);
       console.log("Context User:", res.data.user);
-
-      //console.log("User in context", res.data.user);
     } catch (err) {
-      logoutUser();
+      // Invalid/expired token
+      // Do NOT call logoutUser here if axios interceptor already handled 401
+      if (err.response?.status !== 401) {
+        logoutUser(false);
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     loadUserFromToken();
-  }, []);
+  }, [loadUserFromToken]);
 
-  const loginUser = async (userData, token) => {
-    const expiryTime = Date.now() + SESSION_TIMEOUT_MINUTES * 60 * 1000;
+  // LOGIN
+  const loginUser = useCallback((userData, token) => {
+    const expiryTime =
+      Date.now() + SESSION_TIMEOUT_MINUTES * 60 * 1000;
 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("sessionExpiry", String(expiryTime));
 
+    // Reset logout protection for next session
+    logoutInProgress.current = false;
+
     setUser(userData);
-  };
+  }, []);
 
-  const logoutUser = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("username");
-    localStorage.removeItem("sessionExpiry");
+  // LOGOUT
+  const logoutUser = useCallback(
+    (showToast = true) => {
+      // Prevent duplicate logout calls
+      if (logoutInProgress.current) {
+        return;
+      }
 
-    setUser(null);
+      logoutInProgress.current = true;
 
-    toast.success("You have been logged out successfully");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("username");
+      localStorage.removeItem("sessionExpiry");
+      localStorage.removeItem("authIdentifier");
 
-    navigate("/login", { replace: true });
-  };
+      setUser(null);
+
+      navigate("/login", {
+        replace: true,
+        state: {
+          logoutSuccess: showToast,
+        },
+      });
+    },
+    [navigate]
+  );
 
   return (
-    <UserContext.Provider value={{ user, loading, loginUser, logoutUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        loading,
+        loginUser,
+        logoutUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

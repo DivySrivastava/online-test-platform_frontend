@@ -1,648 +1,511 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import './css/Quiz.css';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import "./css/Quiz.css";
 import { useParams } from "react-router-dom";
 import { useAxios } from "../api/axiosInstance";
 import { UserContext } from "../contexts/UserContext";
-
+import { useNavigate } from "react-router-dom";
 
 function QuizResult() {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const axios = useAxios();
 
-    const API_URL = process.env.REACT_APP_API_URL;
-    const axios = useAxios();
+  const { id, lang } = useParams();
+  const { user } = useContext(UserContext);
 
-    const { id, lang } = useParams();
-    const { user } = useContext(UserContext);
+  // -------------------------
+  // Test / Question Data
+  // -------------------------
 
-    // -------------------------
-    // Test / Question Data
-    // -------------------------
+  const [test, setTest] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const navigate = useNavigate();
 
-    const [test, setTest] = useState(null);
-    const [questions, setQuestions] = useState([]);
-    const [selectedAnswers, setSelectedAnswers] = useState({});
+  const handleBack = () => {
+    navigate("/dashboard/past-quizzes");
+  };
 
-    // -------------------------
-    // Result Data
-    // -------------------------
+  // -------------------------
+  // Result Data
+  // -------------------------
 
-    const [results, setResults] = useState({
-        score: 0,
-        answered: 0,
-        unanswered: 0,
-        correct: 0,
-        incorrect: 0
-    });
+  const [results, setResults] = useState({
+    score: 0,
+    answered: 0,
+    unanswered: 0,
+    correct: 0,
+    incorrect: 0,
+  });
 
-    const [totalMarks, setTotalMarks] = useState(0);
-    const [timeTaken, setTimeTaken] = useState(0);
+  const [totalMarks, setTotalMarks] = useState(0);
+  const [timeTaken, setTimeTaken] = useState(0);
 
-    // -------------------------
-    // UI State
-    // -------------------------
+  // -------------------------
+  // UI State
+  // -------------------------
 
-    const [isInfoOpen, setIsInfoOpen] = useState(false);
-    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-    const infoRef = useRef(null);
-    const detailsRef = useRef(null);
-    const detailsButtonRef = useRef(null);
+  const infoRef = useRef(null);
+  const detailsRef = useRef(null);
+  const detailsButtonRef = useRef(null);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        isDetailsOpen &&
+        detailsRef.current &&
+        !detailsRef.current.contains(event.target) &&
+        detailsButtonRef.current &&
+        !detailsButtonRef.current.contains(event.target)
+      ) {
+        setIsDetailsOpen(false);
+      }
+    }
 
-    // -------------------------
-    // Fetch Result
-    // -------------------------
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDetailsOpen]);
 
-    useEffect(() => {
+  // -------------------------
+  // Fetch Result
+  // -------------------------
 
-        const fetchResult = async () => {
+  useEffect(() => {
+    const fetchResult = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/test/student-result/${id}`,
+          {
+            params: {
+              student_id: user?.id,
+            },
+          },
+        );
 
-            try {
+        const data = response.data;
 
-                const response = await axios.get(
-                    `${API_URL}/test/student-result/${id}`,
-                    {
-                        params: {
-                            student_id: user?.id
-                        }
-                    }
-                );
+        if (!data.success) {
+          return;
+        }
 
+        console.log("Result Data:", data);
 
-                const data = response.data;
+        // -------------------------
+        // Test
+        // -------------------------
 
-                if (!data.success) {
-                    return;
-                }
+        setTest(data.test);
 
-                console.log("Result Data:", data);
+        setTotalMarks(data.test.max_marks);
 
+        // -------------------------
+        // Result
+        // -------------------------
 
-                // -------------------------
-                // Test
-                // -------------------------
+        setTimeTaken(data.result.time_taken);
 
-                setTest(data.test);
+        setResults({
+          score: data.result.marks,
 
-                setTotalMarks(data.test.max_marks);
+          answered: data.result.correct_answers + data.result.wrong_answers,
 
+          unanswered: data.result.missed_answers,
 
-                // -------------------------
-                // Result
-                // -------------------------
+          correct: data.result.correct_answers,
 
-                setTimeTaken(data.result.time_taken);
+          incorrect: data.result.wrong_answers,
+        });
 
-                setResults({
-                    score: data.result.marks,
+        // -------------------------
+        // Questions
+        // -------------------------
 
-                    answered:
-                        data.result.correct_answers +
-                        data.result.wrong_answers,
+        setQuestions(data.questions);
 
-                    unanswered:
-                        data.result.missed_answers,
+        // -------------------------
+        // Student Selected Answers
+        // -------------------------
 
-                    correct:
-                        data.result.correct_answers,
+        const selectedAnswersObject = {};
 
-                    incorrect:
-                        data.result.wrong_answers
-                });
+        data.questions.forEach((question) => {
+          selectedAnswersObject[question.question_id] =
+            question.selected_answer;
+        });
 
-
-                // -------------------------
-                // Questions
-                // -------------------------
-
-                setQuestions(data.questions);
-
-
-                // -------------------------
-                // Student Selected Answers
-                // -------------------------
-
-                const selectedAnswersObject = {};
-
-                data.questions.forEach((question) => {
-
-                    selectedAnswersObject[question.question_id] =
-                        question.selected_answer;
-
-                });
-
-                setSelectedAnswers(selectedAnswersObject);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Error fetching result:",
-                    error.response?.data || error.message
-                );
-
-            }
-
-        };
-
-        fetchResult();
-
-    }, [id]);
-
-
-    // -------------------------
-    // Format Time
-    // -------------------------
-
-    const formatTime = (seconds) => {
-
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-
-        return `${mins} min ${secs} sec`;
-
+        setSelectedAnswers(selectedAnswersObject);
+      } catch (error) {
+        console.error(
+          "Error fetching result:",
+          error.response?.data || error.message,
+        );
+      }
     };
 
+    fetchResult();
+  }, [id]);
 
-    // -------------------------
-    // Toggle Details
-    // -------------------------
+  // -------------------------
+  // Format Time
+  // -------------------------
 
-    const toggleDetails = () => {
-        setIsDetailsOpen(prev => !prev);
-    };
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
 
+    return `${mins} min ${secs} sec`;
+  };
 
-    // -------------------------
-    // Option Mapping
-    // -------------------------
+  // -------------------------
+  // Toggle Details
+  // -------------------------
 
-    const optionMap = {
-        option_a: "a",
-        option_b: "b",
-        option_c: "c",
-        option_d: "d"
-    };
+  const toggleDetails = () => {
+    setIsDetailsOpen((prev) => !prev);
+  };
 
+  // -------------------------
+  // Option Mapping
+  // -------------------------
 
-    // -------------------------
-    // Render
-    // -------------------------
+  const optionMap = {
+    option_a: "a",
+    option_b: "b",
+    option_c: "c",
+    option_d: "d",
+  };
 
-    return (
+  // -------------------------
+  // Render
+  // -------------------------
 
-        <div className="test-submission">
+  return (
+    <div className="test-submission">
+      <div className="top-Quiz-Banner"></div>
 
-            <div className="top-Quiz-Banner">
-            </div>
-
-
-            {/* =========================
+      {/* =========================
                 Sticky Result Information
             ========================= */}
 
-            <div className="Sticky-Info">
+      <div className="Sticky-Info">
+        <div
+          className={`Info-section ${isInfoOpen ? "Info-section--open" : ""}`}
+          ref={infoRef}
+        >
+          <h2>Quiz Result</h2>
 
-                <div
-                    className={`Info-section ${isInfoOpen
-                            ? 'Info-section--open'
-                            : ''
-                        }`}
-                    ref={infoRef}
-                >
+          <hr />
 
-                    <h2>Quiz Result</h2>
-
-                    <hr />
-
-                    <div className="Info-group">
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/chronometer.png"
-                                    alt="counter Icon"
-                                    className="icon"
-                                />
-
-                                Time Taken:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {formatTime(timeTaken)}
-                        </p>
-
-
-                        <hr />
-
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/achievement.png"
-                                    alt="score"
-                                    className="icon"
-                                />
-
-                                Score:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {results.score} / {totalMarks}
-                        </p>
-
-
-                        <hr />
-
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/answer.png"
-                                    alt="answer Icon"
-                                    className="icon"
-                                />
-
-                                Answered Questions:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {results.answered}
-                        </p>
-
-
-                        <hr />
-
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/question.png"
-                                    alt="unanswered Icon"
-                                    className="icon"
-                                />
-
-                                Unanswered Questions:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {results.unanswered}
-                        </p>
-
-
-                        <hr />
-
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/check.png"
-                                    alt="correct Icon"
-                                    className="icon"
-                                />
-
-                                Correct Questions:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {results.correct}
-                        </p>
-
-
-                        <hr />
-
-
-                        <div className='pack-h4-p'>
-
-                            <h4>
-                                <img
-                                    src="/images/no.png"
-                                    alt="incorrect Icon"
-                                    className="icon"
-                                />
-
-                                Incorrect Questions:
-                            </h4>
-
-                        </div>
-
-                        <p>
-                            {results.incorrect}
-                        </p>
-
-                    </div>
-
-                </div>
-
+          <div className="Info-group">
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/chronometer.png"
+                  alt="counter Icon"
+                  className="icon"
+                />
+                Time Taken:
+              </h4>
             </div>
 
+            <p>{formatTime(timeTaken)}</p>
 
-            {/* =========================
+            <hr />
+
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/achievement.png"
+                  alt="score"
+                  className="icon"
+                />
+                Score:
+              </h4>
+            </div>
+
+            <p>
+              {results.score} / {totalMarks}
+            </p>
+
+            <hr />
+
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/answer.png"
+                  alt="answer Icon"
+                  className="icon"
+                />
+                Answered Questions:
+              </h4>
+            </div>
+
+            <p>{results.answered}</p>
+
+            <hr />
+
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/question.png"
+                  alt="unanswered Icon"
+                  className="icon"
+                />
+                Unanswered Questions:
+              </h4>
+            </div>
+
+            <p>{results.unanswered}</p>
+
+            <hr />
+
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/check.png"
+                  alt="correct Icon"
+                  className="icon"
+                />
+                Correct Questions:
+              </h4>
+            </div>
+
+            <p>{results.correct}</p>
+
+            <hr />
+
+            <div className="pack-h4-p">
+              <h4>
+                <img
+                  src="/images/no.png"
+                  alt="incorrect Icon"
+                  className="icon"
+                />
+                Incorrect Questions:
+              </h4>
+            </div>
+
+            <p>{results.incorrect}</p>
+          </div>
+          <button className="qr-back-btn" onClick={handleBack}>
+            ← Back
+          </button>
+        </div>
+      </div>
+
+      {/* =========================
                 Main Result Section
             ========================= */}
 
-            <div className="test-submission-section">
+      <div className="test-submission-section">
+        <div className="test-submission-header">
+          {test && <h1>{test.test_name} Quiz Result</h1>}
+        </div>
 
-                <div className="test-submission-header">
-
-                    {test && (
-
-                        <h1>
-                            {test.test_name} Quiz Result
-                        </h1>
-
-                    )}
-
-                </div>
-
-
-                {/* =========================
+        {/* =========================
                     Mobile Result Information
                 ========================= */}
 
-                <div className="mobile-info-section">
+        <div className="mobile-info-section">
+          <button className="qr-back-btn-mobile" onClick={handleBack}>
+            ←
+          </button>
 
-                    <div className="mobile-info-right">
+          <div className="mobile-info-left">
+            <div>
+              <h4>
+                <img
+                  src="/images/chronometer.png"
+                  alt="counter Icon"
+                  className="icon"
+                />
+                Time Taken
+              </h4>
+              <p>{formatTime(timeTaken)}</p>
+            </div>
 
-                        <button
-                            className="details-toggle"
-                            onClick={toggleDetails}
-                            ref={detailsButtonRef}
-                        >
-                            Quiz Result
-                        </button>
+            <div>
+              <h4>
+                <img
+                  src="/images/achievement.png"
+                  alt="score Icon"
+                  className="icon"
+                />
+                Score
+              </h4>
+              <p>
+                {results.score} / {totalMarks}
+              </p>
+            </div>
+          </div>
 
+          <div className="mobile-info-right">
+            <button
+              className="details-toggle"
+              onClick={toggleDetails}
+              ref={detailsButtonRef}
+            >
+              Quiz Result
+            </button>
 
-                        {isDetailsOpen && (
+            {isDetailsOpen && (
+              <div className="details-dropdown" ref={detailsRef}>
+                <h4>
+                  <img
+                    src="/images/chronometer.png"
+                    alt="counter Icon"
+                    className="icon"
+                  />
+                  Time Taken:
+                </h4>
 
-                            <div
-                                className="details-dropdown"
-                                ref={detailsRef}
-                            >
+                <p>{formatTime(timeTaken)}</p>
 
-                                <h4>
+                <h4>
+                  <img
+                    src="/images/achievement.png"
+                    alt="score Icon"
+                    className="icon"
+                  />
+                  Score:
+                </h4>
 
-                                    <img
-                                        src="/images/chronometer.png"
-                                        alt="counter Icon"
-                                        className="icon"
-                                    />
+                <p>
+                  {results.score} / {totalMarks}
+                </p>
 
-                                    Time Taken:
+                <h4>
+                  <img
+                    src="/images/answer.png"
+                    alt="answered Icon"
+                    className="icon"
+                  />
+                  Answered Questions:
+                </h4>
 
-                                </h4>
+                <p>{results.answered}</p>
 
-                                <p>
-                                    {formatTime(timeTaken)}
-                                </p>
+                <h4>
+                  <img
+                    src="/images/question.png"
+                    alt="unanswered Icon"
+                    className="icon"
+                  />
+                  Unanswered Questions:
+                </h4>
 
+                <p>{results.unanswered}</p>
 
-                                <h4>
+                <h4>
+                  <img
+                    src="/images/check.png"
+                    alt="correct Icon"
+                    className="icon"
+                  />
+                  Correct Questions:
+                </h4>
 
-                                    <img
-                                        src="/images/achievement.png"
-                                        alt="score Icon"
-                                        className="icon"
-                                    />
+                <p>{results.correct}</p>
 
-                                    Score:
+                <h4>
+                  <img
+                    src="/images/no.png"
+                    alt="incorrect Icon"
+                    className="icon"
+                  />
+                  Incorrect Questions:
+                </h4>
 
-                                </h4>
+                <p>{results.incorrect}</p>
+              </div>
+            )}
+          </div>
+        </div>
 
-                                <p>
-                                    {results.score} / {totalMarks}
-                                </p>
-
-
-                                <h4>
-
-                                    <img
-                                        src="/images/answer.png"
-                                        alt="answered Icon"
-                                        className="icon"
-                                    />
-
-                                    Answered Questions:
-
-                                </h4>
-
-                                <p>
-                                    {results.answered}
-                                </p>
-
-
-                                <h4>
-
-                                    <img
-                                        src="/images/question.png"
-                                        alt="unanswered Icon"
-                                        className="icon"
-                                    />
-
-                                    Unanswered Questions:
-
-                                </h4>
-
-                                <p>
-                                    {results.unanswered}
-                                </p>
-
-
-                                <h4>
-
-                                    <img
-                                        src="/images/check.png"
-                                        alt="correct Icon"
-                                        className="icon"
-                                    />
-
-                                    Correct Questions:
-
-                                </h4>
-
-                                <p>
-                                    {results.correct}
-                                </p>
-
-
-                                <h4>
-
-                                    <img
-                                        src="/images/no.png"
-                                        alt="incorrect Icon"
-                                        className="icon"
-                                    />
-
-                                    Incorrect Questions:
-
-                                </h4>
-
-                                <p>
-                                    {results.incorrect}
-                                </p>
-
-                            </div>
-
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                {/* =========================
+        {/* =========================
                     Questions
                 ========================= */}
 
-                <div className="ques-container-row">
+        <div className="ques-container-row">
+          {questions.map((quesVal, index) => (
+            <div className="ques-card" key={quesVal.question_id}>
+              <div className="pack-h4-marks">
+                {test?.test_lang === "hindi" ? (
+                  <>
+                    <h4>
+                      प्रश्न{index + 1}. {quesVal.question_text}
+                    </h4>
 
-                    {questions.map((quesVal, index) => (
+                    <span className="points">अंक: {quesVal.marks}</span>
+                  </>
+                ) : (
+                  <>
+                    <h4>
+                      Q{index + 1}. {quesVal.question_text}
+                    </h4>
 
-                        <div
-                            className="ques-card"
-                            key={quesVal.question_id}
-                        >
+                    <span className="points">Points: {quesVal.marks}</span>
+                  </>
+                )}
+              </div>
 
-                            <div className="pack-h4-marks">
+              <div className="options-container">
+                {["option_a", "option_b", "option_c", "option_d"].map(
+                  (option) => {
+                    const optionValue = optionMap[option];
 
-                                {test?.test_lang === "hindi" ? (
+                    const isCorrect = optionValue === quesVal.correct_answer;
 
-                                    <>
-                                        <h4>
-                                            प्रश्न{index + 1}.{" "}
-                                            {quesVal.question_text}
-                                        </h4>
+                    const isSelected =
+                      selectedAnswers[quesVal.question_id] === optionValue;
 
-                                        <span className="points">
-                                            अंक: {quesVal.marks}
-                                        </span>
-                                    </>
+                    const isWrong = isSelected && !isCorrect;
 
-                                ) : (
+                    return (
+                      <label
+                        key={option}
+                        className={`option-label ${
+                          isCorrect
+                            ? "correct-answer"
+                            : isWrong
+                              ? "incorrect-answer"
+                              : ""
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name={`question-${quesVal.question_id}`}
+                          value={optionValue}
+                          checked={isSelected}
+                          disabled
+                          readOnly
+                        />
 
-                                    <>
+                        {quesVal[option]}
 
-                                        <h4>
-                                            Q{index + 1}.{" "}
-                                            {quesVal.question_text}
-                                        </h4>
+                        {isCorrect && <span>✅</span>}
 
-                                        <span className="points">
-                                            Points: {quesVal.marks}
-                                        </span>
+                        {isWrong && <span>❌</span>}
+                      </label>
+                    );
+                  },
+                )}
+              </div>
 
-                                    </>
+              {/* Explanation */}
 
-                                )}
-
-                            </div>
-
-
-                            <div className="options-container">
-
-                                {[
-                                    "option_a",
-                                    "option_b",
-                                    "option_c",
-                                    "option_d"
-                                ].map((option) => {
-
-                                    const optionValue =
-                                        optionMap[option];
-
-                                    const isCorrect =
-                                        optionValue ===
-                                        quesVal.correct_answer;
-
-                                    const isSelected =
-                                        selectedAnswers[
-                                        quesVal.question_id
-                                        ] === optionValue;
-
-                                    const isWrong =
-                                        isSelected &&
-                                        !isCorrect;
-
-
-                                    return (
-
-                                        <label
-                                            key={option}
-                                            className={`option-label ${isCorrect
-                                                    ? "correct-answer"
-                                                    : isWrong
-                                                        ? "incorrect-answer"
-                                                        : ""
-                                                }`}
-                                        >
-
-                                            <input
-                                                type="radio"
-                                                name={`question-${quesVal.question_id}`}
-                                                value={optionValue}
-                                                checked={isSelected}
-                                                disabled
-                                                readOnly
-                                            />
-
-                                            {quesVal[option]}
-
-
-                                            {isCorrect && (
-                                                <span>
-                                                    ✅
-                                                </span>
-                                            )}
-
-
-                                            {isWrong && (
-                                                <span>
-                                                    ❌
-                                                </span>
-                                            )}
-
-                                        </label>
-
-                                    );
-
-                                })}
-
-                            </div>
-
-
-                            {/* Explanation */}
-
-                            <p>
-                                <b>Reason: </b>
-                                {quesVal.answer_description}
-                            </p>
-
-                        </div>
-
-                    ))}
-
-                </div>
-
+              <p>
+                <b>Reason: </b>
+                {quesVal.answer_description}
+              </p>
             </div>
-
+          ))}
         </div>
-
-    );
-
+      </div>
+    </div>
+  );
 }
 
 export default QuizResult;

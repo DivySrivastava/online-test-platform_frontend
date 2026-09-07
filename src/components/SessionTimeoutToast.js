@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
+import "./SessionTimeout.css";
 
 const WARNING_THRESHOLDS = [
   { key: "5min", ms: 5 * 60 * 1000, label: "5 minutes" },
@@ -11,8 +12,19 @@ const TOAST_ID = "session-timeout-toast";
 const AUTO_CLOSE_MS = 10 * 1000;
 
 const WarningMessage = ({ label }) => (
-  <div>
-    <strong>Your session is about to expire</strong>
+  <div
+    style={{
+      maxWidth: "220px",
+      width: "100%",
+      fontSize: "13px",
+      lineHeight: "1.4",
+      padding: "2px",
+    }}
+  >
+    <strong style={{ fontSize: "14px" }}>
+      Your session is about to expire
+    </strong>
+
     <div style={{ marginTop: 4 }}>
       For your security, you'll be signed out in approximately{" "}
       <strong>{label}</strong>. Please save your work.
@@ -66,6 +78,7 @@ const SessionTimeoutToast = () => {
             closeOnClick: true,
             draggable: false,
             hideProgressBar: false,
+            className: "session-warning-toast",
           });
         }
       }

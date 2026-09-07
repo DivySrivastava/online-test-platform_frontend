@@ -1,23 +1,21 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAxios } from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import ReactDOM from "react-dom";
 //import axios from "axios";
 import "./css/Login.css";
-import App from "../App";
-import { responsiveFontSizes } from "@mui/material";
 import { FaArrowLeft } from "react-icons/fa";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showBackBtn, setShowBackBtn] = useState(true);
   const axios = useAxios();
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showForgotUsername, setShowForgotUsername] = useState(false);
-  const [type, setType] = useState(""); // default
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
@@ -30,7 +28,42 @@ const Login = () => {
     password: "",
   });
 
-  // 🚀 BLOCK ALREADY LOGGED-IN USERS
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 10) {
+        // scrolling down
+        setShowBackBtn(false);
+      } else if (currentScrollY < lastScrollY) {
+        // scrolling up
+        setShowBackBtn(true);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (location.state?.logoutSuccess) {
+      toast.success("You have been logged out successfully", {
+        autoClose: 2000,
+        toastId: "logout-success",
+      });
+
+      navigate("/login", {
+        replace: true,
+        state: {},
+      });
+    }
+  }, [location.state?.logoutSuccess, navigate]);
+
+  // BLOCK ALREADY LOGGED-IN USERS
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -104,47 +137,59 @@ const Login = () => {
     setShowForgotPassword(false);
     setShowForgotUsername(false);
     setMessage("");
-    setIdentifier("");
-    setPassword("");
+    setFormData({ identifier: "", password: "" });
   };
 
   const handleSignupClick = () => {
+    toast.dismiss();
     navigate("/signup");
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 ye upar UseState declarations ke saath add karo
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, formData);
+      const response = await axios.post(`${API_URL}/auth/login`, formData, {
+        skipGlobalLoader: true, // 👈 sirf ye extra config object add karna hai
+      });
 
       const { user, token, per } = response.data;
 
-      // Merge permissions into user object
       const userData = {
         ...user,
         permissions: per || [],
       };
 
-      // Store user in context
       loginUser(userData, token);
 
-      // Store in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("authIdentifier", formData.identifier);
       localStorage.setItem("user", JSON.stringify(userData));
 
-      // Store permissions in state
       setPermissions(userData.permissions);
 
-      toast.success("Login successful! Welcome back 🎉");
+      toast.success("Login successful! Welcome back 🎉", {
+        autoClose: 2000,
+        toastId: "login-success",
+      });
 
-      // Redirect
       setRedirect(true);
     } catch (error) {
       //console.error("Login error:", error);
 
-      toast.error(error.response?.data?.message || "Login failed.");
+      toast.error(
+        error.response?.data?.message || "Invalid username/email or password",
+        {
+          autoClose: 2000,
+          closeOnClick: true,
+          position: "top-right",
+        },
+      );
+    } finally {
+      setIsSubmitting(false); // 👈 add karo
     }
   };
 
@@ -156,21 +201,25 @@ const Login = () => {
     if (showForgotPassword) {
       forgot_entity = "password";
     }
-    // else if (showForgotUsername) {
-    //   forgot_entity = "username";
-    // }
 
     try {
+      console.log("forgot_entity", forgot_entity);
+      console.log("email", email);
 
-      const res = await axios.post(`${API_URL}/auth/account-recovery`, {
-        email,
-        forgot_entity,
-      });
+      const res = await axios.post(
+        `${API_URL}/auth/account-recovery`,
+        {
+          email,
+          forgot_entity,
+        },
+        {
+          skipGlobalLoader: true,
+        },
+      );
 
       toast.success(res.data.message);
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
-      toast.error(err.response?.data?.message);
     }
   };
 
@@ -186,19 +235,23 @@ const Login = () => {
   }, []);
   // ✅ Safe redirect using useEffect
 
+  const backButton = ReactDOM.createPortal(
+    <div className={`signup-back ${showBackBtn ? "" : "back-hidden"}`}>
+      <button
+        type="button"
+        className="login-back-btn"
+        onClick={() => navigate("/")}
+      >
+        <FaArrowLeft />
+        <span>Back</span>
+      </button>
+    </div>,
+    document.body,
+  );
+
   return (
     <>
-      <div className="signup-back">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/")}
-        >
-          <FaArrowLeft />
-          <span>Back</span>
-        </button>
-      </div>
-
+      {backButton}
       <div
         className={`body ${showForgotPassword || showForgotUsername ? "forgot-password-active" : ""}`}
       >
@@ -271,8 +324,12 @@ const Login = () => {
                     <span onClick={handleForgotUsernameClick}>Forgot Username?</span>
                   </div> */}
                 </div>
-                <button type="submit" className="l-login-btn">
-                  Login
+                <button
+                  type="submit"
+                  className="l-login-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Login"}
                 </button>
                 {message && <p className="message">{message}</p>}
               </form>

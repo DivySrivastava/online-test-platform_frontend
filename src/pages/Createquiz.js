@@ -60,6 +60,9 @@ const ExcelUploader = () => {
   const [stateVal, setStateVal] = useState("");
   const [typeVal, setTypeVal] = useState("");
 
+  // NEW: shared state so only ONE InfoTooltip can be open at a time
+  const [openTooltipId, setOpenTooltipId] = useState(null);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -85,6 +88,13 @@ const ExcelUploader = () => {
   const QUIZ_DRAFT_KEY = "createQuizDraft";
   const QUIZ_FILES_DB = "quizFilesDB";
   const QUIZ_FILES_STORE = "files";
+
+  // NEW: close any open tooltip when clicking anywhere outside it
+  useEffect(() => {
+    const handleOutsideClick = () => setOpenTooltipId(null);
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -1112,39 +1122,60 @@ const ExcelUploader = () => {
     ) : null;
   };
 
-  // NEW: Info tooltip icon (the "?" icon shown on hover)
-  const InfoTooltip = ({ text }) => (
-    <Tooltip
-      title={
-        <span style={{ fontSize: "13px", lineHeight: "1.5" }}>{text}</span>
-      }
-      arrow
-      placement="top"
-      slotProps={{
-        tooltip: {
-          sx: {
-            background: "linear-gradient(135deg, #1e4d7a 0%, #306694 100%)",
-            color: "#fff",
-            fontSize: "13px",
-            fontWeight: 500,
-            padding: "10px 14px",
-            borderRadius: "12px",
-            boxShadow: "0 8px 25px rgba(30, 77, 122, 0.28)",
-            maxWidth: "280px",
-            textAlign: "left",
-            lineHeight: 1.5,
+  // NEW: Info tooltip icon (the "?" icon shown on click)
+  // - Only one InfoTooltip can be open at a time (shared openTooltipId state)
+  // - Clicking the same "?" again hides it
+  // - Clicking anywhere outside also hides it (handled by the document click listener above)
+  const InfoTooltip = ({ text, id }) => {
+    const isOpen = openTooltipId === id;
+
+    return (
+      <Tooltip
+        title={
+          <span style={{ fontSize: "13px", lineHeight: "1.5" }}>{text}</span>
+        }
+        arrow
+        placement="top"
+        open={isOpen}
+        disableHoverListener
+        disableFocusListener
+        disableTouchListener
+        onClose={() => setOpenTooltipId((prev) => (prev === id ? null : prev))}
+        slotProps={{
+          tooltip: {
+            sx: {
+              background: "linear-gradient(135deg, #1e4d7a 0%, #306694 100%)",
+              color: "#fff",
+              fontSize: "13px",
+              fontWeight: 500,
+              padding: "10px 14px",
+              borderRadius: "12px",
+              boxShadow: "0 8px 25px rgba(30, 77, 122, 0.28)",
+              maxWidth: "280px",
+              textAlign: "left",
+              lineHeight: 1.5,
+            },
           },
-        },
-        arrow: {
-          sx: {
-            color: "#306694",
+          arrow: {
+            sx: {
+              color: "#306694",
+            },
           },
-        },
-      }}
-    >
-      <span className="info-tooltip-icon">?</span>
-    </Tooltip>
-  );
+        }}
+      >
+        <span
+          className="info-tooltip-icon"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpenTooltipId((prev) => (prev === id ? null : id));
+          }}
+        >
+          ?
+        </span>
+      </Tooltip>
+    );
+  };
 
   // NEW: Upload icon (replaces the old download icon inside the box)
   const UploadIcon = () => (
@@ -1200,8 +1231,12 @@ const ExcelUploader = () => {
 
   // NEW: Uploaded file status text — badge without cross, plus a separate Cancel Upload button below
   const FileUploadStatus = ({ fileName, onRemove }) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+    <div
+      className="file-upload-status-wrapper"
+      style={{ display: "flex", flexDirection: "column", gap: "6px" }}
+    >
       <div
+        className="uploaded-success-status"
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -1210,7 +1245,7 @@ const ExcelUploader = () => {
           fontWeight: 500,
           color: "#1e7e34",
           background: "#eaf7ee",
-          padding: "3px 10px",
+          padding: "3px 0px",
           borderRadius: "12px",
           width: "fit-content",
         }}
@@ -1484,7 +1519,10 @@ const ExcelUploader = () => {
               <div className="form-group-cq">
                 <label htmlFor="testtype">
                   Quiz Type
-                  <InfoTooltip text="Quiz Type is a kind of quiz category not beyond that." />
+                  <InfoTooltip
+                    id="quizType"
+                    text="Quiz Type is a kind of quiz category not beyond that."
+                  />
                 </label>
 
                 <select
@@ -1526,8 +1564,11 @@ const ExcelUploader = () => {
             <div className="form-row-cq">
               <div className="form-group-cq radio-group">
                 <label className="radio-label">
-                  Is it a paid test?
-                  <InfoTooltip text="On selecting Yes students will have to pay for this quiz." />
+                  Is it a paid test
+                  <InfoTooltip
+                    id="paidTest"
+                    text="On selecting Yes students will have to pay for this quiz."
+                  />
                 </label>
                 <div className="radio-options">
                   <label>
@@ -1571,7 +1612,10 @@ const ExcelUploader = () => {
             <div className="form-group-cq">
               <label htmlFor="startDateTime">
                 Starting Date & Time
-                <InfoTooltip text="Quiz will be live so candidate can start giving quiz from this date and time." />
+                <InfoTooltip
+                  id="startDateTime"
+                  text="Quiz will be live so candidate can start giving quiz from this date and time."
+                />
               </label>
 
               <input
@@ -1586,7 +1630,10 @@ const ExcelUploader = () => {
             <div className="form-group-cq">
               <label htmlFor="endDateTime">
                 Ending Date & Time
-                <InfoTooltip text="Quiz will expire at this date and time so candidate cannot give quiz after this." />
+                <InfoTooltip
+                  id="endDateTime"
+                  text="Quiz will expire at this date and time so candidate cannot give quiz after this."
+                />
               </label>
               <input
                 type="datetime-local"
@@ -1625,7 +1672,10 @@ const ExcelUploader = () => {
                       onChange={handleVisibilityChange}
                     />{" "}
                     Global
-                    <InfoTooltip text="Global quiz will be visible to all the candidates." />
+                    <InfoTooltip
+                      id="visibilityGlobal"
+                      text="Global quiz will be visible to all the candidates."
+                    />
                   </label>
                   <label>
                     <input
@@ -1636,7 +1686,10 @@ const ExcelUploader = () => {
                       onChange={handleVisibilityChange}
                     />{" "}
                     Institution
-                    <InfoTooltip text="Institutional quiz will be visible to the corresponding Institutional candidates." />
+                    <InfoTooltip
+                      id="visibilityInstitution"
+                      text="Institutional quiz will be visible to the corresponding Institutional candidates."
+                    />
                   </label>
                   <label>
                     <input
@@ -1647,7 +1700,10 @@ const ExcelUploader = () => {
                       onChange={handleVisibilityChange}
                     />{" "}
                     Interest Area
-                    <InfoTooltip text="Quiz based on interest will be visible to the candidates having corresponding interest." />
+                    <InfoTooltip
+                      id="visibilityInterest"
+                      text="Quiz based on interest will be visible to the candidates having corresponding interest."
+                    />
                   </label>
                 </div>
                 <ErrorMessage field="testVisibility" />
@@ -1795,7 +1851,10 @@ const ExcelUploader = () => {
                     onChange={handleResultReleaseDateChange}
                   />
                   Release After Quiz Expire
-                  <InfoTooltip text="Candidates will get result of quiz after evaluation of quiz." />
+                  <InfoTooltip
+                    id="resultReleaseAfter"
+                    text="Candidates will get result of quiz after evaluation of quiz."
+                  />
                 </label>
 
                 <label>
@@ -1807,7 +1866,10 @@ const ExcelUploader = () => {
                     onChange={handleResultReleaseDateChange}
                   />
                   Choose Release Date
-                  <InfoTooltip text="Candidates will get result of quiz at the chosen release date." />
+                  <InfoTooltip
+                    id="resultReleaseChoose"
+                    text="Candidates will get result of quiz at the chosen release date."
+                  />
                 </label>
               </div>
 

@@ -261,3 +261,20 @@
 .btn-institute-regis-back:active {
   transform: scale(0.97);
 }
+
+/* MOBILE VIEW - BUTTONS SIDE BY SIDE */
+@media (max-width: 600px) {
+  .institute-regis-btn-row {
+    flex-wrap: nowrap;
+    gap: 0.7rem;
+    width: 100%;
+  }
+
+  .btn-institute-regis,
+  .btn-institute-regis-back {
+    width: 50%;
+    min-width: 0;
+    padding: 0.7rem 0.5rem;
+    font-size: 0.95rem;
+  }
+}

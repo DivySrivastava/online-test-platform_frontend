@@ -1,55 +1,30 @@
-// import axios from "axios";
-
-// export function setupAxiosInterceptors(logoutUser) {
-//   axios.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//       const requestUrl = error.config?.url || "";
-
-//       const isAuthEndpoint =
-//         requestUrl.includes("/auth/login") ||
-//         requestUrl.includes("/auth/signup") ||
-//         requestUrl.includes("/auth/account-recovery");
-
-//       // Redirect only if it's NOT a login/signup request
-//       if (error.response?.status === 401 && !isAuthEndpoint) {
-//         logoutUser();
-//         window.location.href = "/login";
-//       }
-
-//       return Promise.reject(error);
-//     },
-//   );
-// }
-
 import axios from "axios";
 
+let interceptorId = null;
+
 export function setupAxiosInterceptors(logoutUser) {
-  axios.interceptors.response.use(
+  // Remove previous interceptor if one exists
+  if (interceptorId !== null) {
+    axios.interceptors.response.eject(interceptorId);
+  }
+
+  interceptorId = axios.interceptors.response.use(
     (response) => response,
+
     (error) => {
       const requestUrl = error.config?.url || "";
 
       const isAuthEndpoint =
         requestUrl.includes("/auth/login") ||
         requestUrl.includes("/auth/signup") ||
-        requestUrl.includes("/auth/account-recovery");
+        requestUrl.includes("/auth/account-recovery") ||
+        requestUrl.includes("/auth/reset-password");
 
-      // ✅ Don't logout for reset password API
-      const isResetPasswordEndpoint = requestUrl.includes(
-        "/auth/reset-password",
-      );
-
-      if (
-        error.response?.status === 401 &&
-        !isAuthEndpoint &&
-        !isResetPasswordEndpoint
-      ) {
-        logoutUser();
-        window.location.href = "/login";
+      if (error.response?.status === 401 && !isAuthEndpoint) {
+        logoutUser(false);
       }
 
       return Promise.reject(error);
-    },
+    }
   );
 }

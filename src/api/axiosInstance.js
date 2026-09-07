@@ -15,6 +15,8 @@ export const useAxios = () => {
     interceptorsAttached = true;
 
     axios.interceptors.request.use((config) => {
+      if (config.skipGlobalLoader) return config; // 👈 add karo — skip karo agar flag true hai
+
       pendingRequests += 1;
       setLoading(true);
       return config;
@@ -22,15 +24,21 @@ export const useAxios = () => {
 
     axios.interceptors.response.use(
       (res) => {
-        pendingRequests = Math.max(0, pendingRequests - 1);
-        if (pendingRequests === 0) setLoading(false);
+        if (!res.config.skipGlobalLoader) {
+          // 👈 add karo
+          pendingRequests = Math.max(0, pendingRequests - 1);
+          if (pendingRequests === 0) setLoading(false);
+        }
         return res;
       },
       (error) => {
-        pendingRequests = Math.max(0, pendingRequests - 1);
-        if (pendingRequests === 0) setLoading(false);
+        if (!error.config?.skipGlobalLoader) {
+          // 👈 add karo
+          pendingRequests = Math.max(0, pendingRequests - 1);
+          if (pendingRequests === 0) setLoading(false);
+        }
         return Promise.reject(error);
-      }
+      },
     );
   }, [setLoading]);
 

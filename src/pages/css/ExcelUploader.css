@@ -367,7 +367,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: clamp(1rem, 3vw, 2rem);
-  margin-top: 3rem;
+  margin-top: rem;
   padding: 1rem;
 }
 
@@ -512,8 +512,31 @@ body {
 
 /* Responsiveness */
 @media (max-width: 768px) {
+  .file-upload-status-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .upload-success {
+    margin-left: 0 !important;
+  }
+
+  .cancel-upload-btn {
+    margin-left: auto !important;
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+  }
+
   .form-row-cq {
     flex-direction: column;
+  }
+
+  .cancel-upload {
+    margin-left: 13px;
   }
 
   .form-group-cq {
@@ -1077,3 +1100,226 @@ body {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(198, 40, 40, 0.3);
 }
+
+/* ===== MOBILE FILE UPLOAD ERROR FIX ===== */
+@media (max-width: 600px) {
+  .file-upload-section .form-row-cq {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .file-upload-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 0 12px;
+    margin-top: 6px;
+  }
+
+  /* Error message */
+  .file-upload-bottom > div {
+    width: 100%;
+    margin: 0 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Download Sample File */
+  .file-upload-bottom button {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap;
+  }
+}
+
+/* ===== MOBILE: CANCEL BEFORE SUCCESS ===== */
+@media (max-width: 600px) {
+  .file-upload-status-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 18px !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 21px !important;
+  }
+
+  /* Cancel Upload LEFT */
+  .file-upload-status-wrapper .cancel-upload-btn {
+    order: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 4px 9px !important;
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Uploaded Successfully RIGHT */
+  .file-upload-status-wrapper .uploaded-success-status {
+    order: 1 !important;
+    margin: 0 !important;
+    padding: 3px 9px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .file-upload-bottom .uploaded-success-status {
+    margin-left: -25px !important;
+  }
+}
+
+/* ===== MOBILE FILE UPLOAD STATUS ===== */
+@media (max-width: 600px) {
+  .file-upload-status-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Uploaded Successfully - apni original LEFT position par */
+  .file-upload-status-wrapper .uploaded-success-status {
+    order: 1 !important;
+    margin: 0 !important;
+    padding: 3px 9px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Cancel Upload - SAME LINE me RIGHT */
+  .file-upload-status-wrapper .cancel-upload-btn {
+    order: 2 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    padding: 4px 10px !important;
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Download Sample File apni original position par */
+  .file-upload-bottom {
+    width: 100% !important;
+    padding: 0 12px !important;
+    margin-top: 6px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* IMPORTANT: success ko left shift mat karo */
+  .file-upload-bottom .uploaded-success-status {
+    margin-left: 0 !important;
+  }
+}
+
+.file-upload-status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px !important;
+}
+
+/* ===== DOWNLOAD + ANSWER SHEET MOBILE FIX ===== */
+
+@media (max-width: 600px) {
+  /* Download Sample File */
+  .file-upload-bottom {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 5px !important;
+    width: 100% !important;
+    padding: 0 12px !important;
+    margin-top: 6px !important;
+  }
+
+  .file-upload-bottom button {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Error / warning message */
+  .file-upload-bottom > div {
+    width: 100% !important;
+    margin: 0 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Answer Sheet upload box */
+  .custom-file-input {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .custom-file-input .file-label-text {
+    font-size: 0.82rem !important;
+    padding-left: 1rem !important;
+    padding-right: 3.5rem !important;
+  }
+
+  /* Upload icon */
+  .upload-icon-inside {
+    right: 10px !important;
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+  }
+
+  /* Publish / Preview / Reset */
+  .form-actions {
+    width: 100% !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 1.5rem !important;
+    gap: 0.8rem !important;
+  }
+
+  .preview-btn,
+  .submit-excelUploader,
+  .reset-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ===== DESKTOP ONLY: FILE UPLOAD STATUS ===== */
+@media (min-width: 601px) {
+
+  /* Success message aur Download Sample File ka gap kam */
+  .file-upload-bottom {
+    gap: 8px !important;
+  }
+
+  .file-upload-status-wrapper {
+    gap: 8px !important;
+  }
+
+  /* Cancel Upload button chhota */
+  .cancel-upload-btn {
+    padding: 4px 11px !important;
+    font-size: 0.70rem !important;
+    line-height: 1.1 !important;
+    border-radius: 16px !important;
+  }
+}
+

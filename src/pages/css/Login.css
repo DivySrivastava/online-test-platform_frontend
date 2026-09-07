@@ -255,51 +255,131 @@
   display: block;
 }
 
-/***REsponsiveness****/
+/* =========================
+   MOBILE LAYOUT - 768px
+   ========================= */
+
 @media (max-width: 768px) {
   .body {
     flex-direction: column;
-    min-height: auto;
-    margin: 2rem;
+    min-height: 100vh;
+    margin: 0;
+    width: 100%;
   }
+
+  .signup-back {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+
+  .back-btn {
+    min-width: 62px;
+    height: 32px;
+    padding: 4px 9px;
+    font-size: 11px;
+    gap: 4px;
+    border-radius: 0 0 8px 0;
+    background: #e8f2f8;
+    color: #245b7d;
+    border: 1px solid #a9c9dc;
+    border-top: none;
+    border-left: none;
+    box-shadow: 0 2px 6px rgba(48, 105, 148, 0.18);
+  }
+
+  .back-btn svg {
+    font-size: 11px;
+  }
+
+  /* =========================
+     BLUE TOP SECTION
+     ========================= */
 
   .right-section {
     order: 1;
     flex: none;
     width: 100%;
-    min-height: auto;
-    padding-top: 2rem;
-    padding-bottom: 1rem;
+    min-height: 330px;
+
+    background-color: #306994;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 70px 25px 30px;
+    box-sizing: border-box;
   }
+
+  .welcome-log-text {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .welcome-log-text h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .welcome-log-text p {
+    font-size: 1rem;
+    margin: 1rem auto 2rem;
+    max-width: 350px;
+  }
+
+  .s-signup-btn {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  /* =========================
+     BUBBLE / LOGIN SECTION
+     ========================= */
 
   .left-section {
     order: 2;
     flex: none;
     width: 100%;
-    min-height: auto;
-    padding: 1rem 0;
+    min-height: calc(100vh - 330px);
+
+    padding: 35px 15px;
+    box-sizing: border-box;
+
     background-color: rgba(237, 245, 248, 0.4);
+
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* IMPORTANT:
+     Tumhara original gradient + bubbles
+     bilkul same rahega */
+
+  .bg-animation {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
   }
 
   .l-container {
-    max-width: 85%;
+    width: 100%;
+    max-width: 450px;
+    min-width: 0;
+
     padding: 2rem;
     margin: 0 auto;
-    min-width: 280px;
-  }
 
-  .welcome-log-text {
-    padding: 2rem 1rem;
-  }
+    box-sizing: border-box;
 
-  .welcome-log-text h2 {
-    font-size: 1.8rem;
-  }
-
-  .welcome-log-text p {
-    font-size: 1rem;
-    margin: 1rem;
-    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .input-group input {
@@ -309,23 +389,24 @@
 
   .input-group label {
     font-size: 1rem;
+    left: 10px;
   }
 
   .input-group input:focus + label,
   .input-group input:not(:placeholder-shown) + label {
     font-size: 0.8rem;
     top: -10px;
+    left: 12px;
   }
 
-  .l-login-btn,
-  .s-signup-btn {
+  .l-login-btn {
     font-size: 1rem;
     padding: 0.8rem;
   }
 
   .options-row {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
   }
 
@@ -364,7 +445,9 @@
 
   .input-group label {
     font-size: 0.9rem;
+    left: 9px;
   }
+  
   .checkbox-group {
     font-size: 0.7rem;
   }
@@ -377,19 +460,33 @@
 }
 
 @media (max-width: 410px) {
-  .l-container {
-    min-width: 240px;
-    padding: 1.2rem;
+  .right-section {
+    min-height: 280px;
+    padding: 60px 15px 20px;
   }
 
-  .welcome-text h2 {
+  .welcome-log-text {
+    padding: 10px;
+  }
+
+  .welcome-log-text h2 {
     font-size: 1.3rem;
   }
 
-  .welcome-text p {
-    font-size: 0.75rem;
-    margin: 0.4rem;
-    margin-bottom: 1.2rem;
+  .welcome-log-text p {
+    font-size: 0.8rem;
+    margin: 0.4rem auto 1.2rem;
+  }
+
+  .left-section {
+    min-height: calc(100vh - 280px);
+    padding: 20px 8px;
+  }
+
+  .l-container {
+    min-width: 0;
+    width: 92%;
+    padding: 1.2rem;
   }
 
   .input-group input {
@@ -399,12 +496,14 @@
 
   .input-group label {
     font-size: 0.85rem;
+    left: 8px;
   }
 
   .input-group input:focus + label,
   .input-group input:not(:placeholder-shown) + label {
     font-size: 0.75rem;
     top: -8px;
+    left: 10px;
   }
 
   .l-login-btn,
@@ -423,19 +522,33 @@
 }
 
 @media (max-width: 350px) {
+  .right-section {
+    min-height: 260px;
+    padding: 55px 12px 15px;
+  }
+
+  .welcome-log-text {
+    padding: 8px;
+  }
+
+  .welcome-log-text h2 {
+    font-size: 1.1rem;
+  }
+
+  .welcome-log-text p {
+    font-size: 0.7rem;
+    margin: 0.3rem auto 1rem;
+  }
+
+  .left-section {
+    min-height: calc(100vh - 260px);
+    padding: 15px 5px;
+  }
+
   .l-container {
-    min-width: 120px;
+    width: 94%;
+    min-width: 0;
     padding: 1rem;
-  }
-
-  .welcome-text h2 {
-    font-size: 1rem;
-  }
-
-  .welcome-text p {
-    font-size: 0.65rem;
-    margin: 0.3rem;
-    margin-bottom: 1rem;
   }
 
   .input-group input {
@@ -460,48 +573,6 @@
   }
 }
 
-.login-back {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 9999;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  background: #fff;
-  color: #150a6a;
-
-  border: 1px solid #dbeafe;
-  border-radius: 30px;
-
-  padding: 10px 18px;
-  width: auto;
-  min-width: 110px;
-
-  font-size: 16px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.back-btn:hover {
-  background: #2563eb;
-  color: #fff;
-  transform: translateX(-3px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
-}
-
-.back-btn svg {
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
 .password-wrapper {
   position: relative;
   width: 100%;
@@ -524,4 +595,86 @@
 
 .password-toggle:hover {
   color: #2563eb;
+}
+
+/* =========================
+   BACK BUTTON
+   ========================= */
+
+.signup-back {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+}
+
+.login-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background: #e8f2f8;
+  color: #245b7d;
+
+  border: 1px solid #a9c9dc;
+  border-radius: 8px;
+
+  padding: 10px 18px;
+  min-width: 110px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+
+  box-shadow: 0 2px 6px rgba(48, 105, 148, 0.18);
+}
+
+.login-back-btn:hover {
+  background: #306994;
+  color: #ffffff;
+  border-color: #306994;
+  transform: translateX(-2px);
+}
+
+.login-back-btn svg {
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* =========================
+   MOBILE BACK BUTTON
+   ========================= */
+
+@media (max-width: 768px) {
+  .signup-back {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .back-hidden {
+    transform: translateY(-100px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .login-back-btn {
+    min-width: 90px;
+    padding: 8px 16px;
+    font-size: 14px;
+    gap: 6px;
+    border-radius: 8px;
+  }
+
+  .login-back-btn svg {
+    font-size: 14px;
+  }
 }

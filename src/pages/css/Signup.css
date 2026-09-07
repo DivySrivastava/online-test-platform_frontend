@@ -175,6 +175,9 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-group-sign input:focus,
@@ -203,11 +206,13 @@
   appearance: none;
   color: rgba(41, 59, 87, 0.86);
   font-weight: 400;
-
   -webkit-appearance: none;
   -moz-appearance: none;
   scrollbar-width: thin;
   scrollbar-color: rgb(167, 173, 247) transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-group-sign select::-webkit-scrollbar {
@@ -411,11 +416,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .dialog-box {
@@ -1390,7 +1397,7 @@ input[type="checkbox"] {
   .signup-container {
     width: 95%;
     padding: 25px;
-    margin: 20px auto;
+    margin: 70px auto 20px;
   }
 
   .form-row-sign {
@@ -1435,6 +1442,7 @@ input[type="checkbox"] {
     width: 96%;
     padding: 18px;
     border-radius: 15px;
+    margin-top: 65px;
   }
 
   .signup-container h2 {
@@ -1494,9 +1502,18 @@ input[type="checkbox"] {
   top: 20px;
   left: 25px;
   z-index: 9999;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
-.signup-back .back-btn {
+.back-hidden {
+  transform: translateY(-100px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.signup-back-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1512,7 +1529,7 @@ input[type="checkbox"] {
   transition: 0.3s ease;
 }
 
-.signup-back .back-btn:hover {
+.signup-back-btn:hover {
   transform: translateX(-4px);
   background: #315efb;
   color: white;

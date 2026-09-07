@@ -353,8 +353,39 @@
 @media (max-width: 768px) {
   /* Layout stacks */
   .body-layout {
+    display: flex;
+    justify-content: center;
     padding: 12px 10px;
     gap: 12px;
+  }
+
+  .filter-sidebar .f-sub:has(+ button.f-btn ~ hr) {
+    display: none;
+  }
+
+  .sidebar-other-actions {
+    display: none;
+  }
+
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .table-wrap {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
+    box-sizing: border-box;
+  }
+
+  .inst-table {
+    width: 100%;
+    min-width: 500px;
+    margin: 0 auto;
   }
 
   /* Sidebar becomes fixed floating dropdown */
@@ -363,7 +394,7 @@
     position: fixed;
     top: calc(7rem + 10px);
     right: clamp(12px, 2vw, 15px);
-    width: clamp(200px, 50vw, 280px);
+    width: clamp(220px, 65vw, 260px);
     max-height: 60vh;
     background-color: #d4ecef;
     overflow-y: auto;
@@ -375,7 +406,8 @@
   }
 
   .filter-sidebar::-webkit-scrollbar {
-    width: 8px;
+    height: 3px;
+    width: 6px;
   }
 
   .filter-sidebar::-webkit-scrollbar-track {
@@ -412,7 +444,7 @@
   }
 
   .table-wrap::-webkit-scrollbar {
-    height: 5px;
+    height: 4px;
   }
   .table-wrap::-webkit-scrollbar-thumb {
     background: #7ab8c0;
@@ -444,6 +476,15 @@
 }
 
 @media (max-width: 480px) {
+  .body-layout {
+    padding: 8px;
+  }
+
+  .table-wrap {
+    margin: 0.6rem auto;
+    width: calc(100% - 1.2rem);
+  }
+
   .filter-siderbar {
     width: clamp(180px, 80vw, 260px);
     right: clamp(8px, 2vw, 10px);
@@ -477,13 +518,12 @@
     border-radius: 20px 20px 10px 10px;
   }
   .table-wrap::-webkit-scrollbar {
-    height: 8px;
+    height: 4px;
   }
 
   .table-wrap::-webkit-scrollbar-track {
     background: #f0fbfc;
     border-radius: 10px;
-    margin: 5px 0;
   }
 
   .table-wrap::-webkit-scrollbar-thumb {
@@ -512,5 +552,45 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+.add-inst-header-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .institute-header {
+    margin-bottom: 0;
+  }
+  .add-inst-header-btn {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 4px 0 7px 0;
+    padding: clamp(6px, 1vw, 8px) clamp(14px, 2vw, 18px);
+    background-color: #306694;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: clamp(0.75rem, 2vw, 0.85em);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .add-inst-header-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+  }
+
+  .mob-filter-bar {
+    display: flex;
+  }
+
+  .main-content {
+    gap: 8px; /* main-content ka overall gap bhi kam karo taaki table upar aaye */
   }
 }

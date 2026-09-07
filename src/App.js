@@ -50,22 +50,27 @@ function App() {
 
   useEffect(() => {
     setupAxiosInterceptors(logoutUser);
+  }, [logoutUser]);
+
+  useEffect(() => {
+    document.body.addEventListener("touchstart", () => {}, { passive: true });
   }, []);
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
+
       <LoaderProvider>
         <GlobalLoader />
         <SessionTimeoutToast />
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          pauseOnHover
-          theme="colored"
-        />
 
         <div className="app-shell">
           <Navbar />

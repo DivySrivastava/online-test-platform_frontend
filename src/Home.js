@@ -34,14 +34,17 @@ const heroSlides = [
   {
     image: "/images/banner3.jpg",
     alt: "Students",
-    title: "Reflecting our platform's mission to support learning at every level.",
-    subtitle: "Join thousands of students — take a quiz and put your knowledge to the test!",
+    title:
+      "Reflecting our platform's mission to support learning at every level.",
+    subtitle:
+      "Join thousands of students — take a quiz and put your knowledge to the test!",
   },
   {
     image: "/images/banner4.jpg",
     alt: "Students",
     title: "Menstrual Health & Hygiene training session.",
-    subtitle: "Take our health awareness quiz and learn more about menstrual hygiene!",
+    subtitle:
+      "Take our health awareness quiz and learn more about menstrual hygiene!",
   },
 ];
 
@@ -204,23 +207,46 @@ const Quiz = ({ tests }) => {
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const cardsPerView = 3;
+
+  // Desktop = 3 cards
+  // Mobile = 1 card
+  const [cardsPerView, setCardsPerView] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth <= 640 ? 1 : 3,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCardsPerView(window.innerWidth <= 640 ? 1 : 3);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Agar screen resize hone ke baad current index invalid ho jaye
+  useEffect(() => {
+    if (tests.length > 0 && currentIndex >= tests.length) {
+      setCurrentIndex(Math.max(0, tests.length - cardsPerView));
+    }
+  }, [tests.length, cardsPerView, currentIndex]);
 
   const isCarouselMode = tests.length > cardsPerView;
 
   const handleNext = () => {
     if (currentIndex + cardsPerView < tests.length) {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      setCurrentIndex((prev) => prev - 1);
     }
   };
 
-  // Carousel mode में सिर्फ visible slice, वरना सारे tests एक साथ
   const displayedTests = isCarouselMode
     ? tests.slice(currentIndex, currentIndex + cardsPerView)
     : tests;

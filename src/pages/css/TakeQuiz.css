@@ -1,12 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
 .take-quiz {
   display: flex;
-
   flex-direction: row;
   font-family: "Poppins", sans-serif;
   background: #f0fbfc8a;
   backdrop-filter: blur(12px);
   min-height: 100vh;
   font-size: 0.95rem;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /******Filterby section*******/
@@ -77,8 +82,9 @@
   flex-grow: 1;
   padding: clamp(15px, 3vw, 20px);
   text-align: center;
-
   min-height: 100vh;
+  min-width: 0;
+  width: 100%;
 }
 
 /**header**/
@@ -145,6 +151,7 @@
   justify-content: center;
   gap: clamp(1rem, 2vw, 1.2rem);
   flex-wrap: wrap;
+  width: 100%;
 }
 
 /* Container for no quiz message */
@@ -260,6 +267,12 @@
 .Status-Lang {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
+}
+
+.Status-Lang span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .from-to {
@@ -270,14 +283,21 @@
   gap: 10px;
 }
 
+.from-to p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 /**input field**/
 .desc {
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0rem !important;
+  text-indent: 8px;
   border-radius: 30px;
   border: 1px solid #93b5e7ff;
   color: #356175ff;
   background: #e3fbfd86;
   transition: all 0.2s ease-in-out;
+  margin-bottom: 8px !important;
 }
 
 .test-status1 {
@@ -312,12 +332,14 @@
   font-size: 0.85rem;
 }
 
-/**Test Card Details****/
+/**Test Card Details — SINGLE CONSISTENT RULE (no per-breakpoint overrides) ****/
 .test-details {
   display: flex;
   justify-content: space-around;
-
+  align-items: center;
   margin: 10px 0;
+  gap: 0;
+  width: 100%;
 }
 
 .detail-item {
@@ -325,11 +347,19 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-item p {
+  overflow-wrap: anywhere;
 }
 
 .vl {
   border-left: 2px solid #559aafa1;
   height: 50px;
+  align-self: center;
+  flex-shrink: 0;
 }
 
 .icon-TakeQuiz {
@@ -338,16 +368,31 @@
   vertical-align: middle;
 }
 
+/**Test Footer — E-Certificate / T&C — SINGLE CONSISTENT RULE ****/
 .test-footer {
   margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
   flex-direction: row;
   font-size: 0.9rem;
+  gap: 20px;
+  text-align: center;
+}
+
+.test-footer div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  flex: none;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .test-footer img {
-  margin: 10px;
+  margin: 0;
 }
 
 .play-button {
@@ -492,29 +537,49 @@
   }
 
   .test-card {
-    width: clamp(220px, 30vw, 280px);
+    min-width: 0;
+    width: min(300px, calc(50% - 10px));
+  }
+
+  .take-quiz-main-section {
+    padding: 15px;
+  }
+
+  .test-container-row {
+    gap: 15px;
   }
 }
 
+/* =========================================
+   MOBILE / TABLET (<=768px)
+========================================= */
 @media (max-width: 768px) {
   .take-quiz {
+    display: block;
     flex-direction: column;
+    width: 100%;
+  }
+
+  .Sticky-filterby {
+    width: 100%;
   }
 
   .filter-section {
     display: none;
     position: fixed;
-    top: calc(18% + 10px);
+    top: 70px;
     right: clamp(12px, 2vw, 15px);
-    width: clamp(200px, 50vw, 280px);
-    max-height: 50vh;
+    width: min(280px, calc(100vw - 24px));
+    max-height: min(70vh, 500px);
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 40;
     background-color: #8ec4c5e0;
     border: 1px solid #d4f8f8d7;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: clamp(10px, 1.5vw, 12px);
+    box-sizing: border-box;
   }
 
   /* Custom Scrollbar Styling */
@@ -562,40 +627,47 @@
     position: relative;
   }
 
-  .test-container-row {
-    flex-direction: row;
-    justify-content: center;
-    gap: clamp(10px, 2vw, 15px);
-  }
-
-  .test-card {
-    width: clamp(250px, 45vw, 300px);
-    max-width: 100%;
-    padding: 0.2rem;
-  }
-
   .take-quiz-main-section {
-    padding: clamp(12px, 2vw, 15px);
+    width: 100%;
+    min-height: 100vh;
+    padding: 12px;
     position: relative;
   }
 
   .take-quiz-header {
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     position: static;
-    /* top: calc(3.5rem + 10px); */
+    margin-bottom: 2rem !important;
   }
 
-  .test-details {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+  .take-quiz-main-section h1 {
+    min-width: 0;
+    margin: 0;
   }
 
-  .detail-item {
+  .test-container-row {
     width: 100%;
-    justify-content: center;
+    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .test-card {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 12px;
+  }
+
+  .play-button {
+    max-width: 100%;
+    height: auto;
+    min-height: 40px;
+    white-space: normal;
   }
 }
 
@@ -603,7 +675,7 @@
   .filter-section {
     width: clamp(180px, 80vw, 260px);
     right: clamp(8px, 2vw, 10px);
-    top: calc(18% + 10px);
+    top: 70px;
   }
 
   .filter-section h2 {
@@ -625,7 +697,6 @@
 
   .test-card {
     min-width: 200px;
-
     font-size: 0.9rem;
   }
 
@@ -635,11 +706,7 @@
 
   .test-footer {
     margin-top: 4px;
-    display: flex;
     font-size: 0.75rem;
-    justify-content: space-between;
-    flex-direction: row;
-    gap: 0.2rem;
   }
 
   .icon-TakeQuiz {
@@ -668,17 +735,50 @@
     width: clamp(100px, 30vw, 150px);
     padding: clamp(0.6rem, 2vw, 0.85rem);
   }
+}
 
-  .vl {
-    height: 30px;
+/* =========================================
+   SMALL MOBILE - SINGLE CARD
+========================================= */
+
+@media (max-width: 600px) {
+  .take-quiz-main-section {
+    padding: 10px;
+  }
+
+  .test-container-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .test-card {
+    width: min(100%, 400px);
+    margin: 0 auto;
+  }
+
+  .take-quiz-header {
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .take-quiz-main-section h1 {
+    padding: 10px;
+  }
+
+  .filter-toggle-button {
+    white-space: nowrap;
   }
 }
+
+/* =========================================
+   VERY SMALL SCREENS
+========================================= */
 
 @media (max-width: 380px) {
   .filter-section {
     width: clamp(180px, 80vw, 260px);
     right: clamp(8px, 2vw, 10px);
-    top: calc(18% + 10px);
+    top: 70px;
   }
 
   .filter-section h2 {
@@ -690,45 +790,61 @@
     font-size: clamp(0.8em, 2vw, 0.85em);
   }
 
+  .take-quiz-main-section {
+    padding: 8px;
+  }
+
+  .take-quiz-header {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
   .take-quiz-main-section h1 {
-    font-size: clamp(1.2em, 4vw, 1.5em);
+    font-size: 1.15rem;
+    padding: 8px;
   }
 
   .filter-toggle-button {
-    padding: clamp(8px, 2vw, 10px);
+    padding: 8px 10px;
+    font-size: 0.75rem;
   }
 
   .test-card {
-    min-width: 176px;
-
+    min-width: 0;
+    padding: 10px;
     font-size: 0.8rem;
+  }
+
+  .test-card h3 {
+    overflow-wrap: anywhere;
   }
 
   .desc {
     padding: 0.245rem;
+    overflow-wrap: anywhere;
   }
 
   .from-to {
-    font-size: 0.595rem;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 0.68rem;
   }
 
-  .test-details {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+  .from-to p {
+    width: auto;
+    white-space: nowrap;
+    margin: 0;
   }
 
   .detail-item p {
-    font-size: 0.595rem;
+    font-size: 0.7rem;
   }
 
   .test-footer {
-    margin-top: 3px;
-    display: flex;
+    flex-wrap: wrap;
     font-size: 0.695rem;
-    justify-content: space-between;
-    flex-direction: row;
-    gap: 0.2rem;
+    margin-top: 3px;
   }
 
   .icon-TakeQuiz {
@@ -759,248 +875,8 @@
 
   .play-button {
     height: 35px;
-    width: clamp(100px, 30vw, 150px);
+    width: 100%;
+    min-width: 0;
     padding: clamp(0.55rem, 2vw, 0.75rem);
-  }
-
-  .vl {
-    height: 20px;
-  }
-}
-
-/* =========================================
-   RESPONSIVE FIXES ONLY
-   Desktop/Laptop layout remains unchanged
-========================================= */
-
-* {
-  box-sizing: border-box;
-}
-
-.take-quiz {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.take-quiz-main-section {
-  min-width: 0;
-  width: 100%;
-}
-
-.test-container-row {
-  width: 100%;
-}
-
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 1024px) {
-  .take-quiz-main-section {
-    padding: 15px;
-  }
-
-  .test-container-row {
-    gap: 15px;
-  }
-
-  .test-card {
-    min-width: 0;
-    width: min(300px, calc(50% - 10px));
-  }
-}
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 768px) {
-  .take-quiz {
-    display: block;
-    width: 100%;
-  }
-
-  .Sticky-filterby {
-    width: 100%;
-  }
-
-  .take-quiz-main-section {
-    width: 100%;
-    min-height: 100vh;
-    padding: 12px;
-  }
-
-  .take-quiz-header {
-    width: 100%;
-  }
-
-  .take-quiz-main-section h1 {
-    min-width: 0;
-    margin: 0;
-  }
-
-  .filter-section {
-    box-sizing: border-box;
-    width: min(280px, calc(100vw - 24px));
-    max-height: min(70vh, 500px);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  .test-container-row {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .test-card {
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-    padding: 12px;
-  }
-
-  .Status-Lang,
-  .from-to {
-    gap: 8px;
-  }
-
-  .Status-Lang span,
-  .from-to p {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .test-details {
-    width: 100%;
-    gap: 5px;
-  }
-
-  .detail-item {
-    min-width: 0;
-  }
-
-  .detail-item p {
-    overflow-wrap: anywhere;
-  }
-
-  .test-footer {
-    gap: 5px;
-  }
-
-  .test-footer div {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .play-button {
-    max-width: 100%;
-    height: auto;
-    min-height: 40px;
-    white-space: normal;
-  }
-}
-
-/* =========================================
-   SMALL MOBILE - SINGLE CARD
-========================================= */
-
-@media (max-width: 600px) {
-  .take-quiz-main-section {
-    padding: 10px;
-  }
-
-  .test-container-row {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .test-card {
-    width: min(100%, 400px);
-    margin: 0 auto;
-  }
-
-  .take-quiz-header {
-    gap: 10px;
-  }
-
-  .take-quiz-main-section h1 {
-    padding: 10px;
-  }
-
-  .filter-toggle-button {
-    white-space: nowrap;
-  }
-}
-
-/* =========================================
-   VERY SMALL SCREENS
-========================================= */
-
-@media (max-width: 380px) {
-  .take-quiz-main-section {
-    padding: 8px;
-  }
-
-  .take-quiz-header {
-    flex-wrap: nowrap;
-    gap: 6px;
-  }
-
-  .take-quiz-main-section h1 {
-    font-size: 1.15rem;
-    padding: 8px;
-  }
-
-  .filter-toggle-button {
-    padding: 8px 10px;
-    font-size: 0.75rem;
-  }
-
-  .test-card {
-    min-width: 0;
-    padding: 10px;
-  }
-
-  .test-card h3 {
-    overflow-wrap: anywhere;
-  }
-
-  .desc {
-    overflow-wrap: anywhere;
-  }
-
-  .from-to {
-    flex-wrap: wrap;
-  }
-
-  .from-to p {
-    width: 100%;
-  }
-
-  .test-details {
-    gap: 2px;
-  }
-
-  .detail-item p {
-    font-size: 0.7rem;
-  }
-
-  .vl {
-    flex-shrink: 0;
-  }
-
-  .test-footer {
-    flex-wrap: wrap;
-  }
-
-  .test-footer div {
-    width: 100%;
-  }
-
-  .play-button {
-    width: 100%;
-    min-width: 0;
   }
 }

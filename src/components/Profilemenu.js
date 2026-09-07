@@ -107,27 +107,33 @@ const ProfileMenu = ({ user }) => {
           <span className="profile-name">{user.username}</span>
           <hr />
 
-          <a
-            href="#home"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-              handleScroll("home");
-            }}
-          >
-            Home
-          </a>
+          {/* HOME & ABOUT US - MOBILE ONLY */}
+          {isMobile && (
+            <>
+              <a
+                href="#home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  handleScroll("home");
+                }}
+              >
+                Home
+              </a>
 
-          <a
-            href="#aboutUs"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-              handleScroll("aboutUs");
-            }}
-          >
-            About Us
-          </a>
+              <a
+                href="#aboutUs"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  handleScroll("aboutUs");
+                }}
+              >
+                About Us
+              </a>
+            </>
+          )}
+
           <Link to="/dashboard" onClick={() => setIsOpen(false)}>
             Dashboard
           </Link>

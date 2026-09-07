@@ -24,6 +24,10 @@ const TestDetails = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const axios = useAxios();
 
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteTestId, setDeleteTestId] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [filters, setFilters] = useState({
     state: "",
     visibility: "",
@@ -75,17 +79,35 @@ const TestDetails = () => {
     }
   };
 
-  const handleDelete = async (test_id) => {
-    if (!window.confirm("Are you sure you want to delete this test?")) return;
+  const handleDelete = (test_id) => {
+    setDeleteTestId(test_id);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTestId) return;
+
+    setIsDeleting(true);
 
     try {
-      await axios.delete(`${API_URL}/test/delete-test/${test_id}`);
+      await axios.delete(`${API_URL}/test/delete-test/${deleteTestId}`);
 
-      alert("Test deleted successfully");
-      fetchTest(); // Refresh list after deletion
+      setShowDeleteDialog(false);
+      setDeleteTestId(null);
+
+      await fetchTest(currentPage);
     } catch (err) {
       console.error("Error deleting test:", err);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const cancelDelete = () => {
+    if (isDeleting) return;
+
+    setShowDeleteDialog(false);
+    setDeleteTestId(null);
   };
 
   useEffect(() => {
@@ -354,6 +376,53 @@ const TestDetails = () => {
           </button>
         </div>
       </div>
+      {showDeleteDialog && (
+        <div className="delete-modal-overlay" onClick={cancelDelete}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-icon-wrapper">
+              <div className="delete-icon">🗑️</div>
+            </div>
+
+            <h2>Delete Quiz?</h2>
+
+            <p>
+              Are you sure you want to delete this quiz?
+              <br />
+              <span>This action cannot be undone.</span>
+            </p>
+
+            <div className="delete-modal-actions">
+              {/* LEFT - Delete */}
+              <button
+                className="delete-confirm-btn"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <span className="delete-spinner"></span>
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <span>🗑</span>
+                    Delete Quiz
+                  </>
+                )}
+              </button>
+
+              {/* RIGHT - Cancel */}
+              <button
+                className="delete-cancel-btn"
+                onClick={cancelDelete}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

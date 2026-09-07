@@ -583,7 +583,7 @@ function UserProfile() {
       </div> */}
 
       <button
-        className="save-btn"
+        className="delete-account-btn"
         onClick={() => setShowDeleteModal(true)}
       >
         <FaSave style={{ marginRight: "10px" }} />

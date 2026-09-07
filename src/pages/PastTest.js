@@ -23,18 +23,49 @@ const PastTest = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // NEW: detect mobile/touch screen
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // NEW: track which tooltip is currently open (mobile only)
+  const [activeTooltip, setActiveTooltip] = useState(null);
+  const tooltipContainerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutsideTooltip = (event) => {
+      if (activeTooltip) {
+        // agar click kisi bhi .tooltip-wrapper ke andar nahi hua, to close kar do
+        const clickedInsideTooltip = event.target.closest(".tooltip-wrapper");
+        if (!clickedInsideTooltip) {
+          setActiveTooltip(null);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideTooltip);
+    document.addEventListener("touchstart", handleClickOutsideTooltip);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideTooltip);
+      document.removeEventListener("touchstart", handleClickOutsideTooltip);
+    };
+  }, [activeTooltip]);
+
+  const toggleTooltip = (key) => {
+    setActiveTooltip((prev) => (prev === key ? null : key));
+  };
+
   useEffect(() => {
     axios
       .get(`${API_URL}/test/pasttests/${user_id}`)
       .then((response) => {
         setTests(response.data || []);
-        const data = response.data || [];
-
-        console.log("Fetched data:", response.data);
       })
       .catch((error) => console.error("Error fetching data:", error));
-
-    //console.log("User ID:", user_id);
   }, [user_id]);
 
   useEffect(() => {
@@ -42,11 +73,8 @@ const PastTest = () => {
       .get(`${API_URL}/institute/institutions/${user.institute_id}`)
       .then((response) => {
         setInstitute(response.data);
-        //console.log("Fetched Institutions:", response.data);
       })
       .catch((error) => console.error("Error fetching data:", error));
-
-    //console.log("User ID:", user_id);
   }, [user.institute_id]);
 
   const sortedTests = [...tests].sort(
@@ -55,28 +83,22 @@ const PastTest = () => {
 
   const formatTime = (seconds) => {
     if (!seconds) return "0 sec";
-
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-
     if (minutes === 0) {
       return `${remainingSeconds} sec`;
     }
-
     return `${minutes} min ${remainingSeconds} sec`;
   };
 
   const filteredTests = sortedTests.filter((test) => {
     const matchQuizType = !quizType || test.test_visibility === quizType;
-
     const matchStatus =
       !passingStatus ||
       (test.is_result_declared === "Yes" && test.status === passingStatus);
-
     const matchSearch = test.test_name
       .toLowerCase()
       .includes(searchText.toLowerCase());
-
     return matchQuizType && matchStatus && matchSearch;
   });
 
@@ -148,7 +170,6 @@ const PastTest = () => {
         setIsFilterOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -168,7 +189,6 @@ const PastTest = () => {
         <div className="filter-backdrop" onClick={toggleFilter}></div>
       )}
 
-      {/*****Filter section */}
       <div className="Sticky-filterby">
         <div
           className={`filter-section ${isFilterOpen ? "filter-section--open" : ""}`}
@@ -186,26 +206,14 @@ const PastTest = () => {
               }}
             >
               <option value="">All Quizzes</option>
-
               {user?.institute_id && (
                 <option value="Institution">Institutional</option>
               )}
-
               <option value="Global">General</option>
               <option value="Interest">Interest Based</option>
             </select>
           </div>
           <hr />
-          {/* <div className="filter-group">
-            <label>Date</label>
-            <select>
-              <option value="yesterday">Yesterday</option>
-              <option value="last-7-days">Last 7 Days</option>
-              <option value="last-30-days">Last 30 Days</option>
-              <option value="last-year">Last Year </option>
-            </select>
-          </div>
-          <hr /> */}
           <div className="filter-group">
             <label>Passing Status </label>
             <select
@@ -233,25 +241,13 @@ const PastTest = () => {
             />
             <hr />
           </div>
-          {/* <div className="filter-group">
-            <label>Performance</label>
-
-          </div>
-          <hr />
-          <div className="filter-group">
-            <label>Self Practice Quiz</label>
-          </div> */}
-          {/* <br></br> */}
-          {/* <br></br><br></br> */}
-
           <div className="clear-filters" onClick={clearFilters}>
             Clear Search & Filter
           </div>
         </div>
       </div>
-      {/***main section starts */}
+
       <div className="pastTest-main-section">
-        {/***header ***** */}
         <div className="pastTest-header">
           <h1>Past Quizzes</h1>
           <div className="filter-toggle-wrapper">
@@ -264,14 +260,13 @@ const PastTest = () => {
             </button>
           </div>
         </div>
-        {/***Table container****/}
-        <div className="table-container">
+
+        <div className="table-container" ref={tooltipContainerRef}>
           <table>
             <thead>
               <tr>
                 <th>S.No.</th>
                 <th>Test Name</th>
-                {/* <th>Test Marks</th> */}
                 <th>Time Taken</th>
                 <th>Submit Date</th>
                 <th>Download Certificate</th>
@@ -287,83 +282,117 @@ const PastTest = () => {
                   </td>
                 </tr>
               ) : (
-                currentTests.map((test, index) => (
-                  <tr key={index}>
-                    <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td>{test.test_name}</td>
-                    {/* <td>{test.marks}</td> */}
-                    <td>{formatTime(test.time_taken)}</td>
-                    <td>{test.test_date}</td>
-                    <td>
-                      <img
-                        src={"/images/download_certificate.png"}
-                        alt="Certificate"
-                        className="certi-rep"
-                        onClick={() =>
-                          handleParticipationCertificateDownload(
-                            test.test_id,
-                            test.test_name,
-                            test.test_date,
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src="/images/download_report.png"
-                        alt="Report"
-                        title={
-                          !isResultAvailable(test.result_release_date)
-                            ? `Report will be available after ${test.result_release_date}`
-                            : ""
-                        }
-                        className={`certi-rep ${!isResultAvailable(test.result_release_date) ? "disabled" : ""}`}
-                        onClick={() => {
-                          if (isResultAvailable(test.result_release_date)) {
-                            handleReportDownload(
+                currentTests.map((test, index) => {
+                  const reportKey = `report-${index}`;
+                  const resultKey = `result-${index}`;
+                  const reportAvailable = isResultAvailable(
+                    test.result_release_date,
+                  );
+
+                  return (
+                    <tr key={index}>
+                      <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                      <td>{test.test_name}</td>
+                      <td>{formatTime(test.time_taken)}</td>
+                      <td>{test.test_date}</td>
+                      <td>
+                        <img
+                          src={"/images/download_certificate.png"}
+                          alt="Certificate"
+                          className="certi-rep"
+                          onClick={() =>
+                            handleParticipationCertificateDownload(
                               test.test_id,
                               test.test_name,
                               test.test_date,
-                            );
+                            )
                           }
-                        }}
-                        style={{
-                          opacity: isResultAvailable(test.result_release_date)
-                            ? 1
-                            : 0.4,
-                          cursor: isResultAvailable(test.result_release_date)
-                            ? "pointer"
-                            : "not-allowed",
-                        }}
-                      />
-                    </td>
-                    <td>
-                      {isResultAvailable(test.result_release_date) ? (
-                        <Link to={`/quiz-result/${test.test_id}`}>
+                        />
+                      </td>
+
+                      {/* DOWNLOAD REPORT */}
+                      <td>
+                        <div className="tooltip-wrapper">
                           <img
-                            src="/images/result.png"
-                            alt="Result"
-                            className="certi-rep"
+                            src="/images/download_report.png"
+                            alt="Report"
+                            title={
+                              !isMobile && !reportAvailable
+                                ? `Report will be available after ${test.result_release_date}`
+                                : ""
+                            }
+                            className={`certi-rep ${!reportAvailable ? "disabled" : ""}`}
+                            onClick={() => {
+                              if (reportAvailable) {
+                                handleReportDownload(
+                                  test.test_id,
+                                  test.test_name,
+                                  test.test_date,
+                                );
+                              } else if (isMobile) {
+                                toggleTooltip(reportKey);
+                              }
+                            }}
                             style={{
-                              cursor: "pointer",
+                              opacity: reportAvailable ? 1 : 0.4,
+                              cursor: reportAvailable
+                                ? "pointer"
+                                : "not-allowed",
                             }}
                           />
-                        </Link>
-                      ) : (
-                        <img
-                          src="/images/result.png"
-                          alt="Result unavailable"
-                          className="certi-rep disabled"
-                          title={`Result will be available after ${test.result_release_date}`}
-                          style={{
-                            opacity: 0.4,
-                            cursor: "not-allowed",
-                          }}
-                        />
-                      )}
-                    </td>
-                  </tr>
-                ))
+                          {isMobile &&
+                            !reportAvailable &&
+                            activeTooltip === reportKey && (
+                              <span className="custom-tooltip">
+                                Report will be available after{" "}
+                                {test.result_release_date}
+                              </span>
+                            )}
+                        </div>
+                      </td>
+
+                      {/* RESULT */}
+                      <td>
+                        {reportAvailable ? (
+                          <Link to={`/quiz-result/${test.test_id}`}>
+                            <img
+                              src="/images/result.png"
+                              alt="Result"
+                              className="certi-rep"
+                              style={{ cursor: "pointer" }}
+                            />
+                          </Link>
+                        ) : (
+                          <div className="tooltip-wrapper">
+                            <img
+                              src="/images/result.png"
+                              alt="Result unavailable"
+                              title={
+                                !isMobile
+                                  ? `Result will be available after ${test.result_release_date}`
+                                  : ""
+                              }
+                              className="certi-rep disabled"
+                              onClick={() => {
+                                if (isMobile) toggleTooltip(resultKey);
+                              }}
+                              style={{
+                                opacity: 0.4,
+                                cursor: "not-allowed",
+                              }}
+                            />
+                            {isMobile && activeTooltip === resultKey && (
+                              <span className="custom-tooltip">
+                                Result will be available after{" "}
+                                {test.result_release_date}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

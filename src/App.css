@@ -735,6 +735,69 @@ main:not(.app-main) {
     padding: 0 clamp(48px, 8vw, 64px);
   }
 
+  /* ===== MOBILE QUIZ CAROUSEL ===== */
+
+  .carousel-wrapper {
+    width: 100%;
+    overflow: hidden;
+    padding: 1rem 42px;
+    box-sizing: border-box;
+  }
+
+  .carousel {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .carousel-card {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    margin: 0 auto;
+
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .carousel-card:first-child,
+  .carousel-card:last-child,
+  .carousel-card:not(:first-child):not(:last-child) {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .carousel-card:hover {
+    transform: none !important;
+  }
+
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+    z-index: 20;
+  }
+
+  .left-arrow {
+    left: 4px;
+  }
+
+  .right-arrow {
+    right: 4px;
+  }
+
+  .test-card {
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
   .feedback-form {
     padding: clamp(0.75rem, 2vw, 1rem);
   }
@@ -776,9 +839,6 @@ main:not(.app-main) {
 
   .quiz-container {
     padding: 0 clamp(36px, 7vw, 48px);
-  }
-  .test-card {
-    width: 200px;
   }
 }
 
@@ -1019,4 +1079,1147 @@ h2 {
 }
 .menu-item:hover {
   background: #c9e3e1 !important;
+}
+
+/* React Toastify - Mobile Small Toast */
+
+@media (max-width: 600px) {
+  .Toastify__toast-container {
+    width: auto !important;
+    max-width: 280px !important;
+    min-width: 0 !important;
+
+    top: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .Toastify__toast {
+    width: fit-content !important;
+    max-width: 280px !important;
+    min-width: 0 !important;
+
+    margin-bottom: 8px !important;
+    padding: 10px 32px 10px 12px !important;
+
+    border-radius: 8px !important;
+  }
+
+  .Toastify__toast-body {
+    width: auto !important;
+    max-width: 235px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+
+  .Toastify__close-button {
+    position: absolute !important;
+    top: 7px !important;
+    right: 7px !important;
+
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE QUIZ CAROUSEL - FINAL FIX
+   ========================================================= */
+
+@media (max-width: 640px) {
+  /* Modern animated quiz background */
+  #quiz {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 15% 20%,
+        rgba(59, 130, 246, 0.18),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 85% 80%,
+        rgba(20, 184, 166, 0.18),
+        transparent 35%
+      ),
+      linear-gradient(135deg, #eef7ff 0%, #f7fbff 45%, #eefaf8 100%);
+    background-size: 140% 140%;
+    animation: mobileQuizBackground 12s ease-in-out infinite alternate;
+  }
+
+  /* soft animated light */
+  #quiz::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    top: 8%;
+    left: -90px;
+    background: rgba(96, 165, 250, 0.14);
+    filter: blur(35px);
+    animation: mobileQuizGlow 7s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  #quiz::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    bottom: 5%;
+    right: -90px;
+    background: rgba(45, 212, 191, 0.14);
+    filter: blur(35px);
+    animation: mobileQuizGlow2 9s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  /* Heading above everything */
+  #quiz h2 {
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Main wrapper */
+  .quiz-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  /* Arrow + card container */
+  .carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 470px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1rem 45px;
+    box-sizing: border-box;
+
+    overflow: visible;
+  }
+
+  /* Only ONE card visible */
+  .carousel {
+    width: 100%;
+    max-width: 320px;
+
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+
+    gap: 0;
+    margin: 0 auto;
+    padding: 0;
+
+    overflow: hidden;
+  }
+
+  /* Single mobile card */
+  .carousel-card {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 320px;
+    min-width: 0;
+
+    margin: 0 auto;
+
+    transform: none !important;
+    opacity: 1 !important;
+
+    transition:
+      transform 0.35s ease,
+      opacity 0.35s ease;
+  }
+
+  /* Remove desktop overlapping-card effect */
+  .carousel-card:first-child,
+  .carousel-card:last-child,
+  .carousel-card:not(:first-child):not(:last-child) {
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 2;
+  }
+
+  .carousel-card:hover {
+    transform: translateY(-3px) !important;
+  }
+
+  /* Actual test card */
+  .test-card {
+    width: 100% !important;
+    max-width: 320px !important;
+    min-width: 0 !important;
+
+    box-sizing: border-box;
+  }
+
+  /* =========================================
+     ARROWS
+     Both arrows EXACTLY same horizontal line
+     and OUTSIDE the card
+     ========================================= */
+
+  .carousel-arrow {
+    position: absolute;
+
+    top: 50%;
+    bottom: auto;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    z-index: 50;
+
+    transform: translateY(-50%);
+
+    box-shadow:
+      0 6px 18px rgba(37, 99, 235, 0.22),
+      0 2px 8px rgba(0, 0, 0, 0.1);
+
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  /* LEFT arrow - outside card */
+  .left-arrow {
+    left: 2px;
+    right: auto;
+  }
+
+  /* RIGHT arrow - outside card */
+  .right-arrow {
+    right: 2px;
+    left: auto;
+  }
+
+  /* Hover */
+  .carousel-arrow:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.08);
+    box-shadow:
+      0 8px 22px rgba(37, 99, 235, 0.28),
+      0 3px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Disabled arrow stays in SAME LINE */
+  .carousel-arrow:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+
+    transform: translateY(-50%);
+  }
+
+  /* Don't allow disabled arrow to move */
+  .carousel-arrow:disabled:hover {
+    transform: translateY(-50%);
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE - 375px / 360px
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .quiz-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .carousel-wrapper {
+    padding-left: 43px;
+    padding-right: 43px;
+
+    min-height: 470px;
+  }
+
+  .carousel {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .carousel-card,
+  .test-card {
+    max-width: 300px !important;
+  }
+
+  /* arrows remain OUTSIDE */
+  .left-arrow {
+    left: 2px;
+  }
+
+  .right-arrow {
+    right: 2px;
+  }
+
+  .carousel-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes mobileQuizBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes mobileQuizGlow {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: translate(80px, 50px) scale(1.35);
+    opacity: 0.9;
+  }
+}
+
+@keyframes mobileQuizGlow2 {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+
+  to {
+    transform: translate(-70px, -50px) scale(1.3);
+    opacity: 0.85;
+  }
+}
+
+/* =========================================================
+   MOBILE ARROWS - FINAL MODERN FIX
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .carousel-wrapper {
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  /* ===== BOTH ARROWS ===== */
+
+  .carousel-arrow {
+    position: absolute !important;
+
+    /* IMPORTANT:
+       top controls BOTH enabled + disabled position */
+    top: 50% !important;
+
+    /* Remove every old bottom positioning */
+    bottom: auto !important;
+
+    /* Keep arrow vertically centered */
+    transform: translateY(-50%) !important;
+
+    width: 40px !important;
+    height: 40px !important;
+
+    min-width: 40px !important;
+    min-height: 40px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.75) !important;
+    border-radius: 50% !important;
+
+    /* Modern blue/teal glass look */
+    background: linear-gradient(
+      135deg,
+      #2563eb,
+      #0ea5e9 55%,
+      #14b8a6
+    ) !important;
+
+    color: white !important;
+
+    box-shadow:
+      0 8px 20px rgba(37, 99, 235, 0.28),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+
+    z-index: 999 !important;
+
+    cursor: pointer !important;
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      opacity 0.25s ease,
+      filter 0.25s ease !important;
+
+    /* subtle floating animation */
+    animation: arrowFloat 2.5s ease-in-out infinite;
+  }
+
+  /* ===== LEFT ARROW ===== */
+
+  .carousel-wrapper .left-arrow {
+    left: 0 !important;
+    right: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* ===== RIGHT ARROW ===== */
+
+  .carousel-wrapper .right-arrow {
+    right: 0 !important;
+    left: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* ===== HOVER ===== */
+
+  .carousel-arrow:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.12) !important;
+
+    box-shadow:
+      0 10px 28px rgba(14, 165, 233, 0.4),
+      0 0 16px rgba(20, 184, 166, 0.25),
+      inset 0 1px 3px rgba(255, 255, 255, 0.55) !important;
+
+    filter: brightness(1.08);
+  }
+
+  /* ===== CLICK ===== */
+
+  .carousel-arrow:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.94) !important;
+  }
+
+  /* =====================================================
+     DISABLED ARROW
+     MOST IMPORTANT PART
+     It stays EXACTLY in the same line
+     ===================================================== */
+
+  .carousel-arrow:disabled,
+  .carousel-arrow[disabled] {
+    position: absolute !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+
+    opacity: 0.35 !important;
+
+    cursor: not-allowed !important;
+
+    filter: grayscale(0.25) !important;
+
+    /* Don't let disabled button change layout */
+    margin: 0 !important;
+
+    animation: none;
+  }
+
+  /* Disabled LEFT stays left */
+  .carousel-wrapper .left-arrow:disabled,
+  .carousel-wrapper .left-arrow[disabled] {
+    left: 0 !important;
+    right: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* Disabled RIGHT stays right */
+  .carousel-wrapper .right-arrow:disabled,
+  .carousel-wrapper .right-arrow[disabled] {
+    right: 0 !important;
+    left: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* Disabled hover must NOT move arrow */
+  .carousel-arrow:disabled:hover,
+  .carousel-arrow[disabled]:hover {
+    transform: translateY(-50%) !important;
+
+    box-shadow:
+      0 5px 14px rgba(37, 99, 235, 0.16),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+/* =========================================================
+   ARROW ANIMATION
+   ========================================================= */
+
+@keyframes arrowFloat {
+  0%,
+  100% {
+    transform: translateY(-50%);
+  }
+
+  50% {
+    transform: translateY(calc(-50% - 3px));
+  }
+}
+
+@media (max-width: 640px) {
+  .carousel-arrow {
+    /* Only round button */
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border-radius: 50% !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+
+    /* Smooth click */
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      filter 0.18s ease !important;
+  }
+
+  /* Remove browser focus rectangle */
+  .carousel-arrow:focus,
+  .carousel-arrow:focus-visible {
+    outline: none !important;
+    box-shadow:
+      0 8px 20px rgba(37, 99, 235, 0.28),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+  }
+
+  /* Smooth round press */
+  .carousel-arrow:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.9) !important;
+
+    box-shadow:
+      0 4px 10px rgba(37, 99, 235, 0.2),
+      inset 0 2px 5px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Prevent any square/rectangular click highlight */
+  .carousel-arrow::before,
+  .carousel-arrow::after {
+    border-radius: 50% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .carousel-arrow {
+    position: absolute !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border-radius: 50% !important;
+    outline: none !important;
+
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation;
+
+    /* FAST SMOOTH */
+    transition:
+      transform 0.1s ease-out,
+      box-shadow 0.1s ease-out,
+      filter 0.1s ease-out !important;
+
+    /* IMPORTANT: no floating animation */
+    animation: none !important;
+  }
+
+  .carousel-wrapper .left-arrow {
+    left: 0 !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .carousel-wrapper .right-arrow {
+    right: 0 !important;
+    left: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* FAST CLICK */
+  .carousel-arrow:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.92) !important;
+
+    box-shadow:
+      0 3px 8px rgba(37, 99, 235, 0.2),
+      inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+
+    filter: brightness(0.96) !important;
+  }
+
+  /* Focus doesn't add delay/box */
+  .carousel-arrow:focus,
+  .carousel-arrow:focus-visible {
+    outline: none !important;
+  }
+
+  /* Disabled stays EXACTLY same position */
+  .carousel-arrow:disabled {
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+
+    animation: none !important;
+    transition: opacity 0.1s ease-out !important;
+  }
+
+  .carousel-wrapper .left-arrow:disabled {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  .carousel-wrapper .right-arrow:disabled {
+    right: 0 !important;
+    left: auto !important;
+  }
+}
+
+/* =========================================================
+   DESKTOP / LAPTOP ARROWS
+   Mobile CSS is NOT affected
+   ========================================================= */
+
+@media (min-width: 641px) {
+  .carousel-wrapper {
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  /* ===== COMMON ARROW ===== */
+
+  .carousel-arrow {
+    position: absolute !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    width: 46px !important;
+    height: 46px !important;
+
+    min-width: 46px !important;
+    min-height: 46px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 50% !important;
+
+    /* Background se matching modern glass */
+    background: linear-gradient(
+      135deg,
+      rgba(191, 219, 254, 0.95),
+      rgba(186, 230, 253, 0.92),
+      rgba(204, 251, 241, 0.95)
+    ) !important;
+
+    color: #2563eb !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+
+    box-shadow:
+      0 6px 18px rgba(37, 99, 235, 0.16),
+      inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+
+    z-index: 100 !important;
+
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+
+    transform: translateY(-50%) !important;
+
+    transition:
+      transform 0.12s ease-out,
+      box-shadow 0.12s ease-out,
+      filter 0.12s ease-out,
+      opacity 0.12s ease-out !important;
+
+    animation: none !important;
+  }
+
+  /* =====================================================
+     LEFT ARROW
+     Card ke paas
+     ===================================================== */
+
+  .carousel-wrapper .left-arrow {
+    left: max(20px, calc(50% - 600px)) !important;
+
+    right: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* =====================================================
+     RIGHT ARROW
+     Card ke paas
+     ===================================================== */
+
+  .carousel-wrapper .right-arrow {
+    right: max(20px, calc(50% - 600px)) !important;
+
+    left: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* ===== HOVER ===== */
+
+  .carousel-arrow:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.08) !important;
+
+    box-shadow:
+      0 8px 22px rgba(37, 99, 235, 0.22),
+      0 0 12px rgba(45, 212, 191, 0.16),
+      inset 0 1px 3px rgba(255, 255, 255, 0.9) !important;
+
+    filter: brightness(1.04) !important;
+  }
+
+  /* ===== FAST CLICK ===== */
+
+  .carousel-arrow:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.92) !important;
+
+    box-shadow:
+      0 3px 8px rgba(37, 99, 235, 0.14),
+      inset 0 2px 4px rgba(37, 99, 235, 0.12) !important;
+  }
+
+  /* =====================================================
+     DISABLED ARROW
+     SAME POSITION — NEVER MOVES DOWN
+     ===================================================== */
+
+  .carousel-arrow:disabled,
+  .carousel-arrow[disabled] {
+    position: absolute !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+
+    margin: 0 !important;
+
+    opacity: 0.38 !important;
+
+    cursor: not-allowed !important;
+
+    filter: grayscale(0.15) !important;
+
+    animation: none !important;
+  }
+
+  /* Disabled LEFT — exact same position */
+  .carousel-wrapper .left-arrow:disabled,
+  .carousel-wrapper .left-arrow[disabled] {
+    left: max(20px, calc(50% - 590px)) !important;
+
+    right: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* Disabled RIGHT — exact same position */
+  .carousel-wrapper .right-arrow:disabled,
+  .carousel-wrapper .right-arrow[disabled] {
+    right: max(20px, calc(50% - 590px)) !important;
+
+    left: auto !important;
+
+    top: 50% !important;
+    bottom: auto !important;
+
+    transform: translateY(-50%) !important;
+  }
+
+  /* Disabled hover = no movement */
+  .carousel-arrow:disabled:hover,
+  .carousel-arrow[disabled]:hover {
+    transform: translateY(-50%) !important;
+
+    box-shadow:
+      0 5px 14px rgba(37, 99, 235, 0.12),
+      inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* Remove browser focus box */
+  .carousel-arrow:focus,
+  .carousel-arrow:focus-visible {
+    outline: none !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .carousel-arrow {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.25) !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .carousel-wrapper .left-arrow {
+    left: calc(50% - 560px) !important;
+  }
+
+  .carousel-wrapper .right-arrow {
+    right: calc(50% - 560px) !important;
+  }
+}
+
+/* Toast should always appear above every UI element */
+.Toastify__toast-container {
+  z-index: 999999 !important;
+}
+
+.Toastify__toast {
+  z-index: 999999 !important;
+}
+
+/* =========================================================
+   REACT TOASTIFY - FINAL TOP RIGHT POSITION
+   ========================================================= */
+
+/* All devices */
+.Toastify__toast-container {
+  position: fixed !important;
+  top: 15px !important;
+  right: 15px !important;
+  left: auto !important;
+  bottom: auto !important;
+
+  width: auto !important;
+  max-width: 360px !important;
+  min-width: 0 !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  z-index: 999999 !important;
+}
+
+.Toastify__toast {
+  width: fit-content !important;
+  min-width: 250px !important;
+  max-width: 360px !important;
+
+  margin: 0 0 10px auto !important;
+  padding: 12px 38px 12px 14px !important;
+
+  border-radius: 10px !important;
+
+  z-index: 999999 !important;
+}
+
+.Toastify__toast-body {
+  width: auto !important;
+  max-width: 300px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.Toastify__close-button {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* =========================================================
+   MOBILE - STILL TOP RIGHT
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .Toastify__toast-container {
+    top: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+    bottom: auto !important;
+
+    width: auto !important;
+    max-width: 280px !important;
+    min-width: 0 !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .Toastify__toast {
+    width: fit-content !important;
+    max-width: 280px !important;
+    min-width: 0 !important;
+
+    margin: 0 0 8px auto !important;
+    padding: 10px 32px 10px 12px !important;
+
+    border-radius: 8px !important;
+  }
+
+  .Toastify__toast-body {
+    width: auto !important;
+    max-width: 235px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+
+  .Toastify__close-button {
+    position: absolute !important;
+    top: 7px !important;
+    right: 7px !important;
+
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .Toastify__toast-container {
+    top: 8px !important;
+    right: 8px !important;
+    max-width: 260px !important;
+    z-index: 999999 !important;
+    position: fixed !important;
+  }
+
+  .Toastify__toast {
+    max-width: 260px !important;
+  }
+
+  .Toastify__toast-body {
+    max-width: 215px !important;
+    font-size: 12px !important;
+  }
+}
+
+.modal-overlay {
+  padding: 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* Sabhi modal/dialog "cards" - inme jo bhi naya class add ho,
+   yahan comma se jod dena */
+.delete-confirm-dialog,
+.delete-account-modal,
+.manage-modal,
+.add-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .delete-confirm-dialog,
+  .delete-account-modal,
+  .manage-modal,
+  .add-modal {
+    width: 92% !important;
+    max-width: 360px !important;
+    max-height: 88vh !important;
+    border-radius: 14px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Manage/Add standard modal ko thoda wide rehne do
+     (table hoti hai andar) */
+  .manage-modal {
+    max-width: 480px !important;
+  }
+
+  /* Heading / icon */
+  .delete-confirm-dialog h3,
+  .delete-account-modal h2,
+  .manage-modal h3,
+  .add-modal h3 {
+    font-size: 16px !important;
+  }
+
+  .delete-dialog-icon,
+  .warning-icon {
+    font-size: 18px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  /* Body text */
+  .delete-confirm-dialog p,
+  .delete-account-modal .delete-message,
+  .delete-account-modal .delete-note {
+    font-size: 12.5px !important;
+    padding: 6px 14px !important;
+  }
+
+  .delete-warning-box {
+    margin: 0 14px !important;
+    padding: 10px 12px !important;
+  }
+
+  .delete-warning-box ol {
+    font-size: 11.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Buttons — sabhi possible class names ek saath */
+  .delete-dialog-actions,
+  .modal-buttons,
+  .modal-footer {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+    padding: 14px 16px !important;
+  }
+
+  .delete-cancel-btn,
+  .delete-confirm-btn,
+  .modal-buttons .cancel-btn,
+  .modal-buttons .delete-btn,
+  .manage-modal .btn,
+  .add-modal .btn {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    padding: 9px 16px !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .modal-overlay {
+    padding: 8px !important;
+  }
+
+  .delete-confirm-dialog,
+  .delete-account-modal {
+    width: 94% !important;
+    max-width: 320px !important;
+  }
+
+  .delete-confirm-dialog h3,
+  .delete-account-modal h2 {
+    font-size: 15px !important;
+  }
+}
+
+.delete-cancel-btn,
+.modal-buttons .cancel-btn,
+.delete-dialog-actions .cancel-btn {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  border: 1.5px solid #b6c2cf !important;
+}
+
+.delete-cancel-btn:hover,
+.modal-buttons .cancel-btn:hover,
+.delete-dialog-actions .cancel-btn:hover {
+  background: #cbd5e1 !important;
+  border-color: #94a3b8 !important;
+  color: #1e293b !important;
 }

@@ -20,6 +20,7 @@ const WinnerSection = () => {
   const [tests, setTests] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [expandedTest, setExpandedTest] = useState(null);
   const [filters, setFilters] = useState({
     test_type: "",
     test_visibility: "",
@@ -82,12 +83,22 @@ const WinnerSection = () => {
   const handlePrevious = () => {
     if (page > 1) {
       setPage(page - 1);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   };
 
   const handleNext = () => {
     if (page < totalPages) {
       setPage(page + 1);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -126,6 +137,13 @@ const WinnerSection = () => {
     //document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isFilterOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = expandedTest ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [expandedTest]);
 
   return (
     <div className="winner-section">
@@ -348,26 +366,84 @@ const WinnerSection = () => {
                 {tests && tests.length > 0 ? (
                   tests.map((test, index) => (
                     <div className="winner-card" key={index}>
-                      <div className="test-info">
-                        <h2>{test.test_name}</h2>
-                        <p>Quiz ID: {test.test_id}</p>
-                        <p>Category: {test.test_type}</p>
-                        <p>Visibility: {test.test_visibility}</p>
-                        <p>
-                          Language:{" "}
-                          {languageMap[test.test_lang] || test.test_lang}
-                        </p>
-                        <p>Duration: {test.test_duration} mins</p>
-                        <p>
-                          Released:{" "}
-                          {new Date(
-                            test.result_release_date,
-                          ).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
-                        </p>
+                      <div className="test-info modern-card">
+                        <div className="card-icon-row">
+                          <div className="card-icon">
+                            <span>
+                              {test.test_name?.charAt(0)?.toUpperCase()}
+                            </span>
+                          </div>
+                          <h2>{test.test_name}</h2>
+                        </div>
+
+                        <div className="card-grid">
+                          <div className="grid-item">
+                            <span className="grid-label">Quiz ID</span>
+                            <span className="grid-value">{test.test_id}</span>
+                          </div>
+                          <div className="grid-item">
+                            <span className="grid-label">Category</span>
+                            <span className="grid-value">{test.test_type}</span>
+                          </div>
+                        </div>
+
+                        <div className="winners-badge">
+                          🏆{" "}
+                          {test.winners && test.winners.length > 0
+                            ? `${test.winners.length} winner${test.winners.length > 1 ? "s" : ""}`
+                            : "No winners yet"}
+                        </div>
+
+                        {test.winners && test.winners.length > 0 && (
+                          <div className="top-winner-mobile">
+                            🥇{" "}
+                            <span className="top-winner-name">
+                              {test.winners[0].student_name}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="test-info-extra">
+                          <p>Visibility: {test.test_visibility}</p>
+                          <p>
+                            Language:{" "}
+                            {languageMap[test.test_lang] || test.test_lang}
+                          </p>
+                          <p>Duration: {test.test_duration} mins</p>
+                          <p>
+                            Released:{" "}
+                            {new Date(
+                              test.result_release_date,
+                            ).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="show-more-btn"
+                          onClick={() => setExpandedTest(test)}
+                        >
+                          Show more
+                          <svg
+                            className="show-more-icon"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M6 9l6 6 6-6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
                       </div>
 
                       <div className="students-list">
@@ -419,7 +495,10 @@ const WinnerSection = () => {
               <div className="su-pagination">
                 <button
                   className="su-page-btn"
-                  onClick={handlePrevious}
+                  onClick={(e) => {
+                    handlePrevious();
+                    e.currentTarget.blur();
+                  }}
                   disabled={page === 1}
                 >
                   &#9664;
@@ -431,7 +510,10 @@ const WinnerSection = () => {
 
                 <button
                   className="su-page-btn"
-                  onClick={handleNext}
+                  onClick={(e) => {
+                    handleNext();
+                    e.currentTarget.blur();
+                  }}
                   disabled={page === totalPages || totalPages === 0}
                 >
                   &#9654;
@@ -443,6 +525,129 @@ const WinnerSection = () => {
 
         <CertificateReport ref={childRef} />
       </div>
+
+      {expandedTest && (
+        <div
+          className="test-modal-overlay"
+          onClick={() => setExpandedTest(null)}
+        >
+          <div
+            className="test-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="test-modal-header">
+              <div className="modal-title-row">
+                <div className="card-icon small">
+                  <span>
+                    {expandedTest.test_name?.charAt(0)?.toUpperCase()}
+                  </span>
+                </div>
+                <h2>{expandedTest.test_name}</h2>
+              </div>
+              <button
+                type="button"
+                className="test-modal-close"
+                onClick={() => setExpandedTest(null)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="modal-info-grid">
+              <div className="modal-info-item">
+                <span className="modal-info-label">Quiz ID</span>
+                <span className="modal-info-value">{expandedTest.test_id}</span>
+              </div>
+              <div className="modal-info-item">
+                <span className="modal-info-label">Category</span>
+                <span className="modal-info-value">
+                  {expandedTest.test_type}
+                </span>
+              </div>
+              <div className="modal-info-item">
+                <span className="modal-info-label">Visibility</span>
+                <span className="modal-info-value">
+                  {expandedTest.test_visibility}
+                </span>
+              </div>
+              <div className="modal-info-item">
+                <span className="modal-info-label">Language</span>
+                <span className="modal-info-value">
+                  {languageMap[expandedTest.test_lang] ||
+                    expandedTest.test_lang}
+                </span>
+              </div>
+              <div className="modal-info-item">
+                <span className="modal-info-label">Duration</span>
+                <span className="modal-info-value">
+                  {expandedTest.test_duration} mins
+                </span>
+              </div>
+              <div className="modal-info-item">
+                <span className="modal-info-label">Released</span>
+                <span className="modal-info-value">
+                  {new Date(
+                    expandedTest.result_release_date,
+                  ).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            </div>
+
+            <div className="test-modal-winners">
+              <h3>Winners</h3>
+              <div className="test-modal-winners-scroll">
+                <div className="modal-winners-inner">
+                  {/* NEW — header row, desktop jaisa */}
+                  <div className="modal-winner-header-row">
+                    <span>Position</span>
+                    <span>User ID</span>
+                    <span>Name</span>
+                    <span>Marks</span>
+                    <span>Time Taken</span>
+                    <span>Achievement</span>
+                  </div>
+
+                  {expandedTest.winners && expandedTest.winners.length > 0 ? (
+                    expandedTest.winners.map((student, i) => (
+                      <div className="student-row-modal" key={i}>
+                        <span>{student.student_rank}</span>
+                        <span>{student.student_id}</span>
+                        <span>{student.student_name}</span>
+                        <span>
+                          {student.marks}/{student.max_marks}
+                        </span>
+                        <span>
+                          {Math.floor(student.time_taken / 60)}m{" "}
+                          {student.time_taken % 60}s
+                        </span>
+                        <img
+                          src="/images/download.png"
+                          alt="Certificate"
+                          className="certi-rep"
+                          onClick={() =>
+                            handleAchievementCertificateDownload(
+                              student.student_id,
+                              expandedTest.test_id,
+                              expandedTest.test_name,
+                              student.test_date,
+                            )
+                          }
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-winners">No winners</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

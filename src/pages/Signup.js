@@ -7,6 +7,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "./css/Signup.css";
+import ReactDOM from "react-dom";
 
 const CustomOption = (props) => {
   return (
@@ -90,6 +91,7 @@ const SignUp = ({ onHomeClick }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [allowEmailSignup, setAllowEmailSignup] = useState(false);
   const [signupUserType, setSignupUserType] = useState("");
+  const [showBackBtn, setShowBackBtn] = useState(true);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -141,6 +143,21 @@ const SignUp = ({ onHomeClick }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [standardData, setStandardData] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 10) {
+        setShowBackBtn(true);
+      } else {
+        setShowBackBtn(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     fetch("/district.json")
@@ -200,15 +217,11 @@ const SignUp = ({ onHomeClick }) => {
     }
   }, [formData.password, formData.confirmPassword]);
 
-
   const fetchEmailSignupStatus = async () => {
     try {
-      const response = await axios.get(
-        `${API_URL}/user/email-signup`
-      );
+      const response = await axios.get(`${API_URL}/user/email-signup`);
 
       setAllowEmailSignup(response.data.allowEmailSignup);
-
     } catch (error) {
       console.error("Error fetching email signup status:", error);
 
@@ -474,35 +487,28 @@ const SignUp = ({ onHomeClick }) => {
   const validateForm = (isEmailRequired) => {
     let newErrors = {};
 
-    // Name
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
 
-    // Username
     if (!formData.username.trim()) {
       newErrors.username = "Username is required";
     } else if (usernameAvailable === false) {
       newErrors.username = "Username already taken";
     }
 
-    if (isEmailRequired && !formData.email) {
+    if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (
-      isEmailRequired &&
-      !/\S+@\S+\.\S+/.test(formData.email)
-    ) {
+    } else if (isEmailRequired && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    // Mobile
-    // if (!formData.mobile) {
-    //   newErrors.mobile = "Mobile number required";
-    // } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-    //   newErrors.mobile = "Enter valid 10-digit number";
-    // }
+    if (!formData.mobile) {
+      newErrors.mobile = "Mobile number required";
+    } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
+      newErrors.mobile = "Enter valid 10-digit number";
+    }
 
-    // Password
     if (!formData.password) {
       newErrors.password = "Password required";
     } else if (
@@ -511,14 +517,12 @@ const SignUp = ({ onHomeClick }) => {
       newErrors.password = "Min 6 chars, 1 uppercase, 1 lowercase, 1 number";
     }
 
-    // Confirm Password
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    // User Type
     if (!formData.userType) {
       newErrors.userType = "Select user type";
     }
@@ -528,7 +532,7 @@ const SignUp = ({ onHomeClick }) => {
         newErrors.interest = "Please select at least one interest";
       }
     }
-    // Institution validation (important logic)
+
     if (formData.userType !== "Others") {
       if (!formData.institutionType) {
         newErrors.institutionType = "Select institution type";
@@ -545,6 +549,44 @@ const SignUp = ({ onHomeClick }) => {
     }
 
     setErrors(newErrors);
+
+    // Reliable scroll to first error, in visual top-to-bottom order
+    const fieldOrder = [
+      "userType",
+      "name",
+      "fathername",
+      "designation",
+      "interest",
+      "email",
+      "mobile",
+      "institutionType",
+      "institutionState",
+      "institutionDistrict",
+      "institutionName",
+      "standard",
+      "course",
+      "exam",
+      "username",
+      "password",
+      "confirmPassword",
+    ];
+
+    const firstErrorField = fieldOrder.find((field) => newErrors[field]);
+
+    if (firstErrorField) {
+      setTimeout(() => {
+        const el = document.querySelector(
+          `[data-field="${firstErrorField}"], [name="${firstErrorField}"]`,
+        );
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (typeof el.focus === "function") {
+            el.focus({ preventScroll: true });
+          }
+        }
+      }, 50);
+    }
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -554,10 +596,8 @@ const SignUp = ({ onHomeClick }) => {
     // Email
     const isEmailRequired =
       formData.userType === "Teacher" ||
-      (
-        allowEmailSignup &&
-        (formData.userType === "Student" || formData.userType === "Others")
-      );
+      (allowEmailSignup &&
+        (formData.userType === "Student" || formData.userType === "Others"));
 
     if (!validateForm(isEmailRequired) || !passwordValid || !passwordMatch) {
       console.log("validation failed");
@@ -611,7 +651,6 @@ const SignUp = ({ onHomeClick }) => {
     try {
       const response = await axios.post(`${API_URL}/auth/add-user`, finalData);
       if (response.data.success) {
-
         // Save user type for dialog
         setSignupUserType(formData.userType);
 
@@ -702,20 +741,46 @@ const SignUp = ({ onHomeClick }) => {
     setInstitutionType("");
     setInstitutes([]);
     setDistricts([]);
+
+    // 🔧 reset email verification + related states
+    setIsEmailVerified(false);
+    setEmailVerified(false);
+    setOtpSent(false);
+    setOtp("");
+    setOtpError("");
+    setShowOtpDialog(false);
+    setShowOtpInfoDialog(false);
+    setTimer(600);
+    setCanResend(false);
+
+    // 🔧 reset other derived validation states
+    setUsernameAvailable(null);
+    setPasswordValid(null);
+    setPasswordMatch(null);
+    setErrors({});
+    setStandardData(null);
   };
 
+  const backButton = ReactDOM.createPortal(
+    <div
+      className={`signup-back ${
+        showBackBtn && !showDialog ? "" : "back-hidden"
+      }`}
+    >
+      <button
+        type="button"
+        className="signup-back-btn"
+        onClick={() => navigate("/login")}
+      >
+        <FaArrowLeft />
+        <span>Back</span>
+      </button>
+    </div>,
+    document.body,
+  );
   return (
     <>
-      <div className="signup-back">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/login")}
-        >
-          <FaArrowLeft />
-          <span>Back</span>
-        </button>
-      </div>
+      {backButton}
 
       <div className="body">
         <div className="bg-animation">
@@ -736,7 +801,10 @@ const SignUp = ({ onHomeClick }) => {
             <fieldset className="form-section-sign">
               <legend>User Type</legend>
               <div className="form-row-sign">
-                <div className="form-group-sign radio-group">
+                <div
+                  className="form-group-sign radio-group"
+                  data-field="userType"
+                >
                   <label className="radio-label">Select User Type</label>
                   <div className="radio-options">
                     <label>
@@ -793,18 +861,18 @@ const SignUp = ({ onHomeClick }) => {
                   </div>
                   {(formData.userType === "Student" ||
                     formData.userType === "Others") && (
-                      <div className="form-group-sign">
-                        <input
-                          type="text"
-                          name="fathername"
-                          required
-                          placeholder="Father's Name "
-                          value={formData.fathername}
-                          onChange={handleChange}
-                        />
-                        <label htmlFor="fathername"></label>
-                      </div>
-                    )}
+                    <div className="form-group-sign">
+                      <input
+                        type="text"
+                        name="fathername"
+                        required
+                        placeholder="Father's Name "
+                        value={formData.fathername}
+                        onChange={handleChange}
+                      />
+                      <label htmlFor="fathername"></label>
+                    </div>
+                  )}
 
                   {formData.userType === "Teacher" && (
                     <div className="form-group-sign">
@@ -857,59 +925,59 @@ const SignUp = ({ onHomeClick }) => {
                 </div>
                 {(formData.userType === "Student" ||
                   formData.userType === "Others") && (
-                    <div className="form-row-sign">
-                      <div className="form-group-sign">
-                        {isInterestMenuOpen && (
-                          <p className="info-text">
-                            Maximum 5 selections allowed
-                          </p>
+                  <div className="form-row-sign">
+                    <div className="form-group-sign" data-field="interest">
+                      {isInterestMenuOpen && (
+                        <p className="info-text">
+                          Maximum 5 selections allowed
+                        </p>
+                      )}
+
+                      <Select
+                        isLoading={loadingInterests}
+                        isMulti
+                        components={{ Option: CustomOption }}
+                        styles={customStyles}
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        onMenuOpen={() => setIsInterestMenuOpen(true)}
+                        onMenuClose={() => setIsInterestMenuOpen(false)}
+                        blurInputOnSelect={false}
+                        isSearchable={false}
+                        placeholder="Area of Interest"
+                        options={interestOptions.map((option) => ({
+                          ...option,
+                          isDisabled:
+                            formData.interest.length >= 5 &&
+                            !formData.interest.includes(option.value),
+                        }))}
+                        value={interestOptions.filter((option) =>
+                          formData.interest.includes(option.value),
                         )}
-
-                        <Select
-                          isLoading={loadingInterests}
-                          isMulti
-                          components={{ Option: CustomOption }}
-                          styles={customStyles}
-                          closeMenuOnSelect={false}
-                          hideSelectedOptions={false}
-                          onMenuOpen={() => setIsInterestMenuOpen(true)}
-                          onMenuClose={() => setIsInterestMenuOpen(false)}
-                          blurInputOnSelect={false}
-                          isSearchable={false}
-                          placeholder="Area of Interest"
-                          options={interestOptions.map((option) => ({
-                            ...option,
-                            isDisabled:
-                              formData.interest.length >= 5 &&
-                              !formData.interest.includes(option.value),
-                          }))}
-                          value={interestOptions.filter((option) =>
-                            formData.interest.includes(option.value),
-                          )}
-                          onChange={(selected) => {
-                            if (!selected) {
-                              setFormData((prev) => ({
-                                ...prev,
-                                interest: [],
-                              }));
-                              return;
-                            }
-
-                            if (selected.length > 5) return;
-
+                        onChange={(selected) => {
+                          if (!selected) {
                             setFormData((prev) => ({
                               ...prev,
-                              interest: selected.map((item) => item.value),
+                              interest: [],
                             }));
-                          }}
-                        />
+                            return;
+                          }
 
-                        {errors.interest && (
-                          <p className="error">{errors.interest}</p>
-                        )}
-                      </div>
+                          if (selected.length > 5) return;
+
+                          setFormData((prev) => ({
+                            ...prev,
+                            interest: selected.map((item) => item.value),
+                          }));
+                        }}
+                      />
+
+                      {errors.interest && (
+                        <p className="error">{errors.interest}</p>
+                      )}
                     </div>
-                  )}
+                  </div>
+                )}
               </fieldset>
             )}
 
@@ -918,65 +986,58 @@ const SignUp = ({ onHomeClick }) => {
               <fieldset className="form-section-sign">
                 <legend>Contact Details</legend>
                 <div className="form-row-sign">
-                  {(
-                    formData.userType === "Teacher" ||
-                    (
-                      allowEmailSignup &&
-                      (
-                        formData.userType === "Student" ||
-                        formData.userType === "Others"
-                      )
-                    )
-                  ) && (
-                      <div className="form-group-sign">
-                        <div className="email-verify-container">
-                          <input
-                            type="email"
-                            name="email"
-                            required
-                            autoComplete="off"
-                            placeholder="Email"
-                            value={formData.email}
-                            disabled={isEmailVerified}
-                            onChange={handleChange}
-                          />
+                  {(formData.userType === "Teacher" ||
+                    (allowEmailSignup &&
+                      (formData.userType === "Student" ||
+                        formData.userType === "Others"))) && (
+                    <div className="form-group-sign">
+                      <div className="email-verify-container">
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          autoComplete="off"
+                          placeholder="Email"
+                          value={formData.email}
+                          disabled={isEmailVerified}
+                          onChange={handleChange}
+                        />
 
-                          {formData.email && !isEmailVerified ? (
-                            <button
-                              type="button"
-                              className="btn-email-verify"
-                              disabled={!isEmailValid}
-                              title={
-                                !isEmailValid
-                                  ? "Please enter a valid email address (example: user@example.com)"
-                                  : ""
+                        {formData.email && !isEmailVerified ? (
+                          <button
+                            type="button"
+                            className="btn-email-verify"
+                            disabled={!isEmailValid}
+                            title={
+                              !isEmailValid
+                                ? "Please enter a valid email address (example: user@example.com)"
+                                : ""
+                            }
+                            onClick={async () => {
+                              if (!isEmailValid) {
+                                toast.warning(
+                                  "Please enter a valid email address (e.g. user@example.com) before verification.",
+                                );
+                                return;
                               }
-                              onClick={async () => {
-                                if (!isEmailValid) {
-                                  toast.warning(
-                                    "Please enter a valid email address (e.g. user@example.com) before verification."
-                                  );
-                                  return;
-                                }
 
-                                await sendOtp();
-                              }}
-                            >
-                              Verify
-                            </button>
-                          ) : isEmailVerified ? (
-                            <span className="email-verified">✓ Verified</span>
-                          ) : null}
+                              await sendOtp();
+                            }}
+                          >
+                            Verify
+                          </button>
+                        ) : isEmailVerified ? (
+                          <span className="email-verified">✓ Verified</span>
+                        ) : null}
 
-                          {errors.email && (
-                            <p className="error">{errors.email}</p>
-                          )}
+                        {errors.email && (
+                          <p className="error">{errors.email}</p>
+                        )}
 
-                          <label htmlFor="email"></label>
-                        </div>
+                        <label htmlFor="email"></label>
                       </div>
-                    )}
-
+                    </div>
+                  )}
 
                   {/** email verification dialog box  **/}
 
@@ -1006,132 +1067,146 @@ const SignUp = ({ onHomeClick }) => {
             {/** Institutional/Educational Details*/}
             {(formData.userType === "Student" ||
               formData.userType === "Teacher") && (
-                <fieldset className="form-section-sign">
-                  <legend>
-                    {formData.userType === "Student"
-                      ? "Educational Details"
-                      : "Institutional Details"}
-                  </legend>
-                  <div className="form-row-sign">
-                    <div className="form-group-sign">
-                      <select
-                        name="institutionType"
-                        value={formData.institutionType}
-                        onChange={handleInstitutionType}
-                      >
-                        <option value="">Institution Type</option>
-                        <option value="School">School</option>
-                        <option value="College">College</option>
-                        <option value="University">University</option>
-                        <option value="Coaching Center">Coaching Center</option>
-                      </select>
-                      <label htmlFor="institutionType"></label>
-                    </div>
+              <fieldset className="form-section-sign">
+                <legend>
+                  {formData.userType === "Student"
+                    ? "Educational Details"
+                    : "Institutional Details"}
+                </legend>
+                <div className="form-row-sign">
+                  <div className="form-group-sign">
+                    <select
+                      name="institutionType"
+                      value={formData.institutionType}
+                      onChange={handleInstitutionType}
+                    >
+                      <option value="">Institution Type</option>
+                      <option value="School">School</option>
+                      <option value="College">College</option>
+                      <option value="University">University</option>
+                      <option value="Coaching Center">Coaching Center</option>
+                    </select>
+                    <label htmlFor="institutionType"></label>
+                  </div>
 
-                    <div className="form-group-sign">
-                      <select
-                        name="institutionState"
-                        required
-                        value={formData.institutionState}
-                        onChange={handleStateChange}
-                        disabled={!formData.institutionType}
-                      >
-                        <option value="" disabled hidden>
-                          Institution State
+                  <div className="form-group-sign">
+                    <select
+                      name="institutionState"
+                      required
+                      value={formData.institutionState}
+                      onChange={handleStateChange}
+                      disabled={!formData.institutionType}
+                      title={formData.institutionState}
+                    >
+                      <option value="" disabled hidden>
+                        Institution State
+                      </option>
+                      {states.map((state, idx) => (
+                        <option key={idx} value={state}>
+                          {state}
                         </option>
-                        {states.map((state, idx) => (
-                          <option key={idx} value={state}>
-                            {state}
-                          </option>
-                        ))}
-                      </select>
-                      <label htmlFor="institutionState"></label>
-                    </div>
+                      ))}
+                    </select>
+                    <label htmlFor="institutionState"></label>
                   </div>
-                  <div className="form-row-sign">
-                    <div className="form-group-sign">
-                      <select
-                        name="institutionDistrict"
-                        value={formData.institutionDistrict}
-                        onChange={handleDistrictChange}
-                        disabled={!formData.institutionState}
-                      >
-                        <option value="" disabled selected hidden>
-                          Institution District
+                </div>
+                <div className="form-row-sign">
+                  <div className="form-group-sign">
+                    <select
+                      name="institutionDistrict"
+                      value={formData.institutionDistrict}
+                      onChange={handleDistrictChange}
+                      disabled={!formData.institutionState}
+                      title={formData.institutionDistrict}
+                    >
+                      <option value="" disabled selected hidden>
+                        Institution District
+                      </option>
+                      {districts.map((dist, idx) => (
+                        <option key={idx} value={dist}>
+                          {dist}
                         </option>
-                        {districts.map((dist, idx) => (
-                          <option key={idx} value={dist}>
-                            {dist}
-                          </option>
-                        ))}
-                      </select>
-                      <label htmlFor="institutionDistrict"></label>
-                    </div>
+                      ))}
+                    </select>
+                    <label htmlFor="institutionDistrict"></label>
                   </div>
+                </div>
 
+                <div className="form-row-sign">
+                  <div className="form-group-sign">
+                    <select
+                      name="institutionName"
+                      value={formData.institutionName}
+                      onChange={handleChange}
+                      required
+                      title={formData.institutionName}
+                    >
+                      <option value=""> Institution Name </option>
+                      {institutes.map((inst, idx) => (
+                        <option
+                          key={idx}
+                          value={inst.institute_name}
+                          title={inst.institute_name}
+                        >
+                          {inst.institute_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {formData.userType !== "Teacher" && (
                   <div className="form-row-sign">
                     <div className="form-group-sign">
-                      <select
-                        name="institutionName"
-                        value={formData.institutionName}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option value=""> Institution Name </option>
-                        {institutes.map((inst, idx) => (
-                          <option key={idx} value={inst.institute_name}>
-                            {inst.institute_name}
+                      {formData.institutionType && (
+                        <select
+                          name={
+                            formData.institutionType === "School"
+                              ? "standard"
+                              : formData.institutionType === "Coaching Center"
+                                ? "exam"
+                                : "course"
+                          }
+                          value={
+                            formData.institutionType === "School"
+                              ? formData.standard
+                              : formData.institutionType === "Coaching Center"
+                                ? formData.exam
+                                : formData.course
+                          }
+                          onChange={handleChange}
+                          title={
+                            formData.institutionType === "School"
+                              ? formData.standard
+                              : formData.institutionType === "Coaching Center"
+                                ? formData.exam
+                                : formData.course
+                          }
+                        >
+                          <option value="">
+                            Select{" "}
+                            {formData.institutionType === "School"
+                              ? "Standard"
+                              : formData.institutionType === "Coaching Center"
+                                ? "Exam"
+                                : "Course"}
                           </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
 
-                  {formData.userType !== "Teacher" && (
-                    <div className="form-row-sign">
-                      <div className="form-group-sign">
-                        {formData.institutionType && (
-                          <select
-                            name={
-                              formData.institutionType === "School"
-                                ? "standard"
-                                : formData.institutionType === "Coaching Center"
-                                  ? "exam"
-                                  : "course"
-                            }
-                            value={
-                              formData.institutionType === "School"
-                                ? formData.standard
-                                : formData.institutionType === "Coaching Center"
-                                  ? formData.exam
-                                  : formData.course
-                            }
-                            onChange={handleChange}
-                          >
-                            <option value="">
-                              Select{" "}
-                              {formData.institutionType === "School"
-                                ? "Standard"
-                                : formData.institutionType === "Coaching Center"
-                                  ? "Exam"
-                                  : "Course"}
+                          {standardData?.map((item) => (
+                            <option
+                              key={item.standard_id}
+                              value={item.item_name}
+                            >
+                              {item.item_name}
                             </option>
-
-                            {standardData?.map((item) => (
-                              <option
-                                key={item.standard_id}
-                                value={item.item_name}
-                              >
-                                {item.item_name}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      </div>
+                          ))}
+                        </select>
+                      )}
                     </div>
-                  )}
-                </fieldset>
-              )}
+                  </div>
+                )}
+              </fieldset>
+            )}
             {/** Account Details*/}
             {formData.userType && (
               <fieldset className="form-section-sign">

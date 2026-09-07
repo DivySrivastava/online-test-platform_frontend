@@ -1,0 +1,21 @@
+/* Toast box ka default size */
+.session-warning-toast {
+  max-width: 300px;
+}
+
+/* Mobile pe aur chhota + screen ke andar fit */
+@media (max-width: 480px) {
+  .Toastify__toast-container {
+    width: 85vw !important;
+    max-width: 300px !important;
+    left: auto !important;
+    right: 8px !important;
+    padding: 0 !important;
+  }
+
+  .session-warning-toast {
+    max-width: 100% !important;
+    font-size: 12px !important;
+    padding: 8px !important;
+  }
+}

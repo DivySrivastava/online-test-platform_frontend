@@ -424,17 +424,14 @@ function Manageinstitutes() {
             </select>
           </div>
 
-          {/* <button className="f-btn" onClick={handleApply}>Apply</button> */}
-
           <hr className="f-hr" />
-          {/* <p className="f-sub">Search By:</p> */}
           <div className="f-row">
             <p className="f-sub">Search By:</p>
             <select
               value={searchType}
               onChange={(e) => {
                 setSearchType(e.target.value);
-                setSearchInput(""); // reset input when changing type
+                setSearchInput("");
               }}
             >
               <option value="name">Search By Name</option>
@@ -451,8 +448,6 @@ function Manageinstitutes() {
               value={searchInput}
               onChange={(e) => {
                 const value = e.target.value;
-
-                // ✅ If ID → allow only numbers
                 if (searchType === "id") {
                   if (/^\d*$/.test(value)) {
                     setSearchInput(value);
@@ -477,15 +472,16 @@ function Manageinstitutes() {
             Clear Search & Filter
           </p>
 
-          <hr className="f-hr" />
-          <p className="f-sub">Other Actions:</p>
+          <div className="sidebar-other-actions">
+            <hr className="f-hr" />
+            <p className="f-sub">Other Actions:</p>
 
-          <button className="f-btn" onClick={() => handleAddInstitute()}>
-            Add New Institute
-          </button>
+            <button className="f-btn" onClick={() => handleAddInstitute()}>
+              Add New Institute
+            </button>
 
-          <hr className="f-hr" />
-          {/* <p className="f-clear" onClick={handleClear}>Clear Filter</p> */}
+            <hr className="f-hr" />
+          </div>
         </aside>
 
         {/* ══════════ MAIN CONTENT ══════════ */}
@@ -505,6 +501,10 @@ function Manageinstitutes() {
               </button>
             </div>
           </div>
+
+          <button className="add-inst-header-btn" onClick={handleAddInstitute}>
+            Add New Institute
+          </button>
 
           {/* Table */}
           <div

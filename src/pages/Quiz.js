@@ -533,28 +533,35 @@ instructions before submission
             <div className="mobile-info-section">
               {!isSubmitted ? (
                 <>
-                  <div className="mobile-info-left">
-                    <h4>
-                      <img
-                        src={"/images/chronometer.png"}
-                        alt="time-Icon"
-                        className="icon"
-                      ></img>{" "}
-                      Time Left:
-                      {formatTime(timeLeft)}
-                    </h4>
-                    <h4>
-                      <img
-                        src={"/images/question.png"}
-                        alt="questions"
-                        className="icon"
-                      ></img>
-                      No. of Questions: {questions.length}
-                    </h4>
+                  <div className="mobile-info-top">
+                    <div className="mobile-info-left">
+                      <h4>
+                        <img
+                          src={"/images/chronometer.png"}
+                          alt="time-Icon"
+                          className="icon"
+                        ></img>{" "}
+                        Time Left:
+                        {formatTime(timeLeft)}
+                      </h4>
+
+                      <h4>
+                        <img
+                          src={"/images/question.png"}
+                          alt="questions"
+                          className="icon"
+                        ></img>
+                        No. of Questions: {questions.length}
+                      </h4>
+                    </div>
                   </div>
-                  <div className="mobile-info-right">
-                    <p>Don't refresh The page</p>
-                    <p>Don't close the page</p>
+
+                  {/* Warning below in separate line */}
+                  <div className="mobile-info-warning">
+                    <p>
+                      Don't refresh the page otherwise your test will get
+                      submitted.
+                    </p>
                   </div>
                 </>
               ) : (
@@ -566,6 +573,7 @@ instructions before submission
                   >
                     Quiz Details
                   </button>
+
                   {isDetailsOpen && (
                     <div className="details-dropdown" ref={detailsRef}>
                       <h4>
@@ -717,16 +725,17 @@ instructions before submission
                 </div>
               ))}
             </div>
-            {/* Submit button at the bottom (hidden after submission) */}
+
+            {/* Mobile bottom submit button */}
             {!isSubmitted && (
               <button
-                type="submit"
                 className="bottom-submit-button"
                 onClick={handleConfirmationForSubmit}
               >
                 Submit
               </button>
-            )}{" "}
+            )}
+
             {/*****i have removed comments from here */}
             {/**SUbmission confirmation popup */}
             {isPopupOpen && (

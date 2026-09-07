@@ -1499,6 +1499,8 @@ body {
   overflow-y: auto;
 
   animation: modalOverlayIn 0.25s ease;
+
+  pointer-events: auto;
 }
 
 /* =========================================================
@@ -2628,6 +2630,8 @@ body {
 
 /* ---------- MODAL BACKDROP ---------- */
 
+
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -2650,6 +2654,32 @@ body {
 
   animation: dashboardModalOverlay 0.3s ease forwards;
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(15, 23, 42, 0.48);
+
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+
+  z-index: 99999;
+
+  /* Important */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  animation: dashboardModalOverlay 0.3s ease forwards;
+}
+
 
 /* soft light effect behind modal */
 .modal-overlay::before {

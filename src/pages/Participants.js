@@ -3,6 +3,8 @@ import "./css/PastTest.css";
 import { useParams } from "react-router-dom";
 import CertificateReport from "../CertificateReport";
 import { useAxios } from "../api/axiosInstance";
+import * as XLSX from "xlsx-js-style";
+import { toast } from "react-toastify";
 
 const Participants = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -63,6 +65,235 @@ const Participants = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+
+
+  const exportParticipantData = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/participants/${test_id}/export`,
+        {
+          params: {
+            sortBy,
+            status: passingStatus,
+            search: searchText,
+          },
+        }
+      );
+
+      const participants = response.data.data;
+
+      if (!participants || participants.length === 0) {
+        toast.warning("No participant data available to export.");
+        return;
+      }
+
+      // =========================
+      // Test Name
+      // =========================
+      const testName = participants[0].test_name || "Test";
+
+      const safeTestName = testName
+        .replace(/[\\/:*?"<>|]/g, "_")
+        .trim();
+
+      // =========================
+      // Column Headers
+      // =========================
+      const headers = [
+        "Rank",
+        "User ID",
+        "Institute ID",
+        "Participant Name",
+        "Test Name",
+        "Test Date",
+        "Marks",
+        "Passing Status",
+        "Submission Date",
+      ];
+
+      // =========================
+      // Participant Data
+      // =========================
+      const excelData = participants.map((participant) => [
+        participant.student_rank ?? "--",
+        participant.student_id ?? "--",
+        participant.institute_id ?? "--",
+        participant.student_name ?? "--",
+        participant.test_name ?? "--",
+        participant.test_date ?? "--",
+        participant.marks ?? "--",
+        participant.status ?? "--",
+        participant.submit_date_time ?? "--",
+      ]);
+
+      // =========================
+      // Create Worksheet
+      // =========================
+      const worksheet = XLSX.utils.aoa_to_sheet([
+        [`${testName}_Sahash`],
+        headers,
+        ...excelData,
+      ]);
+
+      // =========================
+      // Merge Row 1
+      // =========================
+      worksheet["!merges"] = [
+        {
+          s: { r: 0, c: 0 },
+          e: { r: 0, c: headers.length - 1 },
+        },
+      ];
+
+      // =========================
+      // Row 1 - Test Name
+      // Light Green + Bold
+      // =========================
+      worksheet["A1"].s = {
+        fill: {
+          patternType: "solid",
+          fgColor: {
+            rgb: "C6EFCE",
+          },
+        },
+        font: {
+          bold: true,
+          sz: 14,
+        },
+        alignment: {
+          horizontal: "center",
+          vertical: "center",
+        },
+      };
+
+      // =========================
+      // Row 2 - Headers
+      // Light Gray + Bold
+      // =========================
+      for (let col = 0; col < headers.length; col++) {
+        const cellAddress = XLSX.utils.encode_cell({
+          r: 1,
+          c: col,
+        });
+
+        worksheet[cellAddress].s = {
+          fill: {
+            patternType: "solid",
+            fgColor: {
+              rgb: "D9D9D9",
+            },
+          },
+          font: {
+            bold: true,
+            sz: 11,
+          },
+          alignment: {
+            horizontal: "center",
+            vertical: "center",
+          },
+          border: {
+            top: {
+              style: "thin",
+              color: {
+                rgb: "808080",
+              },
+            },
+            bottom: {
+              style: "thin",
+              color: {
+                rgb: "808080",
+              },
+            },
+            left: {
+              style: "thin",
+              color: {
+                rgb: "808080",
+              },
+            },
+            right: {
+              style: "thin",
+              color: {
+                rgb: "808080",
+              },
+            },
+          },
+        };
+      }
+
+      // =========================
+      // Style Data Cells
+      // =========================
+      for (let row = 2; row < excelData.length + 2; row++) {
+        for (let col = 0; col < headers.length; col++) {
+          const cellAddress = XLSX.utils.encode_cell({
+            r: row,
+            c: col,
+          });
+
+          if (worksheet[cellAddress]) {
+            worksheet[cellAddress].s = {
+              alignment: {
+                vertical: "center",
+              },
+            };
+          }
+        }
+      }
+
+      // =========================
+      // Column Widths
+      // =========================
+      worksheet["!cols"] = [
+        { wch: 8 },
+        { wch: 12 },
+        { wch: 14 },
+        { wch: 25 },
+        { wch: 25 },
+        { wch: 15 },
+        { wch: 10 },
+        { wch: 16 },
+        { wch: 22 },
+      ];
+
+      // =========================
+      // Row Heights
+      // =========================
+      worksheet["!rows"] = [
+        { hpt: 28 },
+        { hpt: 24 },
+      ];
+
+      // =========================
+      // Create Workbook
+      // =========================
+      const workbook = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Participants"
+      );
+
+      // =========================
+      // Download
+      // =========================
+      XLSX.writeFile(
+        workbook,
+        `${safeTestName}_participants.xlsx`
+      );
+
+      toast.success("Participant data exported successfully.");
+
+    } catch (error) {
+      console.error("Error exporting participant data:", error);
+
+      toast.error("Failed to export participant data.");
+    }
+  };
+
+
+
 
   const clearFilters = () => {
     setSortBy("");
@@ -180,6 +411,17 @@ const Participants = () => {
               <hr />
             </div>
 
+            <div className="filter-group">
+              <label>Export Participant Data</label>
+              <button
+                type="button"
+                onClick={exportParticipantData}
+              >
+                Export Excel Sheet
+              </button>
+              <hr />
+            </div>
+
             <div className="clear-filters" onClick={clearFilters}>
               Clear Search & Filter
             </div>
@@ -243,9 +485,8 @@ const Participants = () => {
                       <td>{studentTestDetail.marks}</td>
 
                       <td>
-                        {`${Math.floor(studentTestDetail.time_taken / 60)} min ${
-                          studentTestDetail.time_taken % 60
-                        } sec`}
+                        {`${Math.floor(studentTestDetail.time_taken / 60)} min ${studentTestDetail.time_taken % 60
+                          } sec`}
                       </td>
 
                       <td>{studentTestDetail.status}</td>

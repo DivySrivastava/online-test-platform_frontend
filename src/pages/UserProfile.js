@@ -38,7 +38,7 @@ function UserProfile() {
   useEffect(() => {
     if (!user) return;
 
-    console.log("User in Profile", user);
+    //console.log("User in Profile", user);
 
     setUserData(user);
     setOriginalData(user);

@@ -89,9 +89,8 @@ const Hero = ({ tests }) => {
                 <img src={slide.image} alt={slide.alt} />
                 <div className="hero-slide-overlay" />
                 <div
-                  className={`hero-slide-caption ${
-                    activeIndex === i ? "hero-caption-active" : ""
-                  }`}
+                  className={`hero-slide-caption ${activeIndex === i ? "hero-caption-active" : ""
+                    }`}
                 >
                   <h3>{slide.title}</h3>
                   <p>{slide.subtitle}</p>
@@ -280,30 +279,30 @@ const Quiz = ({ tests }) => {
         <p>
           {test.start_date
             ? new Date(test.start_date.replace(" ", "T")).toLocaleTimeString(
-                "en-GB",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                  timeZone: "Asia/Kolkata",
-                },
-              )
+              "en-GB",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+                timeZone: "Asia/Kolkata",
+              },
+            )
             : "N/A"}{" "}
           (IST)
         </p>
         <p>
           {test.end_date
             ? new Date(test.end_date.replace(" ", "T")).toLocaleTimeString(
-                "en-GB",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                  timeZone: "Asia/Kolkata",
-                },
-              )
+              "en-GB",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+                timeZone: "Asia/Kolkata",
+              },
+            )
             : "N/A"}{" "}
           (IST)
         </p>
@@ -540,12 +539,10 @@ const AboutUs = () => (
       <div className="content-block">
         <h3>Our Vision</h3>
         <p>
-          Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut
-          fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem
-          sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia
-          dolor sit, amet, consectetur, adipisci velit, sed quia non numquam
-          eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat
-          voluptatem.{" "}
+          Society for Animal Health Agriculture Science and Humanity (SAHASH) 
+          is a nonprofit organization with a mission to think, promise and work 
+          together within India to achieve a lasting improvement in the quality of 
+          life of the poor.{" "}
         </p>
         <a
           href="https://www.sahashindia.org/visionmission.html"
@@ -559,12 +556,11 @@ const AboutUs = () => (
       <div className="content-block">
         <h3>Our Mission</h3>
         <p>
-          Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut
-          fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem
-          sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia
-          dolor sit, amet, consectetur, adipisci velit, sed quia non numquam
-          eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat
-          voluptatem.{" "}
+          SAHASH is dedicated to the betterment of society; Economically, 
+          Educationally and Culturally. To work for deprived people for their 
+          upliftment and betterment with special emphasis on children, farmers 
+          and women and to provide them with livelihood opportunities and bring 
+          them into the mainstream of society.{" "}
         </p>
         <a
           href="https://www.sahashindia.org/visionmission.html"
@@ -578,12 +574,12 @@ const AboutUs = () => (
       <div className="content-block">
         <h3>Our Values</h3>
         <p>
-          Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut
-          fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem
-          sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia
-          dolor sit, amet, consectetur, adipisci velit, sed quia non numquam
-          eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat
-          voluptatem.
+         We believe in and encourage creative expression and self determination 
+         of rural poor children, farmers and women. We support women’s freedom to make choices.
+         We believe in building community through relationships, communication, and social commitment.
+         We believe in the right to quality services delivered with respect and empathy.
+         We believe in diversity that honors difference in age, culture, and social orientation.
+         We believe in the right to safe, clean environment and corruption free society.
         </p>
         <a
           href="https://www.sahashindia.org/visionmission.html"

@@ -88,6 +88,7 @@ const SignUp = ({ onHomeClick }) => {
   const [interestOptions, setInterestOptions] = useState([]);
   const [loadingInterests, setLoadingInterests] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [allowEmailSignup, setAllowEmailSignup] = useState(false);
   const [signupUserType, setSignupUserType] = useState("");
 
   const [formData, setFormData] = useState({
@@ -198,6 +199,27 @@ const SignUp = ({ onHomeClick }) => {
       setPasswordMatch(formData.password === formData.confirmPassword);
     }
   }, [formData.password, formData.confirmPassword]);
+
+
+  const fetchEmailSignupStatus = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/email-signup`
+      );
+
+      setAllowEmailSignup(response.data.allowEmailSignup);
+
+    } catch (error) {
+      console.error("Error fetching email signup status:", error);
+
+      // Keep email signup disabled if API fails
+      setAllowEmailSignup(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmailSignupStatus();
+  }, []);
 
   useEffect(() => {
     fetchInterests();
@@ -449,7 +471,7 @@ const SignUp = ({ onHomeClick }) => {
   };
 
   //for hadnling the form validation before submission
-  const validateForm = () => {
+  const validateForm = (isEmailRequired) => {
     let newErrors = {};
 
     // Name
@@ -464,19 +486,21 @@ const SignUp = ({ onHomeClick }) => {
       newErrors.username = "Username already taken";
     }
 
-    // Email
-    if (!formData.email) {
+    if (isEmailRequired && !formData.email) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (
+      isEmailRequired &&
+      !/\S+@\S+\.\S+/.test(formData.email)
+    ) {
       newErrors.email = "Invalid email format";
     }
 
     // Mobile
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile number required";
-    } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-      newErrors.mobile = "Enter valid 10-digit number";
-    }
+    // if (!formData.mobile) {
+    //   newErrors.mobile = "Mobile number required";
+    // } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
+    //   newErrors.mobile = "Enter valid 10-digit number";
+    // }
 
     // Password
     if (!formData.password) {
@@ -527,11 +551,19 @@ const SignUp = ({ onHomeClick }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm() || !passwordValid || !passwordMatch) {
+    // Email
+    const isEmailRequired =
+      formData.userType === "Teacher" ||
+      (
+        allowEmailSignup &&
+        (formData.userType === "Student" || formData.userType === "Others")
+      );
+
+    if (!validateForm(isEmailRequired) || !passwordValid || !passwordMatch) {
       console.log("validation failed");
       return;
     }
-    if (!isEmailVerified) {
+    if (isEmailRequired && !isEmailVerified && validateForm) {
       toast.warning("Please verify your email first.");
       return;
     }
@@ -574,7 +606,7 @@ const SignUp = ({ onHomeClick }) => {
       standard_type: standard_type,
     };
 
-    console.log(finalData);
+    //console.log(finalData);
 
     try {
       const response = await axios.post(`${API_URL}/auth/add-user`, finalData);
@@ -584,7 +616,7 @@ const SignUp = ({ onHomeClick }) => {
         setSignupUserType(formData.userType);
 
         setMessage(response.data.message);
-        console.log("User registered successfully!");
+        //console.log("User registered successfully!");
 
         setShowDialog(true); // show success dialog
 
@@ -815,7 +847,7 @@ const SignUp = ({ onHomeClick }) => {
                         type="text"
                         name="gender"
                         required
-                        placeholder="Specific Gender"
+                        placeholder="Mention Gender"
                         value={formData.gender}
                         onChange={handleChange}
                       />
@@ -886,48 +918,66 @@ const SignUp = ({ onHomeClick }) => {
               <fieldset className="form-section-sign">
                 <legend>Contact Details</legend>
                 <div className="form-row-sign">
-                  <div className="form-group-sign">
-                    <div className="email-verify-container">
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        autoComplete="off"
-                        placeholder="Email"
-                        value={formData.email}
-                        disabled={isEmailVerified}
-                        onChange={handleChange}
-                      />
-                      {formData.email && !isEmailVerified ? (
-                        <button
-                          type="button"
-                          className="btn-email-verify"
-                          disabled={!isEmailValid}
-                          title={
-                            !isEmailValid
-                              ? "Please enter a valid email address (example: user@example.com)"
-                              : ""
-                          }
-                          onClick={async () => {
-                            if (!isEmailValid) {
-                              toast.warning(
-                                "Please enter a valid email address (e.g. user@example.com) before verification.",
-                              );
-                              return;
-                            }
+                  {(
+                    formData.userType === "Teacher" ||
+                    (
+                      allowEmailSignup &&
+                      (
+                        formData.userType === "Student" ||
+                        formData.userType === "Others"
+                      )
+                    )
+                  ) && (
+                      <div className="form-group-sign">
+                        <div className="email-verify-container">
+                          <input
+                            type="email"
+                            name="email"
+                            required
+                            autoComplete="off"
+                            placeholder="Email"
+                            value={formData.email}
+                            disabled={isEmailVerified}
+                            onChange={handleChange}
+                          />
 
-                            await sendOtp();
-                          }}
-                        >
-                          Verify
-                        </button>
-                      ) : isEmailVerified ? (
-                        <span className="email-verified">✓ Verified</span>
-                      ) : null}
-                      {errors.email && <p className="error">{errors.email}</p>}
-                      <label htmlFor="email"></label>
-                    </div>
-                  </div>
+                          {formData.email && !isEmailVerified ? (
+                            <button
+                              type="button"
+                              className="btn-email-verify"
+                              disabled={!isEmailValid}
+                              title={
+                                !isEmailValid
+                                  ? "Please enter a valid email address (example: user@example.com)"
+                                  : ""
+                              }
+                              onClick={async () => {
+                                if (!isEmailValid) {
+                                  toast.warning(
+                                    "Please enter a valid email address (e.g. user@example.com) before verification."
+                                  );
+                                  return;
+                                }
+
+                                await sendOtp();
+                              }}
+                            >
+                              Verify
+                            </button>
+                          ) : isEmailVerified ? (
+                            <span className="email-verified">✓ Verified</span>
+                          ) : null}
+
+                          {errors.email && (
+                            <p className="error">{errors.email}</p>
+                          )}
+
+                          <label htmlFor="email"></label>
+                        </div>
+                      </div>
+                    )}
+
+
                   {/** email verification dialog box  **/}
 
                   <div className="form-row-sign">

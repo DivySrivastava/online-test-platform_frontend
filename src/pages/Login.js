@@ -24,7 +24,7 @@ const Login = () => {
   const [permissions, setPermissions] = useState([]);
   const { loginUser } = useContext(UserContext);
   const API_URL = process.env.REACT_APP_API_URL;
-  console.log("API_URL =", API_URL);
+  //console.log("API_URL =", API_URL);
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -142,7 +142,7 @@ const Login = () => {
       // Redirect
       setRedirect(true);
     } catch (error) {
-      console.error("Login error:", error);
+      //console.error("Login error:", error);
 
       toast.error(error.response?.data?.message || "Login failed.");
     }
@@ -161,8 +161,7 @@ const Login = () => {
     // }
 
     try {
-      console.log("forgot_entity", forgot_entity);
-      console.log("email", email);
+
       const res = await axios.post(`${API_URL}/auth/account-recovery`, {
         email,
         forgot_entity,
@@ -230,7 +229,7 @@ const Login = () => {
                   {formData.identifier &&
                     !validateIdentifier(formData.identifier) && (
                       <span className="validation-error">
-                        Enter a valid email, phone number, or username.
+                        Enter a valid email or username.
                       </span>
                     )}
                 </div>

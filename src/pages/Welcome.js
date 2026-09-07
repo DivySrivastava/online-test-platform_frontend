@@ -33,6 +33,7 @@ const Dashboard = () => {
   const [thirdCardTitle, setThirdCardTitle] = useState("");
   const [instituteType, setInstituteType] = useState("");
   const [deleteFeedbackId, setDeleteFeedbackId] = useState(null);
+  const [allowEmailSignup, setAllowEmailSignup] = useState(false);
   const [achievementCount, setAchievementCount] = useState({
     totalAchievements: 0,
     unseenAchievements: 0,
@@ -44,6 +45,12 @@ const Dashboard = () => {
 
   const [standards, setStandards] = useState([]);
   const [newStandard, setNewStandard] = useState("");
+
+  const [interests, setInterests] = useState([]);
+
+  const [manageType, setManageType] = useState(null);
+  const [manageItems, setManageItems] = useState([]);
+  // "standard" or "interest"
 
   const standardTitle =
     instituteType === "School"
@@ -68,6 +75,10 @@ const Dashboard = () => {
     };
 
     fetchFeedbacks();
+  }, []);
+
+  useEffect(() => {
+    fetchEmailSignupStatus();
   }, []);
 
   useEffect(() => {
@@ -183,47 +194,106 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  const fetchStandards = () => {
+  const fetchStandards = async () => {
     if (user?.role_id !== 3) return;
 
-    axios
-      .get(`${API_URL}/institute/standards/${user.institute_id}`)
-      .then((res) => {
-        setStandards(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching standards:", err);
-      });
+    try {
+      const response = await axios.get(
+        `${API_URL}/institute/standards/${user.institute_id}`
+      );
+
+      setManageItems(
+        response.data.map((item) => ({
+          id: item.standard_id,
+          name: item.item_name,
+          creator_name: item.creator_name,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching standards:", error);
+    }
+  };
+
+  const fetchInterests = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/test/interests`);
+
+      setManageItems(
+        response.data.map((item) => ({
+          id: item.interest_id,
+          name: item.interest_name,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching interests:", error);
+    }
+  };
+
+  const fetchEmailSignupStatus = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/email-signup`
+      );
+
+      setAllowEmailSignup(response.data.allowEmailSignup);
+
+    } catch (error) {
+      console.error("Error fetching email signup status:", error);
+    }
   };
 
   const handleAddStandard = async () => {
     try {
+      let response;
+
       if (user.role_id === 3) {
-        await axios.post(`${API_URL}/institute/add-standard`, {
+        response = await axios.post(`${API_URL}/institute/add-standard`, {
           institute_id: user.institute_id,
           item_name: newStandard,
           creator_name: user.name,
           creator_id: user.user_id,
         });
 
-        fetchStandards();
+        await fetchStandards();
+
       } else if (user.role_id === 4) {
-        await axios.post(`${API_URL}/user/add-standard`, {
+        response = await axios.post(`${API_URL}/user/add-standard`, {
           student_id: user.user_id,
           standard_type: newStandard,
         });
       }
 
+      toast.success(
+        response?.data?.message || "Standard added successfully."
+      );
+
       setNewStandard("");
       setActiveModal("manage");
-      fetchStandards();
+
     } catch (error) {
       console.error("Error adding standard:", error);
+
+      toast.error(
+        error.response?.data?.message ||
+        "Something went wrong. Please try again."
+      );
     }
   };
 
   const openManageStandards = () => {
     fetchStandards();
+    setActiveModal("manage");
+  };
+
+  const openManage = async (type) => {
+    setManageType(type);
+
+    if (type === "standard") {
+      fetchStandards();
+    } else if (type === "interest") {
+      fetchInterests();
+    }
+
     setActiveModal("manage");
   };
 
@@ -253,6 +323,14 @@ const Dashboard = () => {
     }
   };
 
+  const closeManage = () => {
+    setActiveModal(null);
+
+    if (location.pathname === "/dashboard/managestandards") {
+      navigate("/dashboard", { replace: true });
+    }
+  };
+
   const handleDelete = (id) => {
     if (!window.confirm("Delete this standard?")) return;
 
@@ -261,7 +339,28 @@ const Dashboard = () => {
     });
   };
 
-  //
+  const handleEmailSignupToggle = async (e) => {
+    const enabled = e.target.checked;
+
+    try {
+      const response = await axios.patch(
+        `${API_URL}/user/email-signup`,
+        {
+          enabled
+        }
+      );
+
+      setAllowEmailSignup(response.data.allowEmailSignup);
+
+    } catch (error) {
+      console.error("Error updating email signup:", error);
+
+      // Revert switch if API fails
+      setAllowEmailSignup((prev) => !prev);
+    }
+  };
+
+
 
   const handleDeleteFeedback = async (id) => {
     try {
@@ -356,8 +455,8 @@ const Dashboard = () => {
       // Super Admin
       {
         id: 1,
-        title: "Manage Users",
-        pagename: "manageuser",
+        title: "Manage Interests",
+        pagename: "manageinterests",
         icon: "group.png",
       },
       { id: 2, title: "Manage Quiz", pagename: "managequiz", icon: "quiz.png" },
@@ -422,44 +521,44 @@ const Dashboard = () => {
     4: [
       //Student
       // { id: 1, title: 'Dashboard', pagename: 'dashboard', icon: 'home.png' },
-      { id: 1, title: "Take Quizz", pagename: "takequiz", icon: "quiz.png" },
+      // { id: 1, title: "Take Quizz", pagename: "takequiz", icon: "quiz.png" },
+      // {
+      //   id: 2,
+      //   title: "My Quizzes",
+      //   pagename: "past-quizzes",
+      //   icon: "planning.png",
+      // },
       {
-        id: 2,
-        title: "My Quizzes",
-        pagename: "past-quizzes",
-        icon: "planning.png",
-      },
-      {
-        id: 3,
+        id: 1,
         title: "Achievements",
         pagename: "achievements",
         icon: "achievement.png",
       },
       {
-        id: 4,
+        id: 2,
         title: "Detailed Performance",
         pagename: "performance",
         icon: "good-feedback.png",
       },
       {
-        id: 5,
+        id: 3,
         title: "Payment Details",
         pagename: "payment-details",
         icon: "rupee.png",
       },
       ...(user?.institute_id &&
-      (user?.standard_type == null || user?.standard_type === "")
+        (user?.standard_type == null || user?.standard_type === "")
         ? [
-            {
-              id: 6,
-              title: `Add/Update ${standardTitle}`,
-              pagename: "addstandard",
-              icon: "online-course.png",
-            },
-          ]
+          {
+            id: 4,
+            title: `Add/Update ${standardTitle}`,
+            pagename: "addstandard",
+            icon: "online-course.png",
+          },
+        ]
         : []),
       {
-        id: 7,
+        id: 5,
         title: "Contact to Admin",
         pagename: "managestandards",
         icon: "contact-admin.png",
@@ -468,33 +567,33 @@ const Dashboard = () => {
     5: [
       //Normal User(Guest)
       // { id: 1, title: 'Dashboard', pagename: 'dashboard', icon: 'home.png' },
-      { id: 1, title: "Take Quizz", pagename: "takequiz", icon: "quiz.png" },
+      // { id: 1, title: "Take Quizz", pagename: "takequiz", icon: "quiz.png" },
+      // {
+      //   id: 2,
+      //   title: "My Quizzes",
+      //   pagename: "past-quizzes",
+      //   icon: "planning.png",
+      // },
       {
-        id: 2,
-        title: "My Quizzes",
-        pagename: "past-quizzes",
-        icon: "planning.png",
-      },
-      {
-        id: 3,
+        id: 1,
         title: "Achievements",
         pagename: "achievements",
         icon: "achievement.png",
       },
       {
-        id: 4,
+        id: 2,
         title: "Detailed Performance",
         pagename: "performance",
         icon: "good-feedback.png",
       },
       {
-        id: 5,
+        id: 3,
         title: "Payment Details",
         pagename: "payment-details",
         icon: "rupee.png",
       },
       {
-        id: 6,
+        id: 4,
         title: "Contact to Admin",
         pagename: "managestandards",
         icon: "contact-admin.png",
@@ -802,44 +901,65 @@ const Dashboard = () => {
             </div>
 
             <div className="menu-scroll menu-container">
-              {menuItems.map((item) =>
-                item.pagename === "managestandards" ||
-                item.pagename === "addstandard" ? (
-                  <div
-                    key={item.id}
-                    className="menu-item"
-                    onClick={() => {
-                      if (item.pagename === "managestandards") {
-                        openManageStandards();
-                      } else if (item.pagename === "addstandard") {
-                        setActiveModal("add");
-                      }
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <img
-                      src={`/images/${item.icon}`}
-                      className="mgt-icon"
-                      alt={item.title}
-                    />
+              {menuItems.map((item) => {
+                const isStandard =
+                  item.pagename === "managestandards" ||
+                  item.pagename === "addstandard";
 
-                    <div className="menu-item-text">
-                      <h4>{item.title}</h4>
-                      {item.total && <p>{item.total}</p>}
+                const isInterest =
+                  item.pagename === "manageinterests" ||
+                  item.pagename === "addinterest";
+
+                // Standard / Interest menu items
+                if (isStandard || isInterest) {
+                  const type = isStandard ? "standard" : "interest";
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="menu-item"
+                      onClick={() => {
+                        if (
+                          item.pagename === "managestandards" ||
+                          item.pagename === "manageinterests"
+                        ) {
+                          openManage(type);
+                        } else if (
+                          item.pagename === "addstandard" ||
+                          item.pagename === "addinterest"
+                        ) {
+                          setManageType(type);
+                          setActiveModal("add");
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img
+                        src={`/images/${item.icon}`}
+                        className="mgt-icon"
+                        alt={item.title}
+                      />
+
+                      <div className="menu-item-text">
+                        <h4>{item.title}</h4>
+                        {item.total && <p>{item.total}</p>}
+                      </div>
+
+                      <span className="menu-arrow">→</span>
                     </div>
+                  );
+                }
 
-                    <span className="menu-arrow">→</span>
-                  </div>
-                ) : (
+                // All other menu items
+                return (
                   <Link
                     to={`/dashboard/${item.pagename}`}
                     key={item.id}
-                    className={`menu-item ${
-                      item.pagename === "achievements" &&
+                    className={`menu-item ${item.pagename === "achievements" &&
                       achievementCount.unseenAchievements > 0
-                        ? "achievement-highlight"
-                        : ""
-                    }`}
+                      ? "achievement-highlight"
+                      : ""
+                      }`}
                   >
                     <img
                       src={`/images/${item.icon}`}
@@ -861,8 +981,8 @@ const Dashboard = () => {
 
                     <span className="menu-arrow">→</span>
                   </Link>
-                ),
-              )}
+                );
+              })}
             </div>
           </div>
 
@@ -1179,42 +1299,26 @@ const Dashboard = () => {
             {role === 1 && (
               <div className="permissions-section">
                 <div className="announce-head-icon">
-                  <h3>Manage Admin Permissions</h3>
+                  <h3>Other Actions</h3>
                   <span className="permissions-icon" title="Manage Permissions">
                     <img src={"/images/permission.png"} alt="Permissions" />
                   </span>
                 </div>
                 <div className="feedback-scroll">
-                  {permissions.map((permissions) => (
-                    <article className="permission-card">
-                      <div className="toggle-head">
-                        <h4>{permissions.title}</h4>
-                        <label className="switch">
-                          <input
-                            type="checkbox"
-                            checked={permissions.enabled}
-                            onChange={() =>
-                              togglePermission(
-                                permissions.title,
-                                permissions.id,
-                              )
-                            }
-                          />
-                          <span className="slider round"></span>
-                        </label>
-                      </div>
-                      <p>{permissions.description}</p>
-                    </article>
-                  ))}
-                  {/* {permissions.map((permission) => (
-               //permission -> issue 
-                  <article key={permission.id} className="permission-card">
-                   <h4>{permission.title}</h4>
-                   <p>{permission.description}</p>
-                   <p><strong>Status:</strong> {permission.status}</p>
-                   <span className="permission-date">{permission.date}</span>
+                  <article className="permission-card">
+                    <div className="toggle-head">
+                      <h4>Enable E-mail Signup</h4>
+
+                      <label className="switch">
+                        <input
+                          type="checkbox"
+                          checked={allowEmailSignup}
+                          onChange={handleEmailSignupToggle}
+                        />
+                        <span className="slider round"></span>
+                      </label>
+                    </div>
                   </article>
-                ))}*/}
                 </div>
               </div>
             )}
@@ -1224,74 +1328,121 @@ const Dashboard = () => {
           createPortal(
             <div className="modal-overlay">
               <div className="manage-modal">
+
+                {/* Header */}
                 <div className="modal-header">
-                  <h3>Manage {standardTitle}</h3>
+                  <h3>
+                    Manage{" "}
+                    {manageType === "standard"
+                      ? standardTitle
+                      : "Interest"}
+                  </h3>
 
                   <button
                     type="button"
                     className="close-btn"
-                    onClick={closeManageStandards}
+                    onClick={closeManage}
                   >
                     ✕
                   </button>
                 </div>
 
+                {/* Body */}
                 <div className="modal-body">
                   <div className="standard-table-wrapper">
                     <table className="standard-table">
+
                       <thead>
                         <tr>
                           <th>S.No.</th>
-                          <th>{standardTitle} Id</th>
-                          <th>{standardTitle}</th>
-                          <th>Creator Name</th>
+
+                          <th>
+                            {manageType === "standard"
+                              ? `${standardTitle} Id`
+                              : "Interest Id"}
+                          </th>
+
+                          <th>
+                            {manageType === "standard"
+                              ? standardTitle
+                              : "Interest Name"}
+                          </th>
+
+                          {/* Creator Name only for Standards */}
+                          {manageType === "standard" && (
+                            <th>Creator Name</th>
+                          )}
+
                           <th>Delete</th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        {standards.length === 0 ? (
+                        {manageItems.length === 0 ? (
                           <tr>
-                            <td colSpan="5" className="no-data">
-                              No {standardTitle.toLowerCase()} found.
+                            <td
+                              colSpan={manageType === "standard" ? 5 : 4}
+                              className="no-data"
+                            >
+                              No{" "}
+                              {manageType === "standard"
+                                ? standardTitle.toLowerCase()
+                                : "interest"}{" "}
+                              found.
                             </td>
                           </tr>
                         ) : (
-                          standards.map((item, index) => (
-                            <tr key={item.standard_id}>
+                          manageItems.map((item, index) => (
+                            <tr key={item.id}>
+
                               <td>{index + 1}</td>
-                              <td>{item.standard_id}</td>
-                              <td>{item.item_name}</td>
-                              <td>{item.creator_name}</td>
+
+                              <td>{item.id}</td>
+
+                              <td>{item.name}</td>
+
+                              {/* Creator Name only for Standards */}
+                              {manageType === "standard" && (
+                                <td>{item.creator_name || "-"}</td>
+                              )}
+
                               <td>
                                 <button
+                                  type="button"
                                   className="delete-btn"
-                                  onClick={() => handleDelete(item.standard_id)}
+                                  onClick={() => handleDelete(item.id)}
                                 >
                                   Delete
                                 </button>
                               </td>
+
                             </tr>
                           ))
                         )}
                       </tbody>
+
                     </table>
                   </div>
                 </div>
 
+                {/* Footer */}
                 <div className="modal-footer">
                   <button
+                    type="button"
                     className="btn btn-primary"
                     onClick={() => {
                       setActiveModal("add");
                     }}
                   >
-                    Add New Standard
+                    {manageType === "standard"
+                      ? "Add New Standard"
+                      : "Add New Interest"}
                   </button>
                 </div>
+
               </div>
             </div>,
-            document.body,
+            document.body
           )}
         {activeModal === "add" && (
           <div className="modal-overlay">

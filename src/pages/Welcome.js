@@ -24,6 +24,64 @@ const Dashboard = () => {
   // const per = location.state?.per || []; // Extract permissions
   const [per, setPer] = useState([]);
 
+  const [hasNewAnnouncement, setHasNewAnnouncement] = useState(false);
+
+  const [announcements, setAnnouncements] = useState([
+    {
+      id: 1,
+      title: "New Quiz Added",
+      content: "A new Science & Humanity quiz has been added to the platform.",
+      date: "2026-09-06",
+    },
+    {
+      id: 2,
+      title: "System Maintenance",
+      content: "Scheduled maintenance on Sept 10, 2026, from 2 AM to 4 AM.",
+      date: "2026-09-05",
+    },
+    {
+      id: 3,
+      title: "New Feature Released",
+      content: "Achievement tracking has been added to student dashboards.",
+      date: "2026-09-03",
+    },
+  ]);
+
+  // Har announcement ka seen/unseen status track karega
+  const getSeenIds = () => {
+    try {
+      return JSON.parse(localStorage.getItem("seenAnnouncementIds") || "[]");
+    } catch {
+      return [];
+    }
+  };
+
+  // Jab bhi announcements change ho, check karo kitne unseen hain
+  useEffect(() => {
+    if (!announcements || announcements.length === 0) {
+      setHasNewAnnouncement(false);
+      return;
+    }
+
+    const seenIds = getSeenIds();
+    const hasUnseen = announcements.some((a) => !seenIds.includes(a.id));
+
+    setHasNewAnnouncement(hasUnseen);
+  }, [announcements]);
+
+  // Ek specific announcement ko seen mark karo (jab user use click/read kare)
+  const markSingleAnnouncementSeen = (id) => {
+    const seenIds = getSeenIds();
+    if (!seenIds.includes(id)) {
+      const updated = [...seenIds, id];
+      localStorage.setItem("seenAnnouncementIds", JSON.stringify(updated));
+
+      // Check karo ab bhi koi unseen hai ya nahi
+      const stillUnseen = announcements.some((a) => !updated.includes(a.id));
+      setHasNewAnnouncement(stillUnseen);
+    }
+  };
+
   const [feedbacks, setFeedbacks] = useState([]);
   const [activeUsers, setActiveUsers] = useState(0);
   const [expiredQuizzes, setExpiredQuizzes] = useState(0);
@@ -438,15 +496,6 @@ const Dashboard = () => {
 
   if (!username) return null;
 
-  // Placeholder data for announcements
-  const announcements = [
-    // { id: 1, title: 'New Quiz Added', content: 'A new science quiz has been added to the platform.', date: '2025-07-15' },
-    // { id: 2, title: 'System Maintenance', content: 'Scheduled maintenance on July 20, 2025, from 2 AM to 4 AM.', date: '2025-07-14' },
-    // { id: 3, title: 'User Feedback Update', content: 'New feedback form features deployed.', date: '2025-07-13' },
-    /*{ id: 4, title: 'New Feature Release', content: 'We have released a new feature for tracking user progress.', date: '2025-07-12' },
-    { id: 5, title: 'Upcoming Webinar', content: 'Join our webinar on educational technology on July 25, 2025.', date: '2025-07-11' },*/
-    //just to check that the scroll works
-  ];
   //Menu items for teacher and user dashboards.... LEFT SECTION
   const menuItemsByRole = {
     1: [
@@ -883,20 +932,17 @@ const Dashboard = () => {
   console.log("per:", per);
   console.log("rolePanels:", rolePanels);
 
-  // ✅ Shared Announcements block — reused on desktop (right section)
-  // and mobile/tablet (injected inside middle-section, above Take Quiz)
   const announcementsBlock = (
     <>
       <div className="feedback-section-d">
-        {/** for section headings */}
         <div className="announce-head-icon">
           <h3>Announcements</h3>
           <span
-            className="announce-icon"
+            className={`announce-icon ${hasNewAnnouncement ? "announce-icon-blink" : ""}`}
             title=" Announcements"
-            onClick={() => console.log("Refresh announcements")}
           >
             <img src={"/images/11182227.png"} alt="Announcements" />
+            {hasNewAnnouncement && <span className="announce-new-dot"></span>}
           </span>
         </div>
       </div>
@@ -914,7 +960,11 @@ const Dashboard = () => {
             </div>
           ) : (
             announcements.map((announcement) => (
-              <article key={announcement.id} className="feedback-card">
+              <article
+                key={announcement.id}
+                className="feedback-card"
+                onClick={() => markSingleAnnouncementSeen(announcement.id)}
+              >
                 <h4>{announcement.title}</h4>
                 <p>{announcement.content}</p>
                 <span className="announcement-date">{announcement.date}</span>
@@ -926,9 +976,6 @@ const Dashboard = () => {
     </>
   );
 
-  // ✅ Shared Permissions block — reused on desktop (right section, below
-  // announcements) and mobile (injected inside announcements-section,
-  // right above the "User Feedback" box). Only role 1 (Super Admin) sees it.
   const permissionsBlock = role === 1 && (
     <div className="permissions-section">
       <div className="announce-head-icon">

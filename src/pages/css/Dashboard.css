@@ -1172,23 +1172,14 @@ body {
 .winner-list-card {
   position: relative;
   overflow: hidden;
-
   background: rgba(255, 255, 255, 0.45);
-
   border: 1px solid rgba(255, 255, 255, 0.56);
-
   border-radius: 10px;
-
   padding: 0.9rem 1rem;
-
   margin-bottom: 0.8rem;
-
   box-shadow: 0 4px 12px rgba(60, 80, 100, 0.1);
-
   height: 140px;
-
   cursor: pointer;
-
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
@@ -2640,8 +2631,6 @@ body {
 
 /* ---------- MODAL BACKDROP ---------- */
 
-
-
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -2689,7 +2678,6 @@ body {
 
   animation: dashboardModalOverlay 0.3s ease forwards;
 }
-
 
 /* soft light effect behind modal */
 .modal-overlay::before {
@@ -3891,4 +3879,54 @@ body {
 .manage-modal .modal-footer .btn:active,
 .add-modal .btn:active {
   transform: scale(0.98);
+}
+
+.feedback-card {
+  animation: fadeSlideIn 0.4s ease backwards;
+}
+
+.feedback-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.feedback-card:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.feedback-card:nth-child(3) {
+  animation-delay: 0.25s;
+}
+.feedback-card:nth-child(4) {
+  animation-delay: 0.35s;
+}
+
+.announce-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.announce-icon-blink img {
+  animation: announceBlink 1s ease-in-out infinite;
+}
+
+@keyframes announceBlink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.15);
+  }
+}
+
+.announce-new-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 0 2px #fff;
+  animation: pulseBadge 1.5s infinite;
 }

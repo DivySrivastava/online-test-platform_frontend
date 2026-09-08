@@ -8,6 +8,7 @@
 }
 
 /* Restore original navbar styling */
+
 .sahash-navbar {
   position: sticky;
   top: 2px;
@@ -26,16 +27,21 @@
   align-items: center;
   height: clamp(56px, 8vh, 64px);
   padding: 0 clamp(8px, 1.5vw, 12px);
-  max-width: full; /****************check here if ur side navbar is still not displaying full...*/
+
+  /* FIX */
+  max-width: 100%;
+
   margin: 0 auto;
   position: relative;
+  min-width: 0;
 }
 
 .logo-container {
   position: relative;
-  width: 150px; /* Fixed width for logo and text */
-  height: 40px; /* Align with navbar height */
+  width: 150px;
+  height: 40px;
   margin-left: 1rem;
+  flex-shrink: 0;
 }
 
 .logo-link {
@@ -67,8 +73,8 @@
 
 .logo-text {
   position: absolute;
-  top: 8px; /* Align with logo */
-  left: 3.5rem; /* 2.5rem logo + 1rem gap */
+  top: 8px;
+  left: 3.5rem;
 }
 
 .sa-name {
@@ -153,6 +159,7 @@
   cursor: pointer;
   padding: 0.5rem;
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .bar {
@@ -195,6 +202,7 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
+
 #mobile-nav.active:hover {
   box-shadow: 0 12px 16px rgba(154, 202, 247, 0.83);
 }
@@ -204,7 +212,6 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 0.75rem;
-
   align-items: center;
 }
 
@@ -228,11 +235,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   outline: none;
 }
+
 /*
 .dropdown {
   position: relative;
 }
 */
+
 .signup-btn {
   padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(1.2rem, 2vw, 1.45rem);
   border: none;
@@ -252,6 +261,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   outline: none;
 }
+
 /*
 .dropdown-content {
   display: none;
@@ -271,7 +281,7 @@
 }
 
 .dropdown-content a {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: #374151;
   padding: 0.75rem 1rem;
   text-decoration: none;
@@ -283,7 +293,8 @@
 .dropdown-content a:hover,
 .dropdown-content a:focus {
   background: #d6e0f7;
-}*/
+}
+*/
 
 .nav-btns-mobile {
   display: none;
@@ -294,26 +305,61 @@
   display: flex;
 }
 
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
 @media (max-width: 1024px) {
+  .mobile-right-controls {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .notification-container {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .notification-bell {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
   .desktop-nav-links,
   .desktop-nav-btns {
     display: none;
   }
+
   #mobile-nav.active {
-    display: flex; /**********keep an eye here* just in case*****/
+    display: flex;
   }
 
   .nav-btns-mobile {
     display: flex;
     flex-direction: row;
     align-items: center;
-
     gap: 0.75rem;
     margin-top: 1rem;
   }
 
+  .bell-icon {
+    width: 23px;
+    height: 23px;
+  }
+
   .menu-icon {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+    padding: 0.25rem;
+    flex-shrink: 0;
   }
 
   .nav-links-list {
@@ -323,7 +369,6 @@
 
   .nav-links li {
     width: 100%;
-
     text-align: center;
   }
 
@@ -331,6 +376,7 @@
     font-size: clamp(1rem, 3vw, 1.25rem);
     padding: 0.75rem;
   }
+
   /*
   .dropdown-content {
     position: static;
@@ -348,8 +394,13 @@
   .dropdown-content a {
     padding: 0.5rem 1rem;
     font-size: clamp(0.875rem, 2.5vw, 1rem);
-  }*/
+  }
+  */
 }
+
+/* =========================================================
+   MOBILE 640px
+========================================================= */
 
 @media (max-width: 640px) {
   .nav-bar {
@@ -371,7 +422,7 @@
 
   .logo-text {
     top: 6px;
-    left: 2.75rem; /* 2rem logo + 0.75rem gap */
+    left: 2.75rem;
   }
 
   .sa-name {
@@ -383,8 +434,30 @@
     font-size: clamp(0.5rem, 2vw, 0.65rem);
   }
 
+  /* Keep notification + hamburger visible */
+  .mobile-right-controls {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.2rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .notification-bell {
+    width: 38px;
+    height: 38px;
+  }
+
+  .bell-icon {
+    width: 22px;
+    height: 22px;
+  }
+
   .menu-icon {
+    display: flex;
     padding: 0.25rem;
+    flex-shrink: 0;
   }
 
   .bar {
@@ -398,6 +471,7 @@
 
   #mobile-nav.active {
     width: 60%;
+    max-width: calc(100vw - 1rem);
     margin-right: 0.5rem;
   }
 
@@ -410,9 +484,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-
     margin-top: 0.625rem;
   }
+
   .login-btn,
   .signup-btn {
     width: 100%;
@@ -420,18 +494,26 @@
     padding: clamp(0.5rem, 2vw, 0.625rem);
     font-size: clamp(0.875rem, 2.5vw, 1rem);
   }
+
+  .notification-dropdown {
+    right: -5px;
+    width: 300px;
+    max-width: calc(100vw - 1rem);
+  }
 }
+
+/* =========================================================
+   PROFILE MENU
+========================================================= */
 
 .profile-icon {
   width: 35px;
   height: 35px;
-  /* border-radius: 50%; */
-  object-fit: cover; /* Keeps aspect ratio and crops extra */
+  object-fit: cover;
 }
 
 /* Profile Menu CSS */
 
-/* src/components/Navbar.css */
 .profile-container {
   position: relative;
   display: inline-block;
@@ -443,7 +525,6 @@
 .profile-icon {
   width: 32px;
   height: 32px;
-  /* border-radius: 50%; */
   margin-top: 5px;
   margin-bottom: -6px;
   object-fit: cover;
@@ -451,13 +532,12 @@
 
 .admin-role {
   font-size: 12px;
-  /* margin-top: 2px; */
 }
 
 .profile-name {
   font-size: 16px;
-  /* margin-top: 2px; */
 }
+
 .admin-role:hover {
   transform: translateY(-2px);
 }
@@ -487,9 +567,11 @@
   color: #333;
   text-decoration: none;
 }
+
 .dropdown-menu span:hover {
   background-color: #f5f5f5;
 }
+
 .dropdown-menu a:hover {
   background-color: #f5f5f5;
 }
@@ -498,7 +580,8 @@
   transform: scale(1.1);
 }
 
-/* Round Home/Back button (dashboard, profile & reset-password navbars) */
+/* Round Home/Back button */
+
 .home-round-btn {
   display: inline-flex;
   align-items: center;
@@ -532,8 +615,8 @@
   color: #ffffff !important;
 }
 
-/* Only show a highlight ring for keyboard navigation, never a stuck
-   state after a plain mouse click */
+/* Only show highlight ring for keyboard navigation */
+
 .home-round-btn:focus-visible {
   outline: 2px solid #93c5fd;
   outline-offset: 2px;
@@ -547,7 +630,7 @@
 
 /* =========================================================
    PROFILE DROPDOWN - MOBILE OVERLAP FIX
-   ========================================================= */
+========================================================= */
 
 .profile-container {
   position: relative;
@@ -557,32 +640,26 @@
 .dropdown-menu {
   position: absolute;
   z-index: 11001;
-
-  /* Background ko solid rakho */
   background: #ffffff;
-
-  /* Neeche ka content visible nahi hoga */
   opacity: 1;
-
-  /* Dropdown ke andar ka content clear rahe */
   isolation: isolate;
-
   border-radius: 0 0 8px 8px;
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
-
   overflow: hidden;
 }
 
-/* Dropdown ke andar ke elements bhi upar rahenge */
+/* Dropdown elements */
+
 .dropdown-menu a,
 .dropdown-menu span,
 .dropdown-menu hr {
   position: relative;
   z-index: 11002;
 }
+
 /* =========================================================
    PROFILE DROPDOWN ABOVE ALL WINNER CONTENT
-   ========================================================= */
+========================================================= */
 
 .profile-container {
   position: relative !important;
@@ -592,19 +669,317 @@
 .dropdown-menu {
   position: absolute !important;
   z-index: 1000000 !important;
-
   background: #ffffff !important;
   opacity: 1 !important;
-
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
-
   isolation: isolate;
 }
 
 /* Dropdown items */
+
 .dropdown-menu a,
 .dropdown-menu span,
 .dropdown-menu hr {
   position: relative;
   z-index: 1000001;
+}
+
+/* =========================================================
+   MOBILE RIGHT CONTROLS
+========================================================= */
+
+.mobile-right-controls {
+  display: none;
+  margin-left: auto;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+.notification-container {
+  position: relative;
+}
+
+.notification-bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #ffb300;
+  transition:
+    transform 0.25s ease,
+    color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.notification-bell:hover {
+  color: #ff8f00;
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.bell-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 17px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseBadge 1.8s infinite;
+}
+
+@keyframes pulseBadge {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 300px;
+  max-width: 90vw;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.18);
+  z-index: 11000;
+  overflow: hidden;
+  animation: notifDropIn 0.25s ease;
+}
+
+@keyframes notifDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-dropdown-header {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #eef2f6;
+  background: linear-gradient(135deg, #306694, #2563eb);
+}
+
+.notification-dropdown-header h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.notification-list {
+  max-height: 310px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.notification-item {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.65rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  animation: fadeSlideInNotif 0.35s ease backwards;
+
+  /* FIX */
+  transition: background 0.2s ease;
+}
+
+@keyframes fadeSlideInNotif {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-item:hover {
+  background: #f1f6fb;
+}
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.notification-content h5 {
+  margin: 0 0 2px;
+  font-size: 0.85rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.notification-content p {
+  margin: 0 0 3px;
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.notification-time {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.no-notifications {
+  padding: 1.2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   FINAL MOBILE OVERRIDE
+   IMPORTANT: This is intentionally at the bottom so the
+   later .mobile-right-controls { display:none } rule
+   cannot hide it on mobile.
+========================================================= */
+
+@media (max-width: 1024px) {
+  .mobile-right-controls {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    margin-left: auto;
+    flex-shrink: 0;
+    visibility: visible;
+  }
+
+  .mobile-right-controls .notification-container,
+  .mobile-right-controls .notification-bell,
+  .mobile-right-controls .menu-icon {
+    flex-shrink: 0;
+  }
+
+  .mobile-right-controls .menu-icon {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .mobile-right-controls {
+    display: flex !important;
+    gap: 0.2rem;
+  }
+
+  .mobile-right-controls .notification-bell {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mobile-right-controls .bell-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mobile-right-controls .menu-icon {
+    display: flex !important;
+    padding: 0.25rem;
+  }
+}
+
+/* =========================================================
+   DASHBOARD ROUTE — MOBILE (bell + profile icon, no wrapper)
+========================================================= */
+
+@media (max-width: 1024px) {
+  .nav-bar > .notification-container,
+  .nav-bar > .profile-container {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-bar .notification-container .notification-bell {
+    width: 34px;
+    height: 34px;
+  }
+
+  .nav-bar .notification-container .bell-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-bar .notification-container .notification-badge {
+    top: 3px;
+    right: 3px;
+    min-width: 15px;
+    height: 15px;
+    font-size: 9px;
+  }
+
+  .nav-bar .profile-container .profile-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .nav-bar .profile-container .profile-name,
+  .nav-bar .profile-container .admin-role {
+    font-size: 11px;
+  }
 }

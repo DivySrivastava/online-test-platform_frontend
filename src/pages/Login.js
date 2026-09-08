@@ -153,7 +153,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${API_URL}/auth/login`, formData, {
-        skipGlobalLoader: true, // 👈 sirf ye extra config object add karna hai
+        skipGlobalLoader: true,
       });
 
       const { user, token, per } = response.data;

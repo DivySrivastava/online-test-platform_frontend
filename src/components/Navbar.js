@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../pages/css/Navbar.css";
 import { UserContext } from "../contexts/UserContext";
 import refLogo from "../assets/Logo-Sahash.png";
-import ProfileMenu from "./Profilemenu"; // adjust the path
+import ProfileMenu from "./Profilemenu";
 
 const Navbar = () => {
   const { user, loading } = useContext(UserContext);
@@ -37,6 +37,44 @@ const Navbar = () => {
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
+
+  // Temporary notifications data — replace with API data later
+  const notifications = [
+    {
+      id: 1,
+      title: "New Quiz Added",
+      message: "A new Science quiz has been added to the platform.",
+      time: "2h ago",
+    },
+    {
+      id: 2,
+      title: "System Maintenance",
+      message: "Scheduled maintenance tonight from 2 AM to 4 AM.",
+      time: "5h ago",
+    },
+    {
+      id: 3,
+      title: "New Feedback Received",
+      message: "A user submitted new feedback on the platform.",
+      time: "1d ago",
+    },
+  ];
+
+  useEffect(() => {
+    const handleOutsideNotifClick = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("click", handleOutsideNotifClick);
+    return () => document.removeEventListener("click", handleOutsideNotifClick);
+  }, []);
 
   //to handle smooth scrolling to section
   const handleScroll = (event, sectionId) => {
@@ -135,6 +173,69 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   if (loading) return null; // Avoid early render
+
+  const NotificationBell = (
+    <div className="notification-container" ref={notificationRef}>
+      <button
+        type="button"
+        className="notification-bell"
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowNotifications((prev) => !prev);
+        }}
+        aria-label="Notifications"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          className="bell-icon"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2.5c-.9 0-1.6.7-1.6 1.6v.6C7.7 5.4 6 7.7 6 10.5v3.8c0 .5-.2 1-.6 1.4l-1.1 1.1c-.6.6-.2 1.7.7 1.7h14c.9 0 1.3-1.1.7-1.7l-1.1-1.1c-.4-.4-.6-.9-.6-1.4v-3.8c0-2.8-1.7-5.1-4.4-5.8v-.6c0-.9-.7-1.6-1.6-1.6z"
+            fill="currentColor"
+          />
+          <path
+            d="M9.5 19a2.5 2.5 0 0 0 5 0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </svg>
+        {notifications.length > 0 && (
+          <span className="notification-badge">{notifications.length}</span>
+        )}
+      </button>
+
+      {showNotifications && (
+        <div className="notification-dropdown">
+          <div className="notification-dropdown-header">
+            <h4>Notifications</h4>
+          </div>
+          <div className="notification-list">
+            {notifications.length === 0 ? (
+              <p className="no-notifications">No notifications yet.</p>
+            ) : (
+              notifications.map((n, idx) => (
+                <div
+                  className="notification-item"
+                  key={n.id}
+                  style={{ animationDelay: `${idx * 0.08}s` }}
+                >
+                  <span className="notification-dot" />
+                  <div className="notification-content">
+                    <h5>{n.title}</h5>
+                    <p>{n.message}</p>
+                    <span className="notification-time">{n.time}</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   // Hide Navbar for quiz pages
   if (
@@ -290,18 +391,30 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* Mobile menu toggle button */}
-        {!isDashboardRoute && !user && (
-          <div
-            className="menu-icon"
-            onClick={toggleMenu}
-            ref={mobileToggleRef}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span className="bar"></span>
-            <span className="bar"></span>
-            <span className="bar"></span>
+        {/* Mobile: notification bell + menu toggle button */}
+        {!isDashboardRoute && (
+          <div className="mobile-right-controls">
+            {NotificationBell}
+
+            <div
+              className="menu-icon"
+              onClick={toggleMenu}
+              ref={mobileToggleRef}
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleMenu();
+                }
+              }}
+            >
+              <span className="bar"></span>
+              <span className="bar"></span>
+              <span className="bar"></span>
+            </div>
           </div>
         )}
 
@@ -444,6 +557,7 @@ const Navbar = () => {
           {!isDashboardRoute &&
             (!user ? (
               <div className="nav-btns desktop-nav-btns">
+                {NotificationBell}
                 <button className="login-btn" onClick={handleLogin}>
                   Login
                 </button>
@@ -452,11 +566,19 @@ const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <ProfileMenu user={user} />
+              <>
+                {NotificationBell}
+                <ProfileMenu user={user} />
+              </>
             ))}
         </>
 
-        {isDashboardRoute && <ProfileMenu user={user} />}
+        {isDashboardRoute && (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {NotificationBell}
+            <ProfileMenu user={user} />
+          </div>
+        )}
       </div>
     </nav>
   );
